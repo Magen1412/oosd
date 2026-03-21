@@ -1,4 +1,4 @@
-package main.java.internship.registration;
+package internship.registration;
 
 import javax.swing.*;
 import java.awt.*;
