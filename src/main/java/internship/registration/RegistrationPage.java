@@ -2,8 +2,6 @@ package internship.registration;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 /**
  * RegistrationPage for the Internship Management System.
