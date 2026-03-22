@@ -221,7 +221,7 @@ public class DashboardMain extends JFrame {
             // UPDATE (example: change name of first student)
             if (!students.isEmpty()) {
                 Student first = students.get(0);
-                first.setName("Roubina Persand");
+                first.setName("Roubina");
                 studentDAO.updateStudent(first);
                 System.out.println("✏️ Student updated successfully!");
             }
