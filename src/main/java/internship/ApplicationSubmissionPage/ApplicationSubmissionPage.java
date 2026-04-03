@@ -1,4 +1,4 @@
-package internship.ApplicationSubmissionPage;
+package com.internship.ApplicationSubmissionPage;
 
 import javax.swing.*;
 import javax.swing.border.LineBorder;

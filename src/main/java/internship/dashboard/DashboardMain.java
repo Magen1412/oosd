@@ -161,11 +161,11 @@ public class DashboardMain extends JFrame {
     }
 
     // Custom rounded border class
-    static class RoundedBorder implements Border {
+    public static class RoundedBorder implements Border {
         private final int radius;
         private final int thickness;
 
-        RoundedBorder(int radius, int thickness) {
+        public RoundedBorder(int radius, int thickness) {
             this.radius = radius;
             this.thickness = thickness;
         }
