@@ -1,240 +1,388 @@
 package internship.dashboard;
 
-import internship.dashboard.dao.StudentDAO;
-import internship.dashboard.model.Student;
-
 import javax.swing.*;
-import javax.swing.border.Border;
+import javax.swing.border.*;
 import java.awt.*;
-import java.util.List;
+import java.awt.event.*;
+import java.awt.geom.*;
+import com.formdev.flatlaf.extras.FlatSVGIcon;
 
 public class DashboardMain extends JFrame {
 
+    static final Color SIDEBAR_TOP = new Color(61,138,181);
+    static final Color SIDEBAR_BOT = new Color(30,78,112);
+    static final Color BG = new Color(240,245,249);
+    static final Color WHITE = Color.WHITE;
+    static final Color TEXT_DARK = new Color(30,58,95);
+    static final Color TEXT_MUTED = new Color(138,165,191);
+
+    static final Color CARD1_A = new Color(74,127,160);
+    static final Color CARD1_B = new Color(90,154,184);
+    static final Color CARD2_A = new Color(90,181,200);
+    static final Color CARD2_B = new Color(110,203,219);
+    static final Color CARD3_A = new Color(46,74,107);
+    static final Color CARD3_B = new Color(58,95,136);
+
     public DashboardMain() {
-        setTitle("Internship Management System");
-        setSize(1000, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("InternPath Dashboard");
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setSize(1200,780);
         setLocationRelativeTo(null);
-        setLayout(new BorderLayout());
 
-        // ===== SIDEBAR =====
-        JPanel sidebar = new JPanel();
-        sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
-        sidebar.setPreferredSize(new Dimension(220, getHeight()));
-        sidebar.setBackground(Color.LIGHT_GRAY);
+        JPanel root = new JPanel(new BorderLayout());
+        root.add(buildSidebar(), BorderLayout.WEST);
+        root.add(buildMain(), BorderLayout.CENTER);
 
-        sidebar.add(createSidebarButton("Dashboard", "/icons/home.png"));
-        sidebar.add(createSidebarButton("Jobs", "/icons/briefcase.png"));
-        sidebar.add(createSidebarButton("Companies", "/icons/building.png"));
-        sidebar.add(createSidebarButton("Application Status", "/icons/status.png"));
-        sidebar.add(createSidebarButton("Profile", "/icons/user.png"));
+        setContentPane(root);
+    }
 
-        JSeparator separator = new JSeparator();
-        separator.setMaximumSize(new Dimension(Integer.MAX_VALUE, 2));
-        separator.setForeground(Color.WHITE);
-        sidebar.add(separator);
+    // ─── SIDEBAR ─────────────────────────────
+    private JPanel sidebarSeparator() {
+        JPanel line = new JPanel();
+        line.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1)); // full width, 1px height
+        line.setBackground(new Color(255, 255, 255, 60)); // semi-transparent white
+        return line;
+    }
 
-        sidebar.add(createSidebarButton("Log Out", "/icons/logout.png"));
-
-        add(sidebar, BorderLayout.WEST);
-
-        // ===== MAIN CONTENT =====
-        JPanel mainContent = new JPanel(new BorderLayout());
-        mainContent.setBackground(Color.WHITE);
-
-        // ===== TOP PANEL (Search Bar) =====
-        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
-        topPanel.setBackground(Color.WHITE);
-
-        JTextField searchField = new JTextField("Search Jobs...");
-        searchField.setBounds(0, 0, 400, 40);
-        searchField.setBackground(Color.WHITE);
-        searchField.setForeground(Color.BLACK);
-        searchField.setCaretColor(Color.WHITE);
-        searchField.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        searchField.setBorder(new RoundedBorder(20, 3));
-
-        ImageIcon rawIcon = new ImageIcon(getClass().getResource("/icons/search.png"));
-        Image scaledImage = rawIcon.getImage().getScaledInstance(18, 18, Image.SCALE_SMOOTH);
-        ImageIcon searchIcon = new ImageIcon(scaledImage);
-
-        JButton searchButton = new JButton(searchIcon);
-        searchButton.setBounds(370, 5, 30, 30);
-        searchButton.setBorderPainted(false);
-        searchButton.setContentAreaFilled(false);
-        searchButton.setFocusPainted(false);
-
-        JLayeredPane layeredPane = new JLayeredPane();
-        layeredPane.setPreferredSize(new Dimension(400, 40));
-        layeredPane.add(searchField, Integer.valueOf(0));
-        layeredPane.add(searchButton, Integer.valueOf(1));
-
-        topPanel.add(layeredPane);
-        mainContent.add(topPanel, BorderLayout.NORTH);
-
-        // ===== CENTER CONTENT =====
-        JPanel centerPanel = new JPanel(new BorderLayout());
-        centerPanel.setBackground(Color.WHITE);
-
-        // Welcome Panel
-        JPanel welcomePanel = new JPanel();
-        welcomePanel.setBackground(Color.WHITE);
-        welcomePanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
-
-        JLabel welcomeLabel = new JLabel("Welcome to the Internship Dashboard");
-        welcomeLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
-        welcomePanel.add(welcomeLabel);
-
-        centerPanel.add(welcomePanel, BorderLayout.NORTH);
-
-        // Statistics Cards
-        JPanel statsPanel = new JPanel(new GridLayout(1, 3, 20, 20));
-        statsPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
-        statsPanel.setBackground(Color.WHITE);
-
-        statsPanel.add(createStatCard("Available Jobs", "24"));
-        statsPanel.add(createStatCard("Companies", "12"));
-        statsPanel.add(createStatCard("Applications", "5"));
-
-        centerPanel.add(statsPanel, BorderLayout.CENTER);
-
-        // Recent Jobs Table
-        String[] columns = {"Company", "Position", "Location", "Status"};
-        Object[][] data = {
-                {"TechSoft", "Java Intern", "Port Louis", "Open"},
-                {"CyberNet", "Web Developer Intern", "Ebene", "Open"},
-                {"SmartTech", "Database Intern", "Curepipe", "Closed"},
-                {"FutureLabs", "Software Engineer Intern", "Rose Hill", "Open"}
+    JPanel buildSidebar() {
+        JPanel sidebar = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                GradientPaint gp = new GradientPaint(0,0,SIDEBAR_TOP,0,getHeight(),SIDEBAR_BOT);
+                g2.setPaint(gp);
+                g2.fillRect(0,0,getWidth(),getHeight());
+            }
         };
 
-        JTable jobsTable = new JTable(data, columns);
-        JScrollPane scrollPane = new JScrollPane(jobsTable);
-        scrollPane.setBorder(BorderFactory.createTitledBorder("Recent Internship Opportunities"));
+        sidebar.setPreferredSize(new Dimension(220,0));
+        sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
+        sidebar.add(Box.createVerticalStrut(30));
 
-        centerPanel.add(scrollPane, BorderLayout.SOUTH);
+        String[] items = {"Dashboard","Browse Internships","Companies","My Applications","Support","Log Out"};
+        for (int i = 0; i < items.length; i++) {
+            sidebar.add(sidebarButton(items[i]));
+            sidebar.add(Box.createVerticalStrut(5));
 
-        mainContent.add(centerPanel, BorderLayout.CENTER);
-        add(mainContent, BorderLayout.CENTER);
-
-        // ===== ACTIONS =====
-        searchField.addActionListener(e -> performSearch(searchField.getText()));
-        searchButton.addActionListener(e -> performSearch(searchField.getText()));
-    }
-
-    private JButton createSidebarButton(String text, String iconPath) {
-        ImageIcon rawIcon = new ImageIcon(getClass().getResource(iconPath));
-        Image scaledImage = rawIcon.getImage().getScaledInstance(15, 15, Image.SCALE_SMOOTH);
-        ImageIcon icon = new ImageIcon(scaledImage);
-
-        JButton button = new JButton(text, icon);
-        button.setAlignmentX(Component.CENTER_ALIGNMENT);
-        button.setMaximumSize(new Dimension(Integer.MAX_VALUE, 60));
-        button.setBackground(Color.GRAY);
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setFont(new Font("SansSerif", Font.BOLD, 16));
-
-        button.setHorizontalAlignment(SwingConstants.LEFT);
-        button.setMargin(new Insets(0, 20, 0, 0));
-        button.setHorizontalTextPosition(SwingConstants.RIGHT);
-        button.setIconTextGap(10);
-
-        return button;
-    }
-
-    private JPanel createStatCard(String title, String value) {
-        JPanel card = new JPanel(new BorderLayout());
-        card.setBackground(new Color(240, 240, 240));
-        card.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-        JLabel lblTitle = new JLabel(title);
-        lblTitle.setFont(new Font("SansSerif", Font.BOLD, 16));
-
-        JLabel lblValue = new JLabel(value);
-        lblValue.setFont(new Font("SansSerif", Font.BOLD, 28));
-        lblValue.setHorizontalAlignment(SwingConstants.CENTER);
-
-        card.add(lblTitle, BorderLayout.NORTH);
-        card.add(lblValue, BorderLayout.CENTER);
-
-        return card;
-    }
-
-    // Custom rounded border class
-    static class RoundedBorder implements Border {
-        private final int radius;
-        private final int thickness;
-
-        RoundedBorder(int radius, int thickness) {
-            this.radius = radius;
-            this.thickness = thickness;
+            // Add separator after every button except the last
+            if (i < items.length - 1) {
+                sidebar.add(sidebarSeparator());
+                sidebar.add(Box.createVerticalStrut(5));
+            }
         }
 
-        @Override
-        public Insets getBorderInsets(Component c) {
-            return new Insets(thickness, thickness, thickness, thickness);
-        }
-
-        @Override
-        public boolean isBorderOpaque() {
-            return false;
-        }
-
-        @Override
-        public void paintBorder(Component c, Graphics g, int x, int y, int width, int height) {
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setColor(Color.BLACK);
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setStroke(new BasicStroke(thickness));
-            g2.drawRoundRect(x + thickness / 2, y + thickness / 2,
-                    width - thickness, height - thickness,
-                    radius, radius);
-            g2.dispose();
-        }
+        return sidebar;
     }
 
-    private void performSearch(String query) {
-        JOptionPane.showMessageDialog(this,
-                "Searching for: " + query,
-                "Search Results",
-                JOptionPane.INFORMATION_MESSAGE);
+    JButton sidebarButton(String text) {
+        JButton btn = new JButton(text) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                Graphics2D g2 = (Graphics2D) g;
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                if (getModel().isRollover()) {
+                    g2.setColor(new Color(255,255,255,40)); // hover highlight
+                    g2.fillRoundRect(0,0,getWidth(),getHeight(),12,12);
+                }
+                super.paintComponent(g);
+            }
+        };
+
+        btn.setFocusPainted(false);
+        btn.setBorderPainted(false);
+        btn.setContentAreaFilled(false);
+        btn.setForeground(Color.WHITE);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+
+        // Align text to the left inside the button
+        btn.setHorizontalAlignment(SwingConstants.LEFT);
+
+        // Align the button itself to the left in the BoxLayout
+        btn.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+        // Add padding so text isn’t flush against the edge
+        btn.setBorder(new EmptyBorder(10,20,10,10));
+
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        btn.setMaximumSize(new Dimension(200,40));
+
+        btn.addActionListener(e ->
+                JOptionPane.showMessageDialog(this, text + " page opened")
+        );
+
+        return btn;
+    }
+
+    JButton navButton(String text) {
+        JButton btn = new JButton(text);
+        btn.setFocusPainted(false);
+        btn.setBorderPainted(false);
+        btn.setContentAreaFilled(false);
+        btn.setForeground(Color.WHITE);
+        btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        btn.setAlignmentX(Component.LEFT_ALIGNMENT);
+        btn.setBorder(new EmptyBorder(12,20,12,10));
+        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+        // Hover effect
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                btn.setOpaque(true);
+                btn.setBackground(new Color(255,255,255,40));
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                btn.setOpaque(false);
+                btn.setBackground(null);
+            }
+        });
+
+        btn.addActionListener(e ->
+                JOptionPane.showMessageDialog(this, text + " page opened")
+        );
+
+        return btn;
+    }
+
+    // ─── MAIN ─────────────────────────────
+    JPanel buildMain() {
+        JPanel main = new JPanel();
+        main.setBackground(BG);
+        main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
+        main.setBorder(new EmptyBorder(20,20,20,20));
+
+        main.add(topBar());
+        main.add(Box.createVerticalStrut(20));
+        main.add(statsRow());
+        main.add(Box.createVerticalStrut(25));
+        main.add(recommendedSection());
+        main.add(Box.createVerticalStrut(25));
+        main.add(Box.createVerticalStrut(25));
+        main.add(loadMore());
+
+        return main;
+    }
+
+    JPanel topBar() {
+        JPanel p = new JPanel(new BorderLayout());
+        p.setOpaque(false);
+
+        JLabel greeting = new JLabel("Welcome Student");
+        greeting.setFont(new Font("Segoe UI", Font.BOLD, 20));
+        greeting.setForeground(TEXT_DARK);
+
+        JPanel right = new JPanel();
+        right.setOpaque(false);
+
+        FlatSVGIcon avatarIcon = new FlatSVGIcon("icons/user.svg", 25, 25);
+        FlatSVGIcon gearIcon   = new FlatSVGIcon("icons/settings.svg", 25, 25);
+
+        JLabel avatar = new JLabel(avatarIcon, SwingConstants.CENTER);
+        JLabel gear   = new JLabel(gearIcon, SwingConstants.CENTER);
+
+        // Make them clickable
+        avatar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        avatar.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                // Replace with your navigation logic
+                JOptionPane.showMessageDialog(null, "Opening Profile Page...");
+                // e.g. mainPanel.showPage("profile");
+            }
+        });
+
+        gear.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        gear.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                JOptionPane.showMessageDialog(null, "Opening Settings Page...");
+            }
+        });
+
+        right.add(avatar);
+        right.add(Box.createHorizontalStrut(10));
+        right.add(gear);
+
+        p.add(greeting, BorderLayout.WEST);
+        p.add(right, BorderLayout.EAST);
+
+        return p;
+    }
+
+    // ─── STATS ─────────────────────────────
+    JPanel statsRow() {
+        JPanel p = new JPanel(new GridLayout(1,3,20,0));
+        p.setOpaque(false);
+
+        p.add(new StatCard("Applied","12","Applications sent",CARD1_A,CARD1_B));
+        p.add(new StatCard("Shortlisted","5","Companies interested",CARD2_A,CARD2_B));
+        p.add(new StatCard("Offers","2","Offers received",CARD3_A,CARD3_B));
+
+        return p;
+    }
+
+    // ─── RECOMMENDED ───────────────────────
+    JPanel recommendedSection() {
+        JPanel panel = new RoundedCard(20, WHITE);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(new EmptyBorder(20,20,20,20));
+
+        JLabel title = new JLabel("Recommended Internships");
+        title.setFont(new Font("Segoe UI", Font.BOLD, 16));
+        title.setForeground(TEXT_DARK);
+
+        panel.add(title);
+        panel.add(Box.createVerticalStrut(15));
+
+        panel.add(jobItem("Software Engineering Intern","Google"));
+        panel.add(jobItem("UI/UX Design Intern","Adobe"));
+        panel.add(jobItem("Data Science Intern","Microsoft"));
+        panel.add(jobItem("Cybersecurity Intern","IBM"));
+        panel.add(jobItem("Cloud Engineering Intern","Amazon Web Services"));
+        panel.add(jobItem("AI Research Intern","OpenAI"));
+        panel.add(jobItem("Machine Learning Intern","NVIDIA"));
+        panel.add(jobItem("Mobile App Development Intern","Meta"));
+        panel.add(jobItem("Game Development Intern","Electronic Arts"));
+        panel.add(jobItem("DevOps Intern","Red Hat"));
+        panel.add(jobItem("Full Stack Developer Intern","Oracle"));
+        panel.add(jobItem("Business Analyst Intern (Tech)","Deloitte"));
+
+        JScrollPane scroll = new JScrollPane(panel);
+        scroll.setBorder(null);
+        scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scroll.getVerticalScrollBar().setUnitIncrement(16); // smoother scrolling
+
+        // Return the scroll pane instead of just the panel
+        JPanel container = new JPanel(new BorderLayout());
+        container.setOpaque(false);
+        container.add(scroll, BorderLayout.CENTER);
+
+        return container;
+    }
+
+    JPanel jobItem(String role, String company) {
+        JPanel p = new JPanel(new BorderLayout());
+        p.setOpaque(false);
+        p.setBorder(new EmptyBorder(10,0,10,0));
+
+        JLabel l = new JLabel("<html><b>"+role+"</b><br>"+company+"</html>");
+        l.setFont(new Font("Segoe UI", Font.PLAIN, 14));
+        l.setForeground(TEXT_DARK);
+
+        JButton apply = new JButton("Apply");
+        apply.setBackground(new Color(61,138,181));
+        apply.setForeground(Color.WHITE);
+        apply.setFocusPainted(false);
+
+        apply.addActionListener(e ->
+                JOptionPane.showMessageDialog(this,"Applied to "+role)
+        );
+
+        p.add(l,BorderLayout.WEST);
+        p.add(apply,BorderLayout.EAST);
+
+        return p;
+    }
+
+    // ─── LOAD MORE ─────────────────────────
+    JPanel loadMore() {
+        JPanel p = new JPanel();
+        p.setBackground(new Color(200,230,240));
+        p.setMaximumSize(new Dimension(Integer.MAX_VALUE,50));
+
+        JLabel l = new JLabel("Search Internships");
+        l.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        l.setForeground(TEXT_DARK);
+        p.add(l);
+
+        p.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        p.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                JOptionPane.showMessageDialog(null,"Loading more...");
+            }
+        });
+
+        return p;
     }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new DashboardMain().setVisible(true));
+    }
+}
 
-        StudentDAO studentDAO = new StudentDAO();
+// ─── SUPPORT CLASSES ─────────────────────
+class RoundedCard extends JPanel {
+    int r; Color bg;
+    RoundedCard(int r, Color bg) {
+        this.r = r; this.bg = bg;
+        setOpaque(false);
+    }
+    protected void paintComponent(Graphics g) {
+        Graphics2D g2 = (Graphics2D) g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setColor(bg);
+        g2.fillRoundRect(0,0,getWidth(),getHeight(),r,r);
+    }
+}
 
-        try {
-            // CREATE
-            Student student = new Student("Krishnen Chinien", "M", "kchinien@gmail.com", "krishnen2411");
-            studentDAO.addStudent(student);
-            System.out.println("✅ Student added successfully!");
+class StatCard extends JPanel {
+    Color a,b;
+    String label,value,sub;
+    StatCard(String label,String value,String sub,Color a,Color b) {
+        this.a=a; this.b=b;
+        this.label=label; this.value=value; this.sub=sub;
+        setLayout(new BoxLayout(this,BoxLayout.Y_AXIS));
+        setBorder(new EmptyBorder(15,15,15,15));
+        setOpaque(false);
 
-            // READ
-            List<Student> students = studentDAO.getAllStudents();
-            System.out.println("📋 Student List:");
-            for (Student s : students) {
-                System.out.println(s.getStudentId() + " | " + s.getName() + " | " + s.getGender() + " | " + s.getEmail());
-            }
+        JLabel l=new JLabel(label);
+        JLabel v=new JLabel(value);
+        JLabel s=new JLabel(sub);
 
-            // UPDATE (example: change name of first student)
-            if (!students.isEmpty()) {
-                Student first = students.get(0);
-                first.setName("Roubina");
-                studentDAO.updateStudent(first);
-                System.out.println("✏️ Student updated successfully!");
-            }
+        l.setForeground(Color.WHITE);
+        v.setForeground(Color.WHITE);
+        s.setForeground(Color.WHITE);
 
-            // DELETE (example: delete last student)
-            if (!students.isEmpty()) {
-                int lastId = students.get(students.size() - 1).getStudentId();
-                studentDAO.deleteStudent(lastId);
-                System.out.println("🗑️ Student deleted successfully!");
-            }
+        l.setFont(new Font("Segoe UI",Font.PLAIN,14));
+        v.setFont(new Font("Segoe UI",Font.BOLD,28));
+        s.setFont(new Font("Segoe UI",Font.PLAIN,12));
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        add(l); add(Box.createVerticalStrut(5)); add(v); add(Box.createVerticalStrut(5)); add(s);
+    }
+
+    protected void paintComponent(Graphics g) {
+        Graphics2D g2=(Graphics2D)g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        GradientPaint gp=new GradientPaint(0,0,a,getWidth(),getHeight(),b);
+        g2.setPaint(gp);
+        g2.fillRoundRect(0,0,getWidth(),getHeight(),25,25);
+
+        // subtle shadow
+        g2.setColor(new Color(0,0,0,40));
+        g2.drawRoundRect(0,0,getWidth()-1,getHeight()-1,25,25);
+    }
+}
+
+class AvatarIcon extends JComponent {
+    AvatarIcon() { setPreferredSize(new Dimension(40,40)); }
+    protected void paintComponent(Graphics g) {
+        Graphics2D g2=(Graphics2D)g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setColor(new Color(180,180,180));
+        g2.fillOval(0,0,40,40);
+        g2.setColor(Color.WHITE);
+        g2.drawOval(0,0,40,40);
+    }
+}
+
+class GearIcon extends JComponent {
+    GearIcon() { setPreferredSize(new Dimension(40,40)); }
+    protected void paintComponent(Graphics g) {
+        Graphics2D g2=(Graphics2D)g;
+        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2.setColor(new Color(100,100,100));
+        g2.fillOval(5,5,30,30);
+        g2.setColor(Color.WHITE);
+        g2.drawOval(5,5,30,30);
     }
 }
