@@ -4,10 +4,10 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.*;
+
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
-public class DashboardMain extends JFrame {
+public class StudentDashboard extends JFrame {
 
     static final Color SIDEBAR_TOP = new Color(61,138,181);
     static final Color SIDEBAR_BOT = new Color(30,78,112);
@@ -23,7 +23,7 @@ public class DashboardMain extends JFrame {
     static final Color CARD3_A = new Color(46,74,107);
     static final Color CARD3_B = new Color(58,95,136);
 
-    public DashboardMain() {
+    public StudentDashboard() {
         setTitle("InternPath Dashboard");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(1200,780);
@@ -306,7 +306,7 @@ public class DashboardMain extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new DashboardMain().setVisible(true));
+        SwingUtilities.invokeLater(() -> new StudentDashboard().setVisible(true));
     }
 }
 

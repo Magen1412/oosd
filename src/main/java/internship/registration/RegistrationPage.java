@@ -1,6 +1,6 @@
 package internship.registration;
 
-import internship.login.Login;
+import internship.login.LoginPage;
 import javax.swing.*;
 import java.awt.*;
 
@@ -131,7 +131,7 @@ public class RegistrationPage extends JFrame {
 
         loginButton.addActionListener(e -> {
             this.dispose(); 
-            Login.main(null); 
+            LoginPage.main(null);
         });
 
         add(mainContainer, BorderLayout.CENTER);

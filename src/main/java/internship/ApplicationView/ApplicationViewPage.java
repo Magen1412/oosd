@@ -7,9 +7,9 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class ApplicationView extends JFrame {
+public class ApplicationViewPage extends JFrame {
 
-    public ApplicationView() {
+    public ApplicationViewPage() {
         setTitle("View Application Page");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 850); 
@@ -52,7 +52,7 @@ public class ApplicationView extends JFrame {
                 
                 // Show a selection dialog
                 String selection = (String) JOptionPane.showInputDialog(
-                        ApplicationView.this,
+                        ApplicationViewPage.this,
                         "Select the new status for this application:",
                         "Update Application Status",
                         JOptionPane.PLAIN_MESSAGE,
@@ -65,7 +65,7 @@ public class ApplicationView extends JFrame {
                 if (selection != null) {
                     // You can add logic here to save the status
                     JOptionPane.showMessageDialog(
-                        ApplicationView.this, 
+                        ApplicationViewPage.this,
                         "Status successfully updated to: " + selection,
                         "Success",
                         JOptionPane.INFORMATION_MESSAGE
@@ -231,7 +231,7 @@ public class ApplicationView extends JFrame {
         }
         
         SwingUtilities.invokeLater(() -> {
-            new ApplicationView().setVisible(true);
+            new ApplicationViewPage().setVisible(true);
         });
     }
 }

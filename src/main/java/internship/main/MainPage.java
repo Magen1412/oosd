@@ -2,7 +2,6 @@ package internship.main;
 
 import internship.dashboard.DashboardMain;
 import internship.profile.ProfilePage;
-import internship.registration.RegistrationPage;
 //import internship.settings.SettingsPage;
 //import internship.search.SearchInternships;
 import internship.support.SupportPage;
@@ -15,11 +14,11 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
-public class Main extends JFrame {
+public class MainPage extends JFrame {
     private CardLayout cardLayout;
     private JPanel mainContent;
 
-    public Main() {
+    public MainPage() {
         setTitle("InternPath Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 700);
@@ -108,6 +107,6 @@ public class Main extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new Main().setVisible(true));
+        SwingUtilities.invokeLater(() -> new MainPage().setVisible(true));
     }
 }
