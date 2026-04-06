@@ -1,4 +1,4 @@
-package com.internship.password;
+package internship.password;
 
 import javax.swing.*;
 import javax.swing.border.*;
