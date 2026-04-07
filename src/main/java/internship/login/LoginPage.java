@@ -8,7 +8,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.HashMap;
 
-class Login {
+public class LoginPage {
 
     private String userId;
     private String password;
@@ -44,12 +44,9 @@ class Login {
         }
     }
 
-
-
-
     public static void main(String[] args) {
 
-        Login.users.put("admin","1234");
+        LoginPage.users.put("admin","1234");
 
         JFrame frame = new JFrame("Login");
         frame.setSize(900,500);
@@ -122,7 +119,7 @@ class Login {
         mainPanel.add(formPanel);
         mainPanel.add(Box.createVerticalGlue()); // push content up to center
 
-        Login login = new Login();
+        LoginPage login = new LoginPage();
 
         btnLogin.addActionListener(new ActionListener() {
             @Override
