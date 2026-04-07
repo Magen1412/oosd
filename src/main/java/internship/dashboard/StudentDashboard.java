@@ -4,10 +4,11 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
+import internship.settings.SettingsPage;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
-public class StudentDashboard extends JFrame {
+public class StudentDashboard extends JPanel {
 
     static final Color SIDEBAR_TOP = new Color(61,138,181);
     static final Color SIDEBAR_BOT = new Color(30,78,112);
@@ -23,24 +24,23 @@ public class StudentDashboard extends JFrame {
     static final Color CARD3_A = new Color(46,74,107);
     static final Color CARD3_B = new Color(58,95,136);
 
-    public StudentDashboard() {
-        setTitle("InternPath Dashboard");
-        setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(1200,780);
-        setLocationRelativeTo(null);
+    private CardLayout cardLayout;
+    private JPanel mainContent;
 
-        JPanel root = new JPanel(new BorderLayout());
-        root.add(buildSidebar(), BorderLayout.WEST);
-        root.add(buildMain(), BorderLayout.CENTER);
+    public StudentDashboard(CardLayout cardLayout, JPanel mainContent) {
+        this.cardLayout = cardLayout;
+        this.mainContent = mainContent;
 
-        setContentPane(root);
+        setLayout(new BorderLayout());
+        add(buildSidebar(), BorderLayout.WEST);
+        add(buildMain(), BorderLayout.CENTER);
     }
 
-    // ─── SIDEBAR ─────────────────────────────
+    // Sidebar
     private JPanel sidebarSeparator() {
         JPanel line = new JPanel();
-        line.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1)); // full width, 1px height
-        line.setBackground(new Color(255, 255, 255, 60)); // semi-transparent white
+        line.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+        line.setBackground(new Color(255, 255, 255, 60));
         return line;
     }
 
@@ -65,7 +65,6 @@ public class StudentDashboard extends JFrame {
             sidebar.add(sidebarButton(items[i]));
             sidebar.add(Box.createVerticalStrut(5));
 
-            // Add separator after every button except the last
             if (i < items.length - 1) {
                 sidebar.add(sidebarSeparator());
                 sidebar.add(Box.createVerticalStrut(5));
@@ -82,7 +81,7 @@ public class StudentDashboard extends JFrame {
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 if (getModel().isRollover()) {
-                    g2.setColor(new Color(255,255,255,40)); // hover highlight
+                    g2.setColor(new Color(255,255,255,40));
                     g2.fillRoundRect(0,0,getWidth(),getHeight(),12,12);
                 }
                 super.paintComponent(g);
@@ -95,13 +94,10 @@ public class StudentDashboard extends JFrame {
         btn.setForeground(Color.WHITE);
         btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
 
-        // Align text to the left inside the button
         btn.setHorizontalAlignment(SwingConstants.LEFT);
 
-        // Align the button itself to the left in the BoxLayout
         btn.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        // Add padding so text isn’t flush against the edge
         btn.setBorder(new EmptyBorder(10,20,10,10));
 
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -125,7 +121,6 @@ public class StudentDashboard extends JFrame {
         btn.setBorder(new EmptyBorder(12,20,12,10));
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        // Hover effect
         btn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 btn.setOpaque(true);
@@ -144,7 +139,7 @@ public class StudentDashboard extends JFrame {
         return btn;
     }
 
-    // ─── MAIN ─────────────────────────────
+    // Main
     JPanel buildMain() {
         JPanel main = new JPanel();
         main.setBackground(BG);
@@ -180,14 +175,11 @@ public class StudentDashboard extends JFrame {
         JLabel avatar = new JLabel(avatarIcon, SwingConstants.CENTER);
         JLabel gear   = new JLabel(gearIcon, SwingConstants.CENTER);
 
-        // Make them clickable
         avatar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         avatar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Replace with your navigation logic
                 JOptionPane.showMessageDialog(null, "Opening Profile Page...");
-                // e.g. mainPanel.showPage("profile");
             }
         });
 
@@ -195,7 +187,7 @@ public class StudentDashboard extends JFrame {
         gear.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                JOptionPane.showMessageDialog(null, "Opening Settings Page...");
+                cardLayout.show(mainContent, "settings");
             }
         });
 
@@ -209,7 +201,7 @@ public class StudentDashboard extends JFrame {
         return p;
     }
 
-    // ─── STATS ─────────────────────────────
+    // Statistics
     JPanel statsRow() {
         JPanel p = new JPanel(new GridLayout(1,3,20,0));
         p.setOpaque(false);
@@ -221,7 +213,7 @@ public class StudentDashboard extends JFrame {
         return p;
     }
 
-    // ─── RECOMMENDED ───────────────────────
+    // Recommended Internships
     JPanel recommendedSection() {
         JPanel panel = new RoundedCard(20, WHITE);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -250,9 +242,8 @@ public class StudentDashboard extends JFrame {
         JScrollPane scroll = new JScrollPane(panel);
         scroll.setBorder(null);
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scroll.getVerticalScrollBar().setUnitIncrement(16); // smoother scrolling
+        scroll.getVerticalScrollBar().setUnitIncrement(16); 
 
-        // Return the scroll pane instead of just the panel
         JPanel container = new JPanel(new BorderLayout());
         container.setOpaque(false);
         container.add(scroll, BorderLayout.CENTER);
@@ -284,7 +275,7 @@ public class StudentDashboard extends JFrame {
         return p;
     }
 
-    // ─── LOAD MORE ─────────────────────────
+    // Search Internships
     JPanel loadMore() {
         JPanel p = new JPanel();
         p.setBackground(new Color(200,230,240));
@@ -306,11 +297,30 @@ public class StudentDashboard extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new StudentDashboard().setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Student Dashboard");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(860, 800);
+            frame.setLocationRelativeTo(null);
+
+            // Create CardLayout and mainContent
+            CardLayout cardLayout = new CardLayout();
+            JPanel mainContent = new JPanel(cardLayout);
+
+            // Add dashboard and settings page
+            mainContent.add(new StudentDashboard(cardLayout, mainContent), "dashboard");
+            mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
+
+            // Show dashboard first
+            cardLayout.show(mainContent, "dashboard");
+
+            frame.setContentPane(mainContent);
+            frame.setVisible(true);
+        });
     }
 }
 
-// ─── SUPPORT CLASSES ─────────────────────
+// Additional Classes
 class RoundedCard extends JPanel {
     int r; Color bg;
     RoundedCard(int r, Color bg) {
@@ -356,8 +366,6 @@ class StatCard extends JPanel {
         GradientPaint gp=new GradientPaint(0,0,a,getWidth(),getHeight(),b);
         g2.setPaint(gp);
         g2.fillRoundRect(0,0,getWidth(),getHeight(),25,25);
-
-        // subtle shadow
         g2.setColor(new Color(0,0,0,40));
         g2.drawRoundRect(0,0,getWidth()-1,getHeight()-1,25,25);
     }

@@ -1,14 +1,16 @@
 package internship.settings;
 
+import internship.dashboard.StudentDashboard;
+
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.*;
 
-public class SettingsPage extends JFrame {
+public class SettingsPage extends JPanel {  // <-- changed from JFrame to JPanel
 
-    // ===== COLORS (matching Dashboard theme) =====
+    // ===== COLORS =====
     private static final Color CONTENT_BG  = new Color(240, 240, 240);
     private static final Color CARD_BG     = Color.WHITE;
     private static final Color HEADER_BG   = new Color(200, 60, 50);
@@ -18,35 +20,29 @@ public class SettingsPage extends JFrame {
     private static final Color BTN_ORANGE  = new Color(200, 120, 40);
     private static final Color BTN_BACK    = new Color(60, 63, 65);
 
-    // ===== WHO IS USING SETTINGS? =====
-    // Change this to "Company" or "Admin" depending on who launched the page
-    private final String callerRole; // "Student", "Company", or "Admin"
+    private final String callerRole;
 
-    // ===== SETTINGS STATE =====
+    private CardLayout cardLayout;
+    private JPanel mainContent;
+
     private String selectedTheme = "Light";
     private JPanel themeLight, themeDark, themeSystem;
 
-    // Language & Region
     private JComboBox<String> cmbLanguage, cmbDateFormat, cmbTimeZone;
-
-    // Notifications
     private JCheckBox chkEmail, chkApp, chkSMS;
-
-    // Display
     private JComboBox<String> cmbFontSize;
     private JSlider sldRows;
     private JLabel lblRowsVal;
     private JCheckBox chkAutoSave, chkCompact, chkTips;
 
-    // ===== CONSTRUCTOR — pass the role of whoever opened this page =====
-    public SettingsPage(String callerRole) {
+    // ===== CONSTRUCTOR =====
+    public SettingsPage(String callerRole, CardLayout cardLayout, JPanel mainContent) {
         this.callerRole = callerRole;
+        this.cardLayout = cardLayout;
+        this.mainContent = mainContent;
 
-        setTitle("Internship Management System");
-        setSize(860, 800);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
+        setBackground(CONTENT_BG);
 
         // ===== TITLE BAR =====
         JPanel titleBar = new JPanel(new BorderLayout());
@@ -58,10 +54,8 @@ public class SettingsPage extends JFrame {
         titleBar.add(appTitle, BorderLayout.WEST);
         add(titleBar, BorderLayout.NORTH);
 
-        // No sidebar — just the content
+        // Content
         add(buildContent(), BorderLayout.CENTER);
-
-        setVisible(true);
     }
 
     // ===== CONTENT =====
@@ -69,7 +63,6 @@ public class SettingsPage extends JFrame {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setBackground(CONTENT_BG);
 
-        // Page header row: title on the left, back button on the right
         JPanel pageHeader = new JPanel(new BorderLayout());
         pageHeader.setBackground(CONTENT_BG);
         pageHeader.setBorder(BorderFactory.createEmptyBorder(22, 28, 10, 28));
@@ -79,15 +72,8 @@ public class SettingsPage extends JFrame {
         pageTitle.setForeground(new Color(40, 40, 40));
         pageHeader.add(pageTitle, BorderLayout.WEST);
 
-        // Back button in the header — goes to the right dashboard
-        JButton btnHeaderBack = btn("< Back to Dashboard", BTN_BACK);
-        btnHeaderBack.setPreferredSize(new Dimension(170, 34));
-        /*btnHeaderBack.addActionListener(e -> goBackToDashboard());*/
-        pageHeader.add(btnHeaderBack, BorderLayout.EAST);
-
         wrapper.add(pageHeader, BorderLayout.NORTH);
 
-        // Scrollable cards
         JPanel scrollContent = new JPanel();
         scrollContent.setLayout(new BoxLayout(scrollContent, BoxLayout.Y_AXIS));
         scrollContent.setBackground(CONTENT_BG);
@@ -109,17 +95,7 @@ public class SettingsPage extends JFrame {
         return wrapper;
     }
 
-    /*// ===== BACK TO DASHBOARD LOGIC =====
-    *private void goBackToDashboard() {
-    *    dispose();
-    *    switch (callerRole) {
-    *        case "Admin"   -> new AdminDashboard();
-    *        case "Company" -> new CompanyDashboard();
-    *        default        -> new Dashboard(); // Student dashboard
-    *    }
-    }*/
-
-    // ===== CARD 1: THEME =====
+    // ===== THEME CARD =====
     private JPanel buildThemeCard() {
         JPanel card = card();
         card.add(sectionHeader("Appearance & Theme"), BorderLayout.NORTH);
@@ -198,7 +174,7 @@ public class SettingsPage extends JFrame {
         themeSystem.setBorder(new LineBorder(selectedTheme.equals("System") ? ACCENT : new Color(210,210,210), selectedTheme.equals("System") ? 2 : 1, true));
     }
 
-    // ===== CARD 2: LANGUAGE =====
+    // ===== LANGUAGE CARD =====
     private JPanel buildLanguageCard() {
         JPanel card = card();
         card.add(sectionHeader("Language & Region"), BorderLayout.NORTH);
@@ -228,7 +204,7 @@ public class SettingsPage extends JFrame {
         return card;
     }
 
-    // ===== CARD 3: NOTIFICATIONS =====
+    // ===== NOTIFICATIONS CARD =====
     private JPanel buildNotificationsCard() {
         JPanel card = card();
         card.add(sectionHeader("Notification Preferences"), BorderLayout.NORTH);
@@ -251,7 +227,7 @@ public class SettingsPage extends JFrame {
         return card;
     }
 
-    // ===== CARD 4: DISPLAY =====
+    // ===== DISPLAY CARD =====
     private JPanel buildDisplayCard() {
         JPanel card = card();
         card.add(sectionHeader("Display & Accessibility"), BorderLayout.NORTH);
@@ -310,7 +286,7 @@ public class SettingsPage extends JFrame {
         return card;
     }
 
-    // ===== CARD 5: ACTIONS =====
+    // ===== ACTIONS CARD =====
     private JPanel buildActionsCard() {
         JPanel card = card();
 
@@ -326,7 +302,9 @@ public class SettingsPage extends JFrame {
         row.add(btnSave);
         card.add(row, BorderLayout.EAST);
 
-        /*btnBack.addActionListener(e -> goBackToDashboard());*/
+        btnBack.addActionListener(e -> {
+            cardLayout.show(mainContent, "dashboard");
+        });
 
         btnReset.addActionListener(e -> {
             if (JOptionPane.showConfirmDialog(this, "Reset all settings to defaults?",
@@ -345,11 +323,7 @@ public class SettingsPage extends JFrame {
                                 "Date Fmt:  " + cmbDateFormat.getSelectedItem() + "\n" +
                                 "Time Zone: " + cmbTimeZone.getSelectedItem() + "\n" +
                                 "Font:      " + cmbFontSize.getSelectedItem() + "\n" +
-                                "Rows/Page: " + sldRows.getValue() + "\n\n" +
-                                "Email Notif:  " + (chkEmail.isSelected()    ? "On" : "Off") + "\n" +
-                                "App Notif:    " + (chkApp.isSelected()      ? "On" : "Off") + "\n" +
-                                "SMS Notif:    " + (chkSMS.isSelected()      ? "On" : "Off") + "\n" +
-                                "Auto-Save:    " + (chkAutoSave.isSelected() ? "On" : "Off"),
+                                "Rows/Page: " + sldRows.getValue(),
                         "Saved", JOptionPane.INFORMATION_MESSAGE)
         );
 
@@ -371,10 +345,6 @@ public class SettingsPage extends JFrame {
         chkAutoSave.setSelected(true);
         chkCompact.setSelected(false);
         chkTips.setSelected(true);
-        for (JCheckBox chk : new JCheckBox[]{chkEmail, chkApp, chkSMS, chkAutoSave, chkCompact, chkTips}) {
-            JPanel p = (JPanel) chk.getClientProperty("cardPanel");
-            if (p != null) updateCheckCardBorder(p, chk.isSelected());
-        }
     }
 
     // ===== SHARED HELPERS =====
@@ -389,6 +359,7 @@ public class SettingsPage extends JFrame {
         return card;
     }
 
+    // ===== SHARED HELPERS =====
     private JPanel sectionHeader(String title) {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setBackground(CARD_BG);
@@ -478,11 +449,23 @@ public class SettingsPage extends JFrame {
         return b;
     }
 
-    // ===== MAIN — change role here for testing =====
+    // ===== MAIN for standalone testing =====
     public static void main(String[] args) {
         try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); }
         catch (Exception ignored) {}
-        // Pass "Student", "Company", or "Admin" depending on who opens settings
-        SwingUtilities.invokeLater(() -> new SettingsPage("Admin"));
+
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Settings Page");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(860, 800);
+            frame.setLocationRelativeTo(null);
+
+            // Create dummy CardLayout + mainContent for testing
+            CardLayout cardLayout = new CardLayout();
+            JPanel mainContent = new JPanel(cardLayout);
+
+            frame.setContentPane(new SettingsPage("Student", cardLayout, mainContent));
+            frame.setVisible(true);
+        });
     }
 }

@@ -1,11 +1,11 @@
 package internship.main;
 
-import internship.dashboard.DashboardMain;
+import internship.dashboard.StudentDashboard;
+import internship.login.LoginPage;
 import internship.profile.ProfilePage;
-//import internship.settings.SettingsPage;
-//import internship.search.SearchInternships;
+import internship.registration.RegistrationPage;
+import internship.settings.SettingsPage;
 import internship.support.SupportPage;
-//import internship.auth.Logout;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
 
@@ -19,31 +19,32 @@ public class MainPage extends JFrame {
     private JPanel mainContent;
 
     public MainPage() {
-        setTitle("InternPath Dashboard");
+        setTitle("Internship Management System");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(1000, 700);
         setLocationRelativeTo(null);
 
-        cardLayout = new CardLayout();
-        mainContent = new JPanel(cardLayout);
+        // CardLayout container for all pages
+        CardLayout cardLayout = new CardLayout();
+        JPanel mainContent = new JPanel(cardLayout);
 
-        // Register all pages
-        mainContent.add(new DashboardMain(), "dashboard");
+        // Register all pages (make sure these extend JPanel!)
+        mainContent.add(new StudentDashboard(cardLayout, mainContent), "dashboard");
         mainContent.add(new ProfilePage(), "profile");
-        //mainContent.add(new SettingsPage(), "settings");
-        //mainContent.add(new SearchInternships(), "search");
+        mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
         mainContent.add(new SupportPage(), "support");
-        //mainContent.add(new Logout(), "logout");
 
         // Sidebar navigation
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
+        sidebar.setPreferredSize(new Dimension(180, getHeight()));
+
         sidebar.add(navButton("Dashboard", "dashboard"));
         sidebar.add(navButton("Profile", "profile"));
         sidebar.add(navButton("Settings", "settings"));
-        sidebar.add(navButton("Search Internships", "search"));
+        sidebar.add(navButton("Search Internships", "search")); // placeholder
         sidebar.add(navButton("Support", "support"));
-        sidebar.add(navButton("Logout", "logout"));
+        sidebar.add(navButton("Logout", "logout")); // placeholder
 
         // Top bar with greeting + icons
         JPanel topBar = buildTopBar();
@@ -53,18 +54,30 @@ public class MainPage extends JFrame {
         add(topBar, BorderLayout.NORTH);
         add(mainContent, BorderLayout.CENTER);
 
-        cardLayout.show(mainContent, "dashboard"); // start with dashboard
+        // Start with dashboard
+        cardLayout.show(mainContent, "dashboard");
     }
 
     private JButton navButton(String text, String page) {
         JButton btn = new JButton(text);
-        btn.addActionListener(e -> cardLayout.show(mainContent, page));
+        btn.setAlignmentX(Component.LEFT_ALIGNMENT);
+        btn.addActionListener(e -> {
+            try {
+                cardLayout.show(mainContent, page);
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this,
+                        "Page '" + page + "' not yet implemented.",
+                        "Navigation Error",
+                        JOptionPane.WARNING_MESSAGE);
+            }
+        });
         return btn;
     }
 
     private JPanel buildTopBar() {
         JPanel p = new JPanel(new BorderLayout());
         p.setOpaque(false);
+        p.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         JLabel greeting = new JLabel("Welcome Student");
         greeting.setFont(new Font("Segoe UI", Font.BOLD, 20));
@@ -84,7 +97,7 @@ public class MainPage extends JFrame {
         avatar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                cardLayout.show(mainContent, "profile"); // go to Profile page
+                cardLayout.show(mainContent, "profile");
             }
         });
 
@@ -92,7 +105,7 @@ public class MainPage extends JFrame {
         gear.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                cardLayout.show(mainContent, "settings"); // go to Settings page
+                cardLayout.show(mainContent, "settings");
             }
         });
 
@@ -107,6 +120,14 @@ public class MainPage extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new MainPage().setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Test Student Dashboard");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(1200, 780);
+            frame.setLocationRelativeTo(null);
+
+            frame.setContentPane(new RegistrationPage()); // embed panel
+            frame.setVisible(true);
+        });
     }
 }
