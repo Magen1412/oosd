@@ -1,15 +1,13 @@
 package internship.settings;
 
-import internship.dashboard.StudentDashboard;
-
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.*;
+import internship.dashboard.StudentDashboard;
 
-public class SettingsPage extends JPanel {  // <-- changed from JFrame to JPanel
-
+public class SettingsPage extends JPanel {
     // ===== COLORS =====
     private static final Color CONTENT_BG  = new Color(240, 240, 240);
     private static final Color CARD_BG     = Color.WHITE;
@@ -21,10 +19,10 @@ public class SettingsPage extends JPanel {  // <-- changed from JFrame to JPanel
     private static final Color BTN_BACK    = new Color(60, 63, 65);
 
     private final String callerRole;
+    private final CardLayout cardLayout;
+    private final JPanel mainContent;
 
-    private CardLayout cardLayout;
-    private JPanel mainContent;
-
+    // State
     private String selectedTheme = "Light";
     private JPanel themeLight, themeDark, themeSystem;
 
@@ -43,16 +41,6 @@ public class SettingsPage extends JPanel {  // <-- changed from JFrame to JPanel
 
         setLayout(new BorderLayout());
         setBackground(CONTENT_BG);
-
-        // ===== TITLE BAR =====
-        JPanel titleBar = new JPanel(new BorderLayout());
-        titleBar.setBackground(HEADER_BG);
-        titleBar.setPreferredSize(new Dimension(0, 38));
-        JLabel appTitle = new JLabel("  Internship Management System");
-        appTitle.setForeground(Color.WHITE);
-        appTitle.setFont(new Font("Segoe UI", Font.PLAIN, 14));
-        titleBar.add(appTitle, BorderLayout.WEST);
-        add(titleBar, BorderLayout.NORTH);
 
         // Content
         add(buildContent(), BorderLayout.CENTER);
@@ -174,7 +162,6 @@ public class SettingsPage extends JPanel {  // <-- changed from JFrame to JPanel
         themeSystem.setBorder(new LineBorder(selectedTheme.equals("System") ? ACCENT : new Color(210,210,210), selectedTheme.equals("System") ? 2 : 1, true));
     }
 
-    // ===== LANGUAGE CARD =====
     private JPanel buildLanguageCard() {
         JPanel card = card();
         card.add(sectionHeader("Language & Region"), BorderLayout.NORTH);
@@ -293,39 +280,25 @@ public class SettingsPage extends JPanel {  // <-- changed from JFrame to JPanel
         JPanel row = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
         row.setBackground(CARD_BG);
 
-        JButton btnBack  = btn("< Back to Dashboard", BTN_BACK);  btnBack.setPreferredSize(new Dimension(170, 34));
-        JButton btnReset = btn("Reset Defaults",       BTN_ORANGE); btnReset.setPreferredSize(new Dimension(140, 34));
-        JButton btnSave  = btn("Save Settings",        BTN_GREEN);  btnSave.setPreferredSize(new Dimension(130, 34));
+        JButton btnBack  = btn("< Back to Dashboard", BTN_BACK);
+        btnBack.setPreferredSize(new Dimension(170, 34));
+        btnBack.addActionListener(e -> cardLayout.show(mainContent, "dashboard"));
+
+        JButton btnReset = btn("Reset Defaults", BTN_ORANGE);
+        btnReset.setPreferredSize(new Dimension(140, 34));
+        btnReset.addActionListener(e -> resetDefaults());
+
+        JButton btnSave  = btn("Save Settings", BTN_GREEN);
+        btnSave.setPreferredSize(new Dimension(130, 34));
+        btnSave.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this,
+                    "Settings saved!");
+        });
 
         row.add(btnBack);
         row.add(btnReset);
         row.add(btnSave);
         card.add(row, BorderLayout.EAST);
-
-        btnBack.addActionListener(e -> {
-            cardLayout.show(mainContent, "dashboard");
-        });
-
-        btnReset.addActionListener(e -> {
-            if (JOptionPane.showConfirmDialog(this, "Reset all settings to defaults?",
-                    "Reset", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
-                resetDefaults();
-                JOptionPane.showMessageDialog(this, "Settings reset to defaults.",
-                        "Reset Complete", JOptionPane.INFORMATION_MESSAGE);
-            }
-        });
-
-        btnSave.addActionListener(e ->
-                JOptionPane.showMessageDialog(this,
-                        "Settings saved!\n\n" +
-                                "Theme:     " + selectedTheme + "\n" +
-                                "Language:  " + cmbLanguage.getSelectedItem() + "\n" +
-                                "Date Fmt:  " + cmbDateFormat.getSelectedItem() + "\n" +
-                                "Time Zone: " + cmbTimeZone.getSelectedItem() + "\n" +
-                                "Font:      " + cmbFontSize.getSelectedItem() + "\n" +
-                                "Rows/Page: " + sldRows.getValue(),
-                        "Saved", JOptionPane.INFORMATION_MESSAGE)
-        );
 
         return card;
     }
@@ -334,11 +307,13 @@ public class SettingsPage extends JPanel {  // <-- changed from JFrame to JPanel
     private void resetDefaults() {
         selectedTheme = "Light";
         refreshThemeBorders();
+
         cmbLanguage.setSelectedItem("English");
         cmbDateFormat.setSelectedIndex(0);
         cmbTimeZone.setSelectedItem("UTC+04:00 (Mauritius)");
         cmbFontSize.setSelectedIndex(1);
         sldRows.setValue(10);
+
         chkEmail.setSelected(true);
         chkApp.setSelected(true);
         chkSMS.setSelected(false);
@@ -359,7 +334,6 @@ public class SettingsPage extends JPanel {  // <-- changed from JFrame to JPanel
         return card;
     }
 
-    // ===== SHARED HELPERS =====
     private JPanel sectionHeader(String title) {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setBackground(CARD_BG);
@@ -451,8 +425,9 @@ public class SettingsPage extends JPanel {  // <-- changed from JFrame to JPanel
 
     // ===== MAIN for standalone testing =====
     public static void main(String[] args) {
-        try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); }
-        catch (Exception ignored) {}
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ignored) {}
 
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Settings Page");
@@ -460,12 +435,26 @@ public class SettingsPage extends JPanel {  // <-- changed from JFrame to JPanel
             frame.setSize(860, 800);
             frame.setLocationRelativeTo(null);
 
-            // Create dummy CardLayout + mainContent for testing
+            // Create CardLayout + mainContent
             CardLayout cardLayout = new CardLayout();
             JPanel mainContent = new JPanel(cardLayout);
 
-            frame.setContentPane(new SettingsPage("Student", cardLayout, mainContent));
+            // Add a dummy dashboard panel so the back button has somewhere to go
+            JPanel dashboard = new JPanel();
+            dashboard.setBackground(new Color(230, 240, 250));
+            dashboard.add(new JLabel("Student Dashboard"));
+
+            // Register both dashboard and settings page
+            mainContent.add(new StudentDashboard(cardLayout, mainContent), "dashboard");
+            mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
+
+            // Show settings page first
+            cardLayout.show(mainContent, "settings");
+
+            frame.setContentPane(mainContent);
             frame.setVisible(true);
         });
     }
+
 }
+

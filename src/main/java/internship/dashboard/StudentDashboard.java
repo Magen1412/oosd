@@ -219,9 +219,10 @@ public class StudentDashboard extends JPanel {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBorder(new EmptyBorder(20,20,20,20));
 
-        JLabel title = new JLabel("Recommended Internships");
+        JLabel title = new JLabel("Recommended Internships", SwingConstants.CENTER);
         title.setFont(new Font("Segoe UI", Font.BOLD, 16));
         title.setForeground(TEXT_DARK);
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         panel.add(title);
         panel.add(Box.createVerticalStrut(15));
@@ -242,7 +243,8 @@ public class StudentDashboard extends JPanel {
         JScrollPane scroll = new JScrollPane(panel);
         scroll.setBorder(null);
         scroll.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
-        scroll.getVerticalScrollBar().setUnitIncrement(16); 
+        scroll.getVerticalScrollBar().setUnitIncrement(16);
+        scroll.setPreferredSize(new Dimension(600,500));
 
         JPanel container = new JPanel(new BorderLayout());
         container.setOpaque(false);
@@ -261,6 +263,7 @@ public class StudentDashboard extends JPanel {
         l.setForeground(TEXT_DARK);
 
         JButton apply = new JButton("Apply");
+        apply.setPreferredSize(new Dimension(100, 30));
         apply.setBackground(new Color(61,138,181));
         apply.setForeground(Color.WHITE);
         apply.setFocusPainted(false);

@@ -1,9 +1,7 @@
 package internship.main;
 
 import internship.dashboard.StudentDashboard;
-import internship.login.LoginPage;
 import internship.profile.ProfilePage;
-import internship.registration.RegistrationPage;
 import internship.settings.SettingsPage;
 import internship.support.SupportPage;
 
@@ -24,11 +22,11 @@ public class MainPage extends JFrame {
         setSize(1000, 700);
         setLocationRelativeTo(null);
 
-        // CardLayout container for all pages
-        CardLayout cardLayout = new CardLayout();
-        JPanel mainContent = new JPanel(cardLayout);
+        // Core layout
+        cardLayout = new CardLayout();
+        mainContent = new JPanel(cardLayout);
 
-        // Register all pages (make sure these extend JPanel!)
+        // Register all pages
         mainContent.add(new StudentDashboard(cardLayout, mainContent), "dashboard");
         mainContent.add(new ProfilePage(), "profile");
         mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
@@ -42,9 +40,7 @@ public class MainPage extends JFrame {
         sidebar.add(navButton("Dashboard", "dashboard"));
         sidebar.add(navButton("Profile", "profile"));
         sidebar.add(navButton("Settings", "settings"));
-        sidebar.add(navButton("Search Internships", "search")); // placeholder
         sidebar.add(navButton("Support", "support"));
-        sidebar.add(navButton("Logout", "logout")); // placeholder
 
         // Top bar with greeting + icons
         JPanel topBar = buildTopBar();
@@ -123,10 +119,21 @@ public class MainPage extends JFrame {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Test Student Dashboard");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(1200, 780);
+            frame.setSize(860, 800);
             frame.setLocationRelativeTo(null);
 
-            frame.setContentPane(new RegistrationPage()); // embed panel
+            // Create CardLayout and mainContent
+            CardLayout cardLayout = new CardLayout();
+            JPanel mainContent = new JPanel(cardLayout);
+
+            // Add dashboard and settings page
+            mainContent.add(new StudentDashboard(cardLayout, mainContent), "dashboard");
+            mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
+
+            // Show dashboard first
+            cardLayout.show(mainContent, "dashboard");
+
+            frame.setContentPane(mainContent);
             frame.setVisible(true);
         });
     }
