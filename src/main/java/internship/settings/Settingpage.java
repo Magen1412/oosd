@@ -1,12 +1,13 @@
 package internship.settings;
 
+
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.*;
 
-public class SettingsPage extends JFrame {
+public class Settingpage extends JFrame {
 
     // ===== COLORS (matching Dashboard theme) =====
     private static final Color CONTENT_BG  = new Color(240, 240, 240);
@@ -39,7 +40,7 @@ public class SettingsPage extends JFrame {
     private JCheckBox chkAutoSave, chkCompact, chkTips;
 
     // ===== CONSTRUCTOR — pass the role of whoever opened this page =====
-    public SettingsPage(String callerRole) {
+    public Settingpage(String callerRole) {
         this.callerRole = callerRole;
 
         setTitle("Internship Management System");
@@ -483,6 +484,6 @@ public class SettingsPage extends JFrame {
         try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); }
         catch (Exception ignored) {}
         // Pass "Student", "Company", or "Admin" depending on who opens settings
-        SwingUtilities.invokeLater(() -> new SettingsPage("Admin"));
+        SwingUtilities.invokeLater(() -> new Settingpage("Admin"));
     }
 }

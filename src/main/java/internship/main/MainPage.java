@@ -1,6 +1,6 @@
 package internship.main;
 
-import internship.dashboard.DashboardMain;
+import internship.dashboard.StudentDashboard;
 import internship.profile.ProfilePage;
 //import internship.settings.SettingsPage;
 //import internship.search.SearchInternships;
@@ -28,7 +28,7 @@ public class MainPage extends JFrame {
         mainContent = new JPanel(cardLayout);
 
         // Register all pages
-        mainContent.add(new DashboardMain(), "dashboard");
+        mainContent.add(new StudentDashboard(), "dashboard");
         mainContent.add(new ProfilePage(), "profile");
         //mainContent.add(new SettingsPage(), "settings");
         //mainContent.add(new SearchInternships(), "search");
