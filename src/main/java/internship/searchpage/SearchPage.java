@@ -1,8 +1,7 @@
-package internship.search.page;
+package internship.searchpage;
 
 import javax.swing.*;
 import javax.swing.border.*;
-import javax.swing.event.*;
 import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;

@@ -1,4 +1,4 @@
-package internship.edit.offer.page;
+package internship.editofferpage;
 
 import javax.swing.*;
 import javax.swing.border.*;
