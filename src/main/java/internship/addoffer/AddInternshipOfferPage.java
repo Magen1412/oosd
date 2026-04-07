@@ -131,7 +131,7 @@ public class AddInternshipOfferPage extends JPanel {
             descriptionArea.setText("");
         });
 
-        backBtn.addActionListener(e -> cardLayout.show(mainContent, "dashboard"));
+        backBtn.addActionListener(e -> cardLayout.show(mainContent, "Dashboard"));
     }
 
     private void styleButton(JButton btn, Color bg) {
@@ -158,7 +158,7 @@ public class AddInternshipOfferPage extends JPanel {
             JPanel dashboardPanel = new JPanel();
             dashboardPanel.setBackground(new Color(220, 240, 250));
             dashboardPanel.add(new JLabel("Company Dashboard"));
-            mainContent.add(new Companydashboard(), "dashboard");
+            mainContent.add(new Companydashboard(mainContent, cardLayout), "dashboard");
 
             // Add AddInternshipOfferPage
             mainContent.add(new AddInternshipOfferPage(cardLayout, mainContent), "addOffer");

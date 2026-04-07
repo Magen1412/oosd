@@ -53,7 +53,7 @@ public class Companydashboard extends JPanel {
 
         sidebar.add(Box.createVerticalStrut(20));
         sidebar.add(createSidebarButton("📊  Dashboard", "Dashboard"));
-        sidebar.add(createSidebarButton("💼  Internship Offers", "Offers"));
+        sidebar.add(createSidebarButton("💼  Internship Offers", "AddOffer"));
         sidebar.add(createSidebarButton("📋  View Applications", "Applications"));
         sidebar.add(createSidebarButton("📅  Interview Scheduling", "Interviews"));
         sidebar.add(createSidebarButton("🏢  Company Profile", "Profile"));
@@ -217,7 +217,7 @@ public class Companydashboard extends JPanel {
             mainContent.add(new Companydashboard(mainContent, cl), "Dashboard");
 
             // Example placeholder pages
-            mainContent.add(createPage("💼 Internship Offers Page"), "Offers");
+            mainContent.add(new AddInternshipOfferPage(cl, mainContent), "AddOffer");
             mainContent.add(createPage("📋 Applications Page"), "Applications");
             mainContent.add(createPage("📅 Interview Scheduling Page"), "Interviews");
             mainContent.add(createPage("🏢 Company Profile Page"), "Profile");
