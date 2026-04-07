@@ -2,56 +2,25 @@ package internship.login;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.util.HashMap;
 
-public class LoginPage {
+public class LoginPage extends JPanel {
 
     private String userId;
     private String password;
 
     public static HashMap<String,String> users = new HashMap<>();
 
-    public void setUserId(String userId){
-        this.userId = userId;
-    }
+    private JPanel mainContent;
+    private CardLayout cardLayout;
 
-    public void setPassword(String password){
-        this.password = password;
-    }
+    public LoginPage(JPanel mainContent, CardLayout cardLayout) {
+        this.mainContent = mainContent;
+        this.cardLayout = cardLayout;
 
-    public String checkLogin(){
-
-        if(userId.equals("") && password.equals("")){
-            return "empty_all";
-        }
-        if(userId.equals("")){
-            return "empty_user";
-        }
-        if(password.equals("")){
-            return "empty_pass";
-        }
-
-        if(users.containsKey(userId) &&
-                users.get(userId).equals(password)){
-            return "success";
-        }
-        else{
-            return "invalid";
-        }
-    }
-
-    public static void main(String[] args) {
-
-        LoginPage.users.put("admin","1234");
-
-        JFrame frame = new JFrame("Login");
-        frame.setSize(900,500);
-        frame.setLayout(new BorderLayout());
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+        setBackground(Color.WHITE);
 
         // ===== MAIN PANEL =====
         JPanel mainPanel = new JPanel();
@@ -67,16 +36,14 @@ public class LoginPage {
         JLabel logoLabel = new JLabel(scaledIcon);
         logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        mainPanel.add(Box.createVerticalGlue()); // push content down to center
+        mainPanel.add(Box.createVerticalGlue());
         mainPanel.add(logoLabel);
-        mainPanel.add(Box.createVerticalStrut(30)); // spacing
+        mainPanel.add(Box.createVerticalStrut(30));
 
         // ===== LOGIN FORM =====
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
         formPanel.setBackground(Color.WHITE);
-
-        // Center the whole form panel
         formPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         formPanel.setMaximumSize(new Dimension(300, 400));
 
@@ -111,53 +78,108 @@ public class LoginPage {
         formPanel.add(btnLogin);
         formPanel.add(Box.createVerticalStrut(15));
 
-        JLabel signupLink = new JLabel("<HTML><U> <P>Don't have an account? Sign Up</P></U></HTML>");
+        JLabel signupLink = new JLabel("<HTML><U>Don't have an account? Sign Up</U></HTML>");
         signupLink.setForeground(Color.BLUE);
-        signupLink.setAlignmentX(Component.CENTER_ALIGNMENT); // center horizontally
+        signupLink.setAlignmentX(Component.CENTER_ALIGNMENT);
         formPanel.add(signupLink);
 
         mainPanel.add(formPanel);
-        mainPanel.add(Box.createVerticalGlue()); // push content up to center
+        mainPanel.add(Box.createVerticalGlue());
 
-        LoginPage login = new LoginPage();
+        add(mainPanel, BorderLayout.CENTER);
 
-        btnLogin.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        // ===== LOGIN LOGIC =====
+        LoginPage login = this;
 
-                login.setUserId(txtUser.getText().trim());
-                login.setPassword(new String(txtPass.getPassword()));
+        btnLogin.addActionListener(e -> {
+            login.setUserId(txtUser.getText().trim());
+            login.setPassword(new String(txtPass.getPassword()));
 
-                String result = login.checkLogin();
+            String result = login.checkLogin();
 
-                if(result.equals("empty_all")){
-                    JOptionPane.showMessageDialog(frame,"Enter User ID and Password");
-                }
-                else if(result.equals("empty_user")){
-                    JOptionPane.showMessageDialog(frame,"Enter User ID");
-                }
-                else if(result.equals("empty_pass")){
-                    JOptionPane.showMessageDialog(frame,"Enter Password");
-                }
-                else if(result.equals("invalid")){
-                    JOptionPane.showMessageDialog(frame,"Invalid Login Details");
-                }
-                else{
-                    JOptionPane.showMessageDialog(frame,"Login Successful");
-                }
+            switch (result) {
+                case "empty_all":
+                    JOptionPane.showMessageDialog(this,"Enter User ID and Password");
+                    break;
+                case "empty_user":
+                    JOptionPane.showMessageDialog(this,"Enter User ID");
+                    break;
+                case "empty_pass":
+                    JOptionPane.showMessageDialog(this,"Enter Password");
+                    break;
+                case "invalid":
+                    JOptionPane.showMessageDialog(this,"Invalid Login Details");
+                    break;
+                case "success":
+                    JOptionPane.showMessageDialog(this,"Login Successful");
+                    cardLayout.show(mainContent, "Dashboard"); // redirect to dashboard
+                    break;
             }
         });
 
         signupLink.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                JOptionPane.showMessageDialog(frame,"Sign Up Window Here");
+                JOptionPane.showMessageDialog(LoginPage.this,"Sign Up Window Here");
             }
         });
+    }
 
-        frame.add(mainPanel, BorderLayout.CENTER);
+    public void setUserId(String userId){
+        this.userId = userId;
+    }
 
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+    public void setPassword(String password){
+        this.password = password;
+    }
+
+    public String checkLogin(){
+        if(userId == null || password == null) return "empty_all";
+
+        if(userId.equals("") && password.equals("")){
+            return "empty_all";
+        }
+        if(userId.equals("")){
+            return "empty_user";
+        }
+        if(password.equals("")){
+            return "empty_pass";
+        }
+
+        if(users.containsKey(userId) &&
+                users.get(userId).equals(password)){
+            return "success";
+        }
+        else{
+            return "invalid";
+        }
+    }
+
+    // ===== MAIN for testing =====
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            users.put("admin","1234");
+
+            JFrame frame = new JFrame("Internship Management System");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(900,500);
+
+            CardLayout cl = new CardLayout();
+            JPanel mainContent = new JPanel(cl);
+
+            // Add login page
+            mainContent.add(new LoginPage(mainContent, cl), "Login");
+
+            // Add dashboard placeholder
+            JPanel dashboard = new JPanel(new BorderLayout());
+            dashboard.add(new JLabel("🏢 Dashboard Page", SwingConstants.CENTER), BorderLayout.CENTER);
+            mainContent.add(dashboard, "Dashboard");
+
+            frame.add(mainContent);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+
+            cl.show(mainContent, "Login");
+        });
     }
 }
