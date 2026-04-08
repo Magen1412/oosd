@@ -1,17 +1,25 @@
 package internship.login;
 
+import internship.dashboard.dao.StudentDAO;
 import javax.swing.*;
 import java.awt.*;
+<<<<<<< HEAD
 import java.awt.event.*;
 import java.util.HashMap;
+=======
+import internship.registration.RegistrationPage;
+>>>>>>> 041dd0b (Link Registration Page with Login Page and added DB connection for Registration Page)
 
 public class LoginPage extends JPanel {
 
-    private String userId;
-    private String password;
+    private CardLayout cardLayout;
+    private JPanel mainContent;
 
-    public static HashMap<String,String> users = new HashMap<>();
+    public LoginPage(CardLayout cardLayout, JPanel mainContent) {
+        this.cardLayout = cardLayout;
+        this.mainContent = mainContent;
 
+<<<<<<< HEAD
     private JPanel mainContent;
     private CardLayout cardLayout;
 
@@ -19,6 +27,8 @@ public class LoginPage extends JPanel {
         this.mainContent = mainContent;
         this.cardLayout = cardLayout;
 
+=======
+>>>>>>> 041dd0b (Link Registration Page with Login Page and added DB connection for Registration Page)
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
@@ -48,17 +58,17 @@ public class LoginPage extends JPanel {
         formPanel.setMaximumSize(new Dimension(300, 400));
 
         JLabel title = new JLabel("LOGIN");
-        title.setFont(new Font("Arial",Font.PLAIN,30));
+        title.setFont(new Font("Arial", Font.PLAIN, 30));
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         formPanel.add(title);
         formPanel.add(Box.createVerticalStrut(20));
 
-        JLabel lblUser = new JLabel("User ID:");
+        JLabel lblUser = new JLabel("Email:");
         lblUser.setAlignmentX(Component.CENTER_ALIGNMENT);
         formPanel.add(lblUser);
 
         JTextField txtUser = new JTextField(15);
-        txtUser.setMaximumSize(new Dimension(200,30));
+        txtUser.setMaximumSize(new Dimension(200, 30));
         txtUser.setAlignmentX(Component.CENTER_ALIGNMENT);
         formPanel.add(txtUser);
         formPanel.add(Box.createVerticalStrut(10));
@@ -68,7 +78,7 @@ public class LoginPage extends JPanel {
         formPanel.add(lblPass);
 
         JPasswordField txtPass = new JPasswordField(15);
-        txtPass.setMaximumSize(new Dimension(200,30));
+        txtPass.setMaximumSize(new Dimension(200, 30));
         txtPass.setAlignmentX(Component.CENTER_ALIGNMENT);
         formPanel.add(txtPass);
         formPanel.add(Box.createVerticalStrut(20));
@@ -78,16 +88,38 @@ public class LoginPage extends JPanel {
         formPanel.add(btnLogin);
         formPanel.add(Box.createVerticalStrut(15));
 
+<<<<<<< HEAD
         JLabel signupLink = new JLabel("<HTML><U>Don't have an account? Sign Up</U></HTML>");
         signupLink.setForeground(Color.BLUE);
         signupLink.setAlignmentX(Component.CENTER_ALIGNMENT);
         formPanel.add(signupLink);
+=======
+        JLabel signupLink = new JLabel("Don't have an account? Sign Up");
+        signupLink.setForeground(Color.BLUE);
+        signupLink.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        signupLink.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        JPanel linkPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        linkPanel.setBackground(Color.WHITE);
+        linkPanel.add(signupLink);
+
+        signupLink.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                cardLayout.show(mainContent, "register"); // navigate to registration page
+            }
+        });
+
+        formPanel.add(Box.createVerticalStrut(15));
+        formPanel.add(linkPanel);
+>>>>>>> 041dd0b (Link Registration Page with Login Page and added DB connection for Registration Page)
 
         mainPanel.add(formPanel);
         mainPanel.add(Box.createVerticalGlue());
 
         add(mainPanel, BorderLayout.CENTER);
 
+<<<<<<< HEAD
         // ===== LOGIN LOGIC =====
         LoginPage login = this;
 
@@ -180,6 +212,60 @@ public class LoginPage extends JPanel {
             frame.setVisible(true);
 
             cl.show(mainContent, "Login");
+        });
+=======
+        // ===== LOGIN ACTION =====
+        btnLogin.addActionListener(e -> {
+            String email = txtUser.getText().trim();
+            String pass = new String(txtPass.getPassword());
+
+            if (email.isEmpty() || pass.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please enter both email and password.");
+                return;
+            }
+
+            StudentDAO dao = new StudentDAO();
+            try {
+                boolean valid = dao.validateLogin(email, pass);
+                if (valid) {
+                    JOptionPane.showMessageDialog(this, "Login successful!");
+                    cardLayout.show(mainContent, "dashboard"); // navigate to dashboard
+                } else {
+                    JOptionPane.showMessageDialog(this, "Invalid login details.");
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            }
+        });
+
+        signupLink.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                cardLayout.show(mainContent, "register"); // navigate to registration page
+            }
+        });
+>>>>>>> 041dd0b (Link Registration Page with Login Page and added DB connection for Registration Page)
+    }
+
+    // ===== MAIN =====
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Login");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(900, 500);
+
+            CardLayout cardLayout = new CardLayout();
+            JPanel mainContent = new JPanel(cardLayout);
+
+            // Add pages
+            mainContent.add(new LoginPage(cardLayout, mainContent), "login");
+            mainContent.add(new RegistrationPage(mainContent, cardLayout), "register");
+            // mainContent.add(new Companydashboard(mainContent, cardLayout), "dashboard");
+
+            frame.setContentPane(mainContent);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+
+            cardLayout.show(mainContent, "login");
         });
     }
 }

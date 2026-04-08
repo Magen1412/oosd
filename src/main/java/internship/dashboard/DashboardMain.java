@@ -6,6 +6,7 @@ import internship.dashboard.model.Student;
 import javax.swing.*;
 import javax.swing.border.Border;
 import java.awt.*;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class DashboardMain extends JFrame {
@@ -207,7 +208,7 @@ public class DashboardMain extends JFrame {
 
         try {
             // CREATE
-            Student student = new Student("Krishnen Chinien", "M", "kchinien@gmail.com", "krishnen2411");
+            Student student = new Student("Krishnen Chinien", "krishnen.chinien@gmail.com", "krishnen2411", "52567890", "M", "C:/Users/Krishnen/Documents/CV.pdf\"", LocalDateTime.now());
             studentDAO.addStudent(student);
             System.out.println("✅ Student added successfully!");
 

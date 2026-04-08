@@ -1,17 +1,27 @@
 package internship.dashboard.model;
 
-public class Student {
-    private int studentId;
-    private String name;
-    private String gender; // 'M', 'F', 'O'
-    private String email;
-    private String password;
+import java.time.LocalDateTime;
 
-    public Student(String name, String gender, String email, String password) {
+public class Student {
+    private int studentId;       // Primary key (auto-increment)
+    private String name;         // Full name
+    private String email;        // Email address
+    private String password;     // Password
+    private String phone;        // Phone number
+    private String gender;       // 'M', 'F', 'O'
+    private String cvPath;       // Path to uploaded CV file
+    private LocalDateTime createdAt; // Timestamp when record was created
+
+    // Constructor without ID (for new registrations)
+    public Student(String name, String email, String password,
+                   String phone, String gender, String cvPath, LocalDateTime createdAt) {
         this.name = name;
-        this.gender = gender;
         this.email = email;
         this.password = password;
+        this.phone = phone;
+        this.gender = gender;
+        this.cvPath = cvPath;
+        this.createdAt = createdAt;
     }
 
     // Getters and setters
@@ -21,13 +31,21 @@ public class Student {
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
 
-    public String getGender() { return gender; }
-    public void setGender(String gender) { this.gender = gender; }
-
     public String getEmail() { return email; }
     public void setEmail(String email) { this.email = email; }
 
     public String getPassword() { return password; }
     public void setPassword(String password) { this.password = password; }
-}
 
+    public String getPhone() { return phone; }
+    public void setPhone(String phone) { this.phone = phone; }
+
+    public String getGender() { return gender; }
+    public void setGender(String gender) { this.gender = gender; }
+
+    public String getCvPath() { return cvPath; }
+    public void setCvPath(String cvPath) { this.cvPath = cvPath; }
+
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+}
