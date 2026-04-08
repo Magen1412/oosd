@@ -282,7 +282,7 @@ public class SettingsPage extends JPanel {
 
         JButton btnBack  = btn("< Back to Dashboard", BTN_BACK);
         btnBack.setPreferredSize(new Dimension(170, 34));
-        btnBack.addActionListener(e -> cardLayout.show(mainContent, "dashboard"));
+        btnBack.addActionListener(e -> cardLayout.show(mainContent, "studentDashboard"));
 
         JButton btnReset = btn("Reset Defaults", BTN_ORANGE);
         btnReset.setPreferredSize(new Dimension(140, 34));
@@ -445,7 +445,7 @@ public class SettingsPage extends JPanel {
             dashboard.add(new JLabel("Student Dashboard"));
 
             // Register both dashboard and settings page
-            mainContent.add(new StudentDashboard(cardLayout, mainContent), "dashboard");
+            mainContent.add(new StudentDashboard(cardLayout, mainContent), "studentDashboard");
             mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
 
             // Show settings page first

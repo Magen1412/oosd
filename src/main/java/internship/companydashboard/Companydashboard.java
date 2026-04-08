@@ -9,6 +9,8 @@ import internship.ApplicationSubmissionPage.ApplicationStatusPage;
 import internship.addoffer.AddInternshipOfferPage;
 import internship.ApplicationView.ApplicationViewPage;
 import internship.choiceapplicationpage.ChoiceApplicationPage;
+import internship.dashboard.dao.CompanyDAO;
+import internship.dashboard.model.Company;
 
 public class Companydashboard extends JPanel {
 
@@ -37,15 +39,10 @@ public class Companydashboard extends JPanel {
         header.setPreferredSize(new Dimension(getWidth(), 65));
         header.setBorder(BorderFactory.createEmptyBorder(10, 25, 10, 25));
 
-        JLabel companyLabel = new JLabel("🏢  Company Dashboard");
+        JLabel companyLabel = new JLabel("Company Dashboard");
         companyLabel.setFont(new Font("SansSerif", Font.BOLD, 22));
         companyLabel.setForeground(Color.WHITE);
         header.add(companyLabel, BorderLayout.WEST);
-
-        JLabel subLabel = new JLabel("Internship Management Portal");
-        subLabel.setFont(new Font("SansSerif", Font.ITALIC, 13));
-        subLabel.setForeground(new Color(180, 210, 255));
-        header.add(subLabel, BorderLayout.EAST);
 
         add(header, BorderLayout.NORTH);
 
@@ -56,11 +53,11 @@ public class Companydashboard extends JPanel {
         sidebar.setBackground(new Color(40, 40, 60));
 
         sidebar.add(Box.createVerticalStrut(20));
-        sidebar.add(createSidebarButton("📊  Dashboard", "Dashboard"));
-        sidebar.add(createSidebarButton("💼  Internship Offers", "AddOffer"));
-        sidebar.add(createSidebarButton("📋  View Applications", "ApplicationViewPage"));
-        sidebar.add(createSidebarButton("📅  Approve/Reject Application", "ChoiceApplicationPage"));
-        sidebar.add(createSidebarButton("🏢  Company Profile", "Profile"));
+        sidebar.add(createSidebarButton("Dashboard", "companyDashboard"));
+        sidebar.add(createSidebarButton("Internship Offers", "AddOffer"));
+        sidebar.add(createSidebarButton("View Applications", "ApplicationViewPage"));
+        sidebar.add(createSidebarButton("Approve/Reject Application", "ChoiceApplicationPage"));
+        sidebar.add(createSidebarButton("Company Profile", "Profile"));
 
         sidebar.add(Box.createVerticalGlue());
 
@@ -71,7 +68,7 @@ public class Companydashboard extends JPanel {
         sidebar.add(Box.createVerticalStrut(10));
 
         // Logout button with confirmation
-        JButton btnLogout = createSidebarButton("🚪  Log Out", null);
+        JButton btnLogout = createSidebarButton("Log Out", null);
         btnLogout.addActionListener(e -> {
             int choice = JOptionPane.showConfirmDialog(
                     this,
@@ -99,10 +96,10 @@ public class Companydashboard extends JPanel {
         JPanel statsPanel = new JPanel(new GridLayout(1, 4, 15, 0));
         statsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
         statsPanel.setBackground(new Color(245, 247, 252));
-        statsPanel.add(createStatCard("📢 Active Offers", "4", new Color(30, 60, 114)));
-        statsPanel.add(createStatCard("📋 Applications", "18", new Color(20, 130, 90)));
-        statsPanel.add(createStatCard("📅 Interviews", "6", new Color(180, 100, 20)));
-        statsPanel.add(createStatCard("✅ Hired", "3", new Color(140, 30, 100)));
+        statsPanel.add(createStatCard("Active Offers", "4", new Color(30, 60, 114)));
+        statsPanel.add(createStatCard("Applications", "18", new Color(20, 130, 90)));
+        statsPanel.add(createStatCard("Interviews", "6", new Color(180, 100, 20)));
+        statsPanel.add(createStatCard("Hired", "3", new Color(140, 30, 100)));
         contentPanel.add(statsPanel, BorderLayout.NORTH);
 
         // Internship Offers Table
@@ -171,10 +168,6 @@ public class Companydashboard extends JPanel {
 
         JPanel topBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         topBar.setBackground(Color.WHITE);
-        JLabel dot = new JLabel("●");
-        dot.setForeground(accent);
-        dot.setFont(new Font("SansSerif", Font.BOLD, 18));
-        topBar.add(dot);
 
         JLabel lblTitle = new JLabel("  " + title);
         lblTitle.setFont(new Font("SansSerif", Font.PLAIN, 13));
@@ -218,7 +211,7 @@ public class Companydashboard extends JPanel {
             JPanel mainContent = new JPanel(cl);
 
             // Add pages to CardLayout
-            mainContent.add(new Companydashboard(mainContent, cl), "Dashboard");
+            mainContent.add(new Companydashboard(mainContent, cl), "companyDashboard");
 
             // Example placeholder pages
             mainContent.add(new AddInternshipOfferPage(cl, mainContent), "AddOffer");
@@ -227,14 +220,12 @@ public class Companydashboard extends JPanel {
             //mainContent.add(new ChoiceApplicationPage(mainContent, cl), "Approve/Reject Page");
            // mainContent.add(new CompanyProfilePage(mainContent, cl), "Approve/Reject Page");
 
-
-
             frame.add(mainContent);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
 
             // Show dashboard by default
-            cl.show(mainContent, "Dashboard");
+            cl.show(mainContent, "companyDashboard");
         });
     }
 

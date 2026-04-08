@@ -37,11 +37,6 @@ public class Admindashboard extends JPanel {
         adminLabel.setForeground(Color.WHITE);
         header.add(adminLabel, BorderLayout.WEST);
 
-        JLabel subLabel = new JLabel("Internship Management Portal");
-        subLabel.setFont(new Font("SansSerif", Font.ITALIC, 13));
-        subLabel.setForeground(new Color(180, 210, 255));
-        header.add(subLabel, BorderLayout.EAST);
-
         add(header, BorderLayout.NORTH);
 
         // ===== SIDEBAR =====
@@ -51,19 +46,18 @@ public class Admindashboard extends JPanel {
         sidebar.setBackground(new Color(40, 40, 60));
 
         sidebar.add(Box.createVerticalStrut(20));
-        sidebar.add(createSidebarButton("📊 Dashboard", "Dashboard"));
-        sidebar.add(createSidebarButton("🏢 Manage Companies", "Companies"));
-        sidebar.add(createSidebarButton("👥 Manage Users", "Users"));
-        sidebar.add(createSidebarButton("🎓 Manage Students", "Students"));
-        sidebar.add(createSidebarButton("📋 Approve/Reject Applications", "Applications"));
-        sidebar.add(createSidebarButton("⚙ System Settings", "Settings"));
+        sidebar.add(createSidebarButton("Dashboard", "adminDashboard"));
+        sidebar.add(createSidebarButton("Manage Companies", "Companies"));
+        sidebar.add(createSidebarButton("Manage Users", "Users"));
+        sidebar.add(createSidebarButton("Manage Students", "Students"));
+        sidebar.add(createSidebarButton("System Settings", "Settings"));
 
         sidebar.add(Box.createVerticalGlue());
         sidebar.add(new JSeparator());
         sidebar.add(Box.createVerticalStrut(10));
 
         // Logout button with confirmation
-        JButton btnLogout = createSidebarButton("🚪 Log Out", null);
+        JButton btnLogout = createSidebarButton("Log Out", null);
         btnLogout.addActionListener(e -> {
             int choice = JOptionPane.showConfirmDialog(
                     this,
@@ -183,7 +177,7 @@ public class Admindashboard extends JPanel {
             setLocationRelativeTo(null);
 
             JPanel panel = new JPanel(new BorderLayout());
-            JLabel lbl = new JLabel("🔑 Please log in", SwingConstants.CENTER);
+            JLabel lbl = new JLabel("Please log in", SwingConstants.CENTER);
             lbl.setFont(new Font("SansSerif", Font.BOLD, 20));
             panel.add(lbl, BorderLayout.CENTER);
 
@@ -202,18 +196,18 @@ public class Admindashboard extends JPanel {
             JPanel mainContent = new JPanel(cl);
 
             // Add pages
-            mainContent.add(new Admindashboard(mainContent, cl), "Dashboard");
-            mainContent.add(createPage("🏢 Manage Companies Page"), "Companies");
-            mainContent.add(createPage("👥 Manage Users Page"), "Users");
-            mainContent.add(createPage("🎓 Manage Students Page"), "Students");
-            mainContent.add(createPage("📋 Applications Approval Page"), "Applications");
-            mainContent.add(createPage("⚙ System Settings Page"), "Settings");
+            mainContent.add(new Admindashboard(mainContent, cl), "adminDashboard");
+            mainContent.add(createPage("Manage Companies Page"), "Companies");
+            mainContent.add(createPage("Manage Users Page"), "Users");
+            mainContent.add(createPage("Manage Students Page"), "Students");
+            mainContent.add(createPage("Applications Approval Page"), "Applications");
+            mainContent.add(createPage("System Settings Page"), "Settings");
 
             frame.add(mainContent);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
 
-            cl.show(mainContent, "Dashboard");
+            cl.show(mainContent, "adminDashboard");
         });
     }
     // Helper to create placeholder pages
