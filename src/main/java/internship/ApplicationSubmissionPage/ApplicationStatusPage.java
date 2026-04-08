@@ -1,6 +1,5 @@
 package internship.ApplicationSubmissionPage;
 
-import
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;

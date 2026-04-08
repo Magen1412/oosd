@@ -188,7 +188,7 @@ public class LoginPage extends JPanel {
                         cardLayout.show(mainContent, "studentDashboard");
                     } else if (role.equals("company")) {
                         cardLayout.show(mainContent, "companyDashboard");
-                    } else {
+                    } else if (role.equals("admin")) {
                         cardLayout.show(mainContent, "adminDashboard");
                     }
                 } else {

@@ -1,8 +1,16 @@
 package internship.registration;
 
 import internship.dashboard.dao.StudentDAO;
+import internship.dashboard.dao.CompanyDAO;
+import internship.dashboard.dao.AdminDAO;
 import internship.dashboard.model.Student;
+import internship.dashboard.model.Company;
+import internship.dashboard.model.Admin;
 import internship.login.LoginPage;
+import internship.support.SupportPage;
+import internship.dashboard.StudentDashboard;
+import internship.companydashboard.Companydashboard;
+import internship.admindashboard.Admindashboard;
 
 import javax.swing.*;
 import java.awt.*;
@@ -68,12 +76,27 @@ public class RegistrationPage extends JPanel {
         genderPanel.add(maleBtn);
         genderPanel.add(femaleBtn);
 
+        // Role radio buttons
+        JRadioButton studentBtn = new JRadioButton("Student");
+        JRadioButton companyBtn = new JRadioButton("Company");
+        JRadioButton adminBtn   = new JRadioButton("Admin");
+        ButtonGroup roleGroup = new ButtonGroup();
+        roleGroup.add(studentBtn);
+        roleGroup.add(companyBtn);
+        roleGroup.add(adminBtn);
+        studentBtn.setSelected(true); // default
+        JPanel rolePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        rolePanel.add(studentBtn);
+        rolePanel.add(companyBtn);
+        rolePanel.add(adminBtn);
+
         addFormField(formCard, "Full Name:", nameField, gbc, 2);
         addFormField(formCard, "Email Address:", emailField, gbc, 4);
         addFormField(formCard, "Phone:", phoneField, gbc, 6);
         addFormField(formCard, "Password:", passField, gbc, 8);
         addFormField(formCard, "Confirm Password:", confirmPassField, gbc, 10);
         addFormField(formCard, "Gender:", genderPanel, gbc, 12);
+        addFormField(formCard, "Register As:", rolePanel, gbc, 14);
 
         // ===== REGISTER BUTTON =====
         JButton regButton = new JButton("CREATE ACCOUNT");
@@ -83,7 +106,7 @@ public class RegistrationPage extends JPanel {
         regButton.setPreferredSize(new Dimension(350, 40));
         regButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        gbc.gridy = 14;
+        gbc.gridy = 16;
         gbc.insets = new Insets(15, 0, 10, 0);
         formCard.add(regButton, gbc);
 
@@ -112,7 +135,7 @@ public class RegistrationPage extends JPanel {
         gbcLogin.gridy = 1;
         loginPanel.add(loginButton, gbcLogin);
 
-        gbc.gridy = 15;
+        gbc.gridy = 17;
         formCard.add(loginPanel, gbc);
 
         add(formCard, BorderLayout.CENTER);
@@ -125,6 +148,7 @@ public class RegistrationPage extends JPanel {
             String pass = new String(passField.getPassword());
             String confirm = new String(confirmPassField.getPassword());
             String gender = maleBtn.isSelected() ? "M" : (femaleBtn.isSelected() ? "F" : null);
+            String role = studentBtn.isSelected() ? "student" : companyBtn.isSelected() ? "company" : "admin";
 
             // Validations
             if (name.isEmpty() || email.isEmpty() || phone.isEmpty() || pass.isEmpty() || gender == null) {
@@ -141,20 +165,39 @@ public class RegistrationPage extends JPanel {
             }
 
             try {
-                StudentDAO dao = new StudentDAO();
-                if (dao.existsByEmail(email)) {
+                boolean exists = false;
+                if (role.equals("student")) {
+                    StudentDAO dao = new StudentDAO();
+                    exists = dao.existsByEmail(email);
+                    if (!exists) {
+                        Student student = new Student(name, email, pass, phone, gender, null, LocalDateTime.now());
+                        dao.addStudent(student);
+                    }
+                } else if (role.equals("company")) {
+                    CompanyDAO dao = new CompanyDAO();
+                    exists = dao.existsByEmail(email);
+                    if (!exists) {
+                        Company company = new Company(name, email, pass, phone, LocalDateTime.now(), role);
+                        dao.addCompany(company);
+                    }
+                } else if (role.equals("admin")) {
+                    AdminDAO dao = new AdminDAO();
+                    exists = dao.existsByEmail(email);
+                    if (!exists) {
+                        Admin admin = new Admin(name, email, pass, role);
+                        dao.addAdmin(admin);
+                    }
+                }
+
+                if (exists) {
                     JOptionPane.showMessageDialog(this, "User already exists with this email", "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
-                // CV path left null at registration
-                Student student = new Student(name, email, pass, phone, gender, null, LocalDateTime.now());
-                dao.addStudent(student);
-
-                JOptionPane.showMessageDialog(this, "Registration successful for " + name);
-                cardLayout.show(mainContent, "loginPage");
+                JOptionPane.showMessageDialog(this, "Registration successful for " + name + " as " + role);
+                cardLayout.show(mainContent, "login");
             } catch (Exception ex) {
-                JOptionPane.showMessageDialog(this, "Error saving student: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Error saving user: " + ex.getMessage(), "Database Error", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -205,17 +248,19 @@ public class RegistrationPage extends JPanel {
             CardLayout cardLayout = (CardLayout) mainContent.getLayout();
 
             RegistrationPage registrationPage = new RegistrationPage(mainContent, cardLayout);
-
             LoginPage loginPage = new LoginPage(cardLayout, mainContent);
 
-            mainContent.add(registrationPage, "register");
-            mainContent.add(loginPage, "login");
+            mainContent.add(new RegistrationPage(mainContent, cardLayout), "register");
+            mainContent.add(new LoginPage(cardLayout, mainContent), "login");
+            mainContent.add(new StudentDashboard(cardLayout, mainContent), "studentDashboard");
+            mainContent.add(new Companydashboard(mainContent, cardLayout), "companyDashboard");
+            mainContent.add(new Admindashboard(mainContent, cardLayout), "adminDashboard");
 
             cardLayout.show(mainContent, "register");
 
             JFrame frame = new JFrame("Internship Management System");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            frame.setSize(500, 700); // smaller frame size so content fits neatly
+            frame.setSize(500, 700);
             frame.setLocationRelativeTo(null);
             frame.setContentPane(mainContent);
             frame.setVisible(true);
