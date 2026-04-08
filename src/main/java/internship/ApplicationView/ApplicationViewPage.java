@@ -31,7 +31,7 @@ public class ApplicationViewPage extends JPanel {
         backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         // Navigation Logic for Back Button
-        backButton.addActionListener(e -> cardLayout.show(mainContent, "Dashboard"));
+        backButton.addActionListener(e -> cardLayout.show(mainContent, "companyDashboard"));
 
         JButton statusButton = new JButton("Update Status");
         statusButton.setBackground(new Color(15, 23, 42));

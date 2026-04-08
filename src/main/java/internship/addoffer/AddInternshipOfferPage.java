@@ -129,7 +129,7 @@ public class AddInternshipOfferPage extends JPanel {
             descriptionArea.setText("");
         });
 
-        backBtn.addActionListener(e -> cardLayout.show(mainContent, "Dashboard"));
+        backBtn.addActionListener(e -> cardLayout.show(mainContent, "companyDashboard"));
     }
 
     // ---------------- Helpers ----------------
@@ -191,7 +191,7 @@ public class AddInternshipOfferPage extends JPanel {
             CardLayout cardLayout = new CardLayout();
             JPanel mainContent = new JPanel(cardLayout);
 
-            mainContent.add(new Companydashboard(mainContent, cardLayout), "Dashboard");
+            mainContent.add(new Companydashboard(mainContent, cardLayout), "companyDashboard");
             mainContent.add(new AddInternshipOfferPage(cardLayout, mainContent), "AddOffer");
 
             cardLayout.show(mainContent, "AddOffer");

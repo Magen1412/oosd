@@ -1,14 +1,43 @@
 package internship.login;
 
-import internship.dashboard.dao.StudentDAO;
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import internship.ApplicationView.ApplicationViewPage;
 import internship.registration.RegistrationPage;
+import internship.settings.SettingsPage;
+import internship.ApplicationSubmissionPage.ApplicationStatusPage;
+import internship.ApplicationSubmissionPage.ApplicationSubmissionPage;
+import internship.choiceapplicationpage.ChoiceApplicationPage;
+import internship.addoffer.AddInternshipOfferPage;
+
+import internship.dashboard.StudentDashboard;
+import internship.dashboard.dao.StudentDAO;
+import internship.dashboard.model.Student;
+
+import internship.companydashboard.Companydashboard;
+import internship.dashboard.dao.CompanyDAO;
+import internship.dashboard.model.Company;
+
+import internship.admindashboard.Admindashboard;
+import internship.dashboard.dao.AdminDAO;
+import internship.dashboard.model.Admin;
+
+import internship.dashboard.DBConnection;
 
 public class LoginPage extends JPanel {
 
     private CardLayout cardLayout;
     private JPanel mainContent;
+
+    // Database credentials (adjust to your setup)
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/internship_db?useSSL=false&serverTimezone=UTC";
+    private static final String DB_USER = "root";
+    private static final String DB_PASS = "blackpowa4****";
 
     public LoginPage(CardLayout cardLayout, JPanel mainContent) {
         this.cardLayout = cardLayout;
@@ -40,7 +69,7 @@ public class LoginPage extends JPanel {
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
         formPanel.setBackground(Color.WHITE);
         formPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        formPanel.setMaximumSize(new Dimension(300, 400));
+        formPanel.setMaximumSize(new Dimension(300, 450));
 
         JLabel title = new JLabel("LOGIN");
         title.setFont(new Font("Arial", Font.PLAIN, 30));
@@ -68,6 +97,31 @@ public class LoginPage extends JPanel {
         formPanel.add(txtPass);
         formPanel.add(Box.createVerticalStrut(20));
 
+        // ===== ROLE SELECTION =====
+        JLabel lblRole = new JLabel("Login as:");
+        lblRole.setAlignmentX(Component.CENTER_ALIGNMENT);
+        formPanel.add(lblRole);
+
+        JRadioButton studentBtn = new JRadioButton("Student");
+        JRadioButton companyBtn = new JRadioButton("Company");
+        JRadioButton adminBtn   = new JRadioButton("Admin");
+
+        ButtonGroup roleGroup = new ButtonGroup();
+        roleGroup.add(studentBtn);
+        roleGroup.add(companyBtn);
+        roleGroup.add(adminBtn);
+
+        studentBtn.setSelected(true); // default
+
+        JPanel rolePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
+        rolePanel.setBackground(Color.WHITE);
+        rolePanel.add(studentBtn);
+        rolePanel.add(companyBtn);
+        rolePanel.add(adminBtn);
+
+        formPanel.add(rolePanel);
+        formPanel.add(Box.createVerticalStrut(20));
+
         JButton btnLogin = new JButton("LOGIN");
         btnLogin.setAlignmentX(Component.CENTER_ALIGNMENT);
         formPanel.add(btnLogin);
@@ -76,22 +130,12 @@ public class LoginPage extends JPanel {
         JLabel signupLink = new JLabel("Don't have an account? Sign Up");
         signupLink.setForeground(Color.BLUE);
         signupLink.setAlignmentX(Component.CENTER_ALIGNMENT);
-        formPanel.add(signupLink);
-
-        signupLink.setForeground(Color.BLUE);
         signupLink.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         signupLink.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         JPanel linkPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         linkPanel.setBackground(Color.WHITE);
         linkPanel.add(signupLink);
-
-        signupLink.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                cardLayout.show(mainContent, "register"); // navigate to registration page
-            }
-        });
 
         formPanel.add(Box.createVerticalStrut(15));
         formPanel.add(linkPanel);
@@ -100,6 +144,56 @@ public class LoginPage extends JPanel {
         mainPanel.add(Box.createVerticalGlue());
 
         add(mainPanel, BorderLayout.CENTER);
+
+        // ===== ACTIONS =====
+        btnLogin.addActionListener(e -> {
+            String email = txtUser.getText().trim();
+            String pass = new String(txtPass.getPassword());
+            String role = studentBtn.isSelected() ? "student" :
+                    companyBtn.isSelected() ? "company" : "admin";
+
+            if (email.isEmpty() || pass.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please enter both email and password.");
+                return;
+            }
+
+            try (Connection conn = DBConnection.getConnection()) {
+                boolean valid = false;
+
+                if (role.equals("student")) {
+                    StudentDAO studentDAO = new StudentDAO();
+                    valid = studentDAO.validateLogin(email, pass);
+                } else if (role.equals("company")) {
+                    CompanyDAO companyDAO = new CompanyDAO();
+                    valid = companyDAO.validateLogin(email, pass);
+                } else if (role.equals("admin")) {
+                    AdminDAO adminDAO = new AdminDAO();
+                    valid = adminDAO.validateLogin(email, pass);
+                }
+
+                if (valid) {
+                    JOptionPane.showMessageDialog(this, "Login successful!");
+                    if (role.equals("student")) {
+                        cardLayout.show(mainContent, "studentDashboard");
+                    } else if (role.equals("company")) {
+                        cardLayout.show(mainContent, "companyDashboard");
+                    } else {
+                        cardLayout.show(mainContent, "adminDashboard");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(this, "Invalid credentials for " + role);
+                }
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage());
+            }
+        });
+
+        signupLink.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                cardLayout.show(mainContent, "register"); // navigate to registration page
+            }
+        });
     }
 
     // ===== MAIN =====
@@ -115,7 +209,14 @@ public class LoginPage extends JPanel {
             // Add pages
             mainContent.add(new LoginPage(cardLayout, mainContent), "login");
             mainContent.add(new RegistrationPage(mainContent, cardLayout), "register");
-            // mainContent.add(new Companydashboard(mainContent, cardLayout), "dashboard");
+            mainContent.add(new StudentDashboard(cardLayout, mainContent), "studentDashboard");
+            mainContent.add(new Companydashboard(mainContent, cardLayout), "companyDashboard");
+            mainContent.add(new Admindashboard(mainContent, cardLayout), "adminDashboard");
+            mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
+            mainContent.add(new ApplicationStatusPage(mainContent, cardLayout), "ApplicationStatusPage");
+            mainContent.add(new ApplicationViewPage(mainContent, cardLayout), "ApplicationViewPage");
+            mainContent.add(new ApplicationSubmissionPage(mainContent, cardLayout), "ApplicationSubmissionPage");
+            mainContent.add(new AddInternshipOfferPage(cardLayout, mainContent), "AddOffer");
 
             frame.setContentPane(mainContent);
             frame.setLocationRelativeTo(null);
