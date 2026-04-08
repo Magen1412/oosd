@@ -1,39 +1,36 @@
 package internship.support;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import internship.dashboard.StudentDashboard;
 
-public class SupportPage extends JFrame {
+public class SupportPage extends JPanel {
 
-    public SupportPage() {
-        setTitle("Student Support Page");
-        setExtendedState(JFrame.MAXIMIZED_BOTH); // Full screen
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    private CardLayout cardLayout;
+    private JPanel mainContent;
 
-        // ---------------- Summary Cards ----------------
+    public SupportPage(CardLayout cardLayout, JPanel mainContent) {
+        this.cardLayout = cardLayout;
+        this.mainContent = mainContent;
+
+        // Summary cards
         JPanel summaryPanel = new JPanel(new GridLayout(1, 3, 20, 0));
         summaryPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
         summaryPanel.add(createCard("FAQs Available", "5", new Color(52, 152, 219)));
         summaryPanel.add(createCard("Requests Submitted", "12", new Color(46, 204, 113)));
         summaryPanel.add(createCard("Pending Responses", "3", new Color(241, 196, 15)));
 
-        // ---------------- Main Content ----------------
-        JPanel contentPanel = new JPanel(new GridLayout(1, 2, 20, 0));
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-
-        // FAQs Section
+        // FAQ table
         JPanel faqPanel = new JPanel(new BorderLayout());
         faqPanel.setBorder(BorderFactory.createTitledBorder("Frequently Asked Questions"));
-
         String[] columns = {"Question", "Answer"};
         Object[][] data = {
-                {"Forgot Password?", "Use the Reset Password option on login."},
+                {"Forgot Password?", "Use the Change Password option on login or settings."},
                 {"CV Upload?", "PDF/DOCX up to 5MB supported."},
                 {"Internship Filters?", "Filter by company, location, duration."},
                 {"Application Status?", "Pending, Accepted, Rejected explained."},
-                {"Notifications?", "Pop-ups + Notifications Page."}
+                {"Edit Profile", "Click on user icon."}
         };
         JTable faqTable = new JTable(data, columns);
         faqTable.setRowHeight(30);
@@ -41,19 +38,18 @@ public class SupportPage extends JFrame {
         faqTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
         faqPanel.add(new JScrollPane(faqTable), BorderLayout.CENTER);
 
-        // Contact Form Section
+        // Contact form
         JPanel contactForm = new JPanel(new GridLayout(5, 2, 10, 10));
         contactForm.setBorder(BorderFactory.createTitledBorder("Submit a Support Request"));
-
+        JTextField titleField = new JTextField();
         JTextField nameField = new JTextField();
-        JTextField idField = new JTextField();
         JTextField emailField = new JTextField();
         JTextArea issueArea = new JTextArea(3, 20);
 
+        contactForm.add(new JLabel("Title:"));
+        contactForm.add(titleField);
         contactForm.add(new JLabel("Name:"));
         contactForm.add(nameField);
-        contactForm.add(new JLabel("Student ID:"));
-        contactForm.add(idField);
         contactForm.add(new JLabel("Email:"));
         contactForm.add(emailField);
         contactForm.add(new JLabel("Issue:"));
@@ -72,14 +68,25 @@ public class SupportPage extends JFrame {
                     "Confirmation", JOptionPane.INFORMATION_MESSAGE);
         });
 
-        // Add both sections side by side
+        // Layout
+        setLayout(new BorderLayout());
+        add(summaryPanel, BorderLayout.NORTH);
+
+        JPanel contentPanel = new JPanel(new GridLayout(1, 2, 20, 0));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         contentPanel.add(faqPanel);
         contentPanel.add(contactForm);
+        add(contentPanel, BorderLayout.CENTER);
 
-        // ---------------- Layout ----------------
-        setLayout(new BorderLayout());
-        add(summaryPanel, BorderLayout.CENTER);
-        add(contentPanel, BorderLayout.SOUTH);
+        JButton backBtn = new JButton("← Back to Dashboard");
+        backBtn.setBackground(new Color(52, 152, 219));
+        backBtn.setForeground(Color.WHITE);
+        backBtn.setFont(new Font("Segoe UI", Font.BOLD, 14));
+        backBtn.addActionListener(e -> cardLayout.show(mainContent, "studentDashboard"));
+
+        JPanel backPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        backPanel.add(backBtn);
+        add(backPanel, BorderLayout.SOUTH);
     }
 
     private JPanel createCard(String title, String value, Color color) {
@@ -101,7 +108,25 @@ public class SupportPage extends JFrame {
         return card;
     }
 
+    // ---------------- Main ----------------
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new SupportPage().setVisible(true));
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Support Page");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(900, 700);
+            frame.setLocationRelativeTo(null);
+
+            CardLayout cardLayout = new CardLayout();
+            JPanel mainContent = new JPanel(cardLayout);
+    
+            mainContent.add(new StudentDashboard(cardLayout, mainContent), "studentDashboard");
+            mainContent.add(new SupportPage(cardLayout, mainContent), "supportPage");
+
+            // Show support page first
+            cardLayout.show(mainContent, "supportPage");
+
+            frame.setContentPane(mainContent);
+            frame.setVisible(true);
+        });
     }
 }

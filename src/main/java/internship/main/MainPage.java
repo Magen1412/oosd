@@ -30,7 +30,7 @@ public class MainPage extends JFrame {
         mainContent.add(new StudentDashboard(cardLayout, mainContent), "dashboard");
         mainContent.add(new ProfilePage(), "profile");
         mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
-        mainContent.add(new SupportPage(), "support");
+        mainContent.add(new SupportPage(cardLayout, mainContent), "support");
 
         // Sidebar navigation
         JPanel sidebar = new JPanel();
