@@ -24,14 +24,12 @@ public class AddInternshipOfferPage extends JPanel {
         setLayout(new BorderLayout());
         setBackground(new Color(236, 240, 241));
 
-        // ---------------- Title ----------------
         JLabel title = new JLabel("Add Internship Offer", SwingConstants.CENTER);
         title.setFont(new Font("Segoe UI", Font.BOLD, 24));
         title.setForeground(new Color(44, 62, 80));
         title.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         add(title, BorderLayout.NORTH);
 
-        // ---------------- Form Card ----------------
         JPanel formCard = new JPanel(new GridBagLayout());
         formCard.setBackground(Color.WHITE);
         formCard.setBorder(BorderFactory.createCompoundBorder(
@@ -44,13 +42,12 @@ public class AddInternshipOfferPage extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
 
-        // Fields
         JTextField companyIdField = createStyledField();
         JTextField companyNameField = createStyledField();
         JTextField titleField = createStyledField();
         JTextArea descriptionArea = createStyledTextArea();
-        JTextField startDateField = createStyledField(); // yyyy-MM-dd
-        JTextField endDateField = createStyledField();   // yyyy-MM-dd
+        JTextField startDateField = createStyledField();
+        JTextField endDateField = createStyledField();
 
         addFormField(formCard, "Company ID:", companyIdField, gbc, 0);
         addFormField(formCard, "Company Name:", companyNameField, gbc, 2);
@@ -61,7 +58,6 @@ public class AddInternshipOfferPage extends JPanel {
 
         add(formCard, BorderLayout.CENTER);
 
-        // ---------------- Buttons ----------------
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
         buttonPanel.setOpaque(false);
 
@@ -75,7 +71,6 @@ public class AddInternshipOfferPage extends JPanel {
 
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // ---------------- Actions ----------------
         submitBtn.addActionListener((ActionEvent e) -> {
             String companyIdStr = companyIdField.getText().trim();
             String companyName = companyNameField.getText().trim();
@@ -133,7 +128,6 @@ public class AddInternshipOfferPage extends JPanel {
         backBtn.addActionListener(e -> cardLayout.show(mainContent, "companyDashboard"));
     }
 
-    // ---------------- Helpers ----------------
     private void addFormField(JPanel panel, String labelText, JComponent field, GridBagConstraints gbc, int y) {
         JLabel label = new JLabel(labelText);
         label.setFont(new Font("Segoe UI", Font.BOLD, 13));
@@ -181,7 +175,6 @@ public class AddInternshipOfferPage extends JPanel {
         return btn;
     }
 
-    // ---------------- Main ----------------
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Internship Management System");

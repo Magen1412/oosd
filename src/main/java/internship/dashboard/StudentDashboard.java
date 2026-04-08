@@ -5,10 +5,12 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import internship.ApplicationSubmissionPage.*;
+import internship.login.LoginPage;
+import internship.dashboard.ProfilePage;
 import internship.searchpage.SearchPage;
 import internship.settings.SettingsPage;
 import internship.support.SupportPage;
-
+import internship.ApplicationSubmissionPage.ApplicationStatusPage;
 import java.util.Arrays;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
@@ -40,7 +42,6 @@ public class StudentDashboard extends JPanel {
         add(buildMain(), BorderLayout.CENTER);
     }
 
-    // Sidebar separator line
     private JPanel sidebarSeparator() {
         JPanel line = new JPanel();
         line.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
@@ -48,7 +49,6 @@ public class StudentDashboard extends JPanel {
         return line;
     }
 
-    // Sidebar with buttons
     JPanel buildSidebar() {
         JPanel sidebar = new JPanel() {
             @Override
@@ -78,7 +78,6 @@ public class StudentDashboard extends JPanel {
         return sidebar;
     }
 
-    // Unified sidebar button method
     JButton createSidebarButton(String text) {
         JButton btn = new JButton(text) {
             @Override
@@ -86,20 +85,18 @@ public class StudentDashboard extends JPanel {
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-                // Draw hover background
                 if (getModel().isRollover()) {
-                    g2.setColor(new Color(255,255,255,40)); // translucent white
+                    g2.setColor(new Color(255,255,255,40));
                     g2.fillRoundRect(0,0,getWidth(),getHeight(),12,12);
                 }
 
-                // Let Swing paint the text once
                 super.paintComponent(g);
             }
         };
 
         btn.setFocusPainted(false);
         btn.setBorderPainted(false);
-        btn.setContentAreaFilled(false); // no default background
+        btn.setContentAreaFilled(false);
         btn.setForeground(Color.WHITE);
         btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btn.setHorizontalAlignment(SwingConstants.LEFT);
@@ -108,21 +105,30 @@ public class StudentDashboard extends JPanel {
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btn.setMaximumSize(new Dimension(200,40));
 
-        // Navigation
         btn.addActionListener(e -> {
             switch (text) {
                 case "Dashboard": cardLayout.show(mainContent, "studentDashboard"); break;
                 case "Browse Internships": cardLayout.show(mainContent, "browseInternships"); break;
-                case "My Applications": cardLayout.show(mainContent, "applicationsPage"); break;
+                case "My Applications": cardLayout.show(mainContent, "applicationStatus"); break;
                 case "Support": cardLayout.show(mainContent, "supportPage"); break;
-                case "Log Out": cardLayout.show(mainContent, "loginPage"); break;
+                case "Log Out":
+                    int choice = JOptionPane.showConfirmDialog(
+                            this,
+                            "Are you sure you want to log out?",
+                            "Confirm Logout",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.QUESTION_MESSAGE
+                    );
+                    if (choice == JOptionPane.YES_OPTION) {
+                        cardLayout.show(mainContent, "loginPage");
+                    }
+                    break;
             }
         });
 
         return btn;
     }
 
-    // Main content
     JPanel buildMain() {
         JPanel main = new JPanel();
         main.setBackground(BG);
@@ -256,7 +262,6 @@ public class StudentDashboard extends JPanel {
         return p;
     }
 
-    // Search Internships
     JPanel loadMore() {
         JPanel p = new JPanel();
         p.setBackground(new Color(200,230,240));
@@ -277,7 +282,6 @@ public class StudentDashboard extends JPanel {
         return p;
     }
 
-    // ---------------- Main ----------------
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Student Dashboard");
@@ -288,14 +292,13 @@ public class StudentDashboard extends JPanel {
             CardLayout cardLayout = new CardLayout();
             JPanel mainContent = new JPanel(cardLayout);
 
-            // Add dashboard and settings page
-            mainContent.add(new StudentDashboard(cardLayout, mainContent), "dashboard");
+            mainContent.add(new StudentDashboard(cardLayout, mainContent), "studentDashboard");
             mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
-            mainContent.add(new ApplicationStatusPage(mainContent, cardLayout), "applicationsPage");
+            mainContent.add(new ApplicationStatusPage(mainContent, cardLayout), "applicationStatus");
             mainContent.add(new ApplicationSubmissionPage(mainContent, cardLayout), "applicationSubmission");
-            //mainContent.add(new SearchPage(cardLayout, mainContent), "browseInternships");
+            mainContent.add(new SearchPage(cardLayout, mainContent), "browseInternships");
             mainContent.add(new SupportPage(cardLayout, mainContent), "supportPage");
-            // mainContent.add(new LoginPage(cardLayout, mainContent), "loginPage");
+            mainContent.add(new LoginPage(cardLayout, mainContent), "loginPage");
             mainContent.add(new ProfilePage(cardLayout, mainContent), "profilePage");
 
             cardLayout.show(mainContent, "studentDashboard");
@@ -321,7 +324,6 @@ class RoundedCard extends JPanel {
     }
 }
 
-// Statistic card with gradient background
 class StatCard extends JPanel {
     Color a,b;
     String label,value,sub;

@@ -42,32 +42,27 @@ public class ApplicationSubmissionPage extends JPanel {
 
         Dimension fieldSize = new Dimension(400, 35);
 
-        // Title
         JLabel title = new JLabel("Application Submission");
         title.setFont(new Font("Segoe UI", Font.BOLD, 22));
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
         title.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 0));
         card.add(title);
 
-        // Full Name
         card.add(createLabel("Full Name"));
         nameField = createField(fieldSize);
         card.add(nameField);
         card.add(Box.createVerticalStrut(15));
 
-        // Email
         card.add(createLabel("Email"));
         emailField = createField(fieldSize);
         card.add(emailField);
         card.add(Box.createVerticalStrut(15));
 
-        // Phone
         card.add(createLabel("Phone"));
         phoneField = createField(fieldSize);
         card.add(phoneField);
         card.add(Box.createVerticalStrut(15));
 
-        // Preferred Role
         card.add(createLabel("Preferred Role"));
         roleBox = new JComboBox<>(new String[]{
                 "Select Role",
@@ -81,7 +76,6 @@ public class ApplicationSubmissionPage extends JPanel {
         card.add(roleBox);
         card.add(Box.createVerticalStrut(15));
 
-        // Work Preference
         card.add(createLabel("Work Preference"));
         JPanel radioPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         radioPanel.setBackground(Color.WHITE);
@@ -105,7 +99,6 @@ public class ApplicationSubmissionPage extends JPanel {
         card.add(radioPanel);
         card.add(Box.createVerticalStrut(15));
 
-        // Skills
         card.add(createLabel("Skills"));
         JPanel skillPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         skillPanel.setBackground(Color.WHITE);
@@ -115,13 +108,11 @@ public class ApplicationSubmissionPage extends JPanel {
         card.add(skillPanel);
         card.add(Box.createVerticalStrut(15));
 
-        // Location
         card.add(createLabel("Preferred Location"));
         locationField = createField(fieldSize);
         card.add(locationField);
         card.add(Box.createVerticalStrut(15));
 
-        // Reason
         card.add(createLabel("Why are you applying?"));
         reasonArea = new JTextArea(3, 20);
         reasonArea.setLineWrap(true);
@@ -134,7 +125,6 @@ public class ApplicationSubmissionPage extends JPanel {
         card.add(reasonArea);
         card.add(Box.createVerticalStrut(15));
 
-        // Resume Upload
         card.add(createLabel("Resume"));
         JPanel filePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         filePanel.setBackground(Color.WHITE);
@@ -150,20 +140,19 @@ public class ApplicationSubmissionPage extends JPanel {
         filePanel.add(fileName);
         card.add(filePanel);
         card.add(Box.createVerticalStrut(20));
-        // Back Button
+
         JButton backBtn = new JButton("← Back");
         backBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
         backBtn.setFocusPainted(false);
         backBtn.setBackground(new Color(220, 220, 220));
 
         backBtn.addActionListener(e -> {
-            cardLayout.show(mainContent, "dashboard");
+            cardLayout.show(mainContent, "studentDashboard");
         });
 
         card.add(backBtn);
         card.add(Box.createVerticalStrut(10));
 
-        // Submit Button
         JButton submitBtn = new JButton("Submit Application");
         submitBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
         submitBtn.setMaximumSize(new Dimension(400, 45));
@@ -202,7 +191,7 @@ public class ApplicationSubmissionPage extends JPanel {
                     "✅ Application submitted successfully!",
                     "Success",
                     JOptionPane.INFORMATION_MESSAGE);
-            cardLayout.show(mainContent, "dashboard"); // redirect back to dashboard
+            cardLayout.show(mainContent, "studentDashboard");
         }
     }
 
@@ -222,7 +211,6 @@ public class ApplicationSubmissionPage extends JPanel {
         return field;
     }
 
-    // ===== MAIN for testing =====
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Internship Management System");
@@ -231,15 +219,15 @@ public class ApplicationSubmissionPage extends JPanel {
 
             CardLayout cl = new CardLayout();
             JPanel mainContent = new JPanel(cl);
-            mainContent.add(new StudentDashboard(cl, mainContent), "dashboard");
+            mainContent.add(new StudentDashboard(cl, mainContent), "studentDashboard");
 
-            mainContent.add(new ApplicationSubmissionPage(mainContent, cl), "Application");
+            mainContent.add(new ApplicationSubmissionPage(mainContent, cl), "ApplicationSubmission");
 
             frame.add(mainContent);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
 
-            cl.show(mainContent, "Application");
+            cl.show(mainContent, "ApplicationSubmission");
         });
     }
 }

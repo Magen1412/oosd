@@ -1,14 +1,19 @@
 package internship.profile;
 
+import internship.dashboard.StudentDashboard;
+
+import javax.smartcardio.Card;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 
-public class ProfilePage extends JFrame {
+public class ProfilePage extends JPanel {
 
-    // ===== COLORS (matching Dashboard theme) =====
+    private CardLayout cardLayout;
+    private JPanel mainContent;
+
     private static final Color SIDEBAR_BG    = new Color(60, 63, 65);
     private static final Color SIDEBAR_HOVER = new Color(80, 83, 85);
     private static final Color SIDEBAR_TEXT  = new Color(220, 220, 220);
@@ -26,26 +31,20 @@ public class ProfilePage extends JFrame {
     private static final Color CV_UPLOAD_BG  = new Color(245, 248, 252);
     private static final Color CV_BORDER     = new Color(180, 200, 230);
 
-    // ===== FIELDS =====
     private JTextField txtUserId, txtName, txtEmail, txtPhone, txtRole;
     private JComboBox<String> cmbGender;
     private JTextArea txtBio;
     private JButton btnEdit, btnUpdate, btnCancel, btnBack;
 
-    // CV section
     private JLabel lblCvFileName;
     private JLabel fileIcon;
     private JButton btnUploadCv, btnViewCv, btnRemoveCv;
     private File uploadedCvFile = null;
 
-    public ProfilePage() {
-        setTitle("Internship Management System");
-        setSize(960, 750);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new BorderLayout());
+    public ProfilePage(CardLayout cardLayout, JPanel mainContent) {
+        this.cardLayout = cardLayout;
+        this.mainContent = mainContent;
 
-        // ===== TITLE BAR =====
         JPanel titleBar = new JPanel(new BorderLayout());
         titleBar.setBackground(HEADER_BG);
         titleBar.setPreferredSize(new Dimension(0, 38));
@@ -63,7 +62,6 @@ public class ProfilePage extends JFrame {
         setVisible(true);
     }
 
-    // ===== SIDEBAR =====
     private JPanel buildSidebar() {
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
@@ -99,12 +97,10 @@ public class ProfilePage extends JFrame {
         return item;
     }
 
-    // ===== CONTENT AREA =====
     private JPanel buildContent() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setBackground(CONTENT_BG);
 
-        // Page header
         JPanel pageHeader = new JPanel(new BorderLayout());
         pageHeader.setBackground(CONTENT_BG);
         pageHeader.setBorder(BorderFactory.createEmptyBorder(22, 28, 10, 28));
@@ -114,7 +110,6 @@ public class ProfilePage extends JFrame {
         pageHeader.add(pageTitle, BorderLayout.WEST);
         wrapper.add(pageHeader, BorderLayout.NORTH);
 
-        // Scrollable area
         JPanel scrollContent = new JPanel();
         scrollContent.setLayout(new BoxLayout(scrollContent, BoxLayout.Y_AXIS));
         scrollContent.setBackground(CONTENT_BG);
@@ -132,7 +127,6 @@ public class ProfilePage extends JFrame {
         return wrapper;
     }
 
-    // ===== PROFILE CARD =====
     private JPanel buildProfileCard() {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(CARD_BG);
@@ -142,7 +136,6 @@ public class ProfilePage extends JFrame {
         ));
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
-        // --- Avatar + name row ---
         JPanel topRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         topRow.setBackground(CARD_BG);
 
@@ -180,7 +173,6 @@ public class ProfilePage extends JFrame {
         topRow.add(nameBlock);
         card.add(topRow, BorderLayout.NORTH);
 
-        // --- Center block ---
         JPanel centerBlock = new JPanel(new BorderLayout());
         centerBlock.setBackground(CARD_BG);
 
@@ -192,7 +184,6 @@ public class ProfilePage extends JFrame {
         sepWrapper.add(sep);
         centerBlock.add(sepWrapper, BorderLayout.NORTH);
 
-        // Form
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setBackground(CARD_BG);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -216,7 +207,6 @@ public class ProfilePage extends JFrame {
         cmbGender.setBackground(Color.WHITE);
         cmbGender.setEnabled(false);
 
-        // Row 0: User ID | Full Name
         gbc.gridx = 0; gbc.gridy = 0; gbc.weightx = 0.25;
         formPanel.add(styledLabel("User ID"), gbc);
         gbc.gridx = 1; gbc.weightx = 0.75;
@@ -226,7 +216,6 @@ public class ProfilePage extends JFrame {
         gbc.gridx = 3; gbc.weightx = 0.75;
         formPanel.add(txtName, gbc);
 
-        // Row 1: Email | Phone
         gbc.gridx = 0; gbc.gridy = 1; gbc.weightx = 0.25;
         formPanel.add(styledLabel("Email"), gbc);
         gbc.gridx = 1; gbc.weightx = 0.75;
@@ -236,7 +225,6 @@ public class ProfilePage extends JFrame {
         gbc.gridx = 3; gbc.weightx = 0.75;
         formPanel.add(txtPhone, gbc);
 
-        // Row 2: Role | Gender
         gbc.gridx = 0; gbc.gridy = 2; gbc.weightx = 0.25;
         formPanel.add(styledLabel("Role"), gbc);
         gbc.gridx = 1; gbc.weightx = 0.75;
@@ -246,7 +234,6 @@ public class ProfilePage extends JFrame {
         gbc.gridx = 3; gbc.weightx = 0.75;
         formPanel.add(cmbGender, gbc);
 
-        // Row 3: About Me (spans full width)
         gbc.gridx = 0; gbc.gridy = 3; gbc.weightx = 0.25;
         gbc.insets = new Insets(8, 0, 0, 20);
         formPanel.add(styledLabel("About Me"), gbc);
@@ -272,12 +259,11 @@ public class ProfilePage extends JFrame {
         centerBlock.add(formPanel, BorderLayout.CENTER);
         card.add(centerBlock, BorderLayout.CENTER);
 
-        // --- Buttons ---
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         buttonPanel.setBackground(CARD_BG);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
 
-        btnBack   = styledButton("← Back",   BTN_BACK);
+        btnBack   = styledButton("← Back to Dashboard",   BTN_BACK);
         btnEdit   = styledButton("✎ Edit",   BTN_EDIT);
         btnCancel = styledButton("✕ Cancel", BTN_CANCEL);
         btnUpdate = styledButton("✔ Update", BTN_UPDATE);
@@ -291,12 +277,11 @@ public class ProfilePage extends JFrame {
         btnEdit.addActionListener(e -> enableEdit());
         btnUpdate.addActionListener(e -> updateProfile());
         btnCancel.addActionListener(e -> { loadData(); disableEdit(); });
-        btnBack.addActionListener(e -> dispose());
+        btnBack.addActionListener(e -> cardLayout.show(mainContent, "studentDashboard"));
 
         return card;
     }
 
-    // ===== CV CARD =====
     private JPanel buildCvCard() {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(CARD_BG);
@@ -306,14 +291,12 @@ public class ProfilePage extends JFrame {
         ));
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
-        // Section title
         JLabel cvTitle = new JLabel("Curriculum Vitae (CV)");
         cvTitle.setFont(new Font("Segoe UI", Font.BOLD, 15));
         cvTitle.setForeground(new Color(40, 40, 40));
         cvTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 12, 0));
         card.add(cvTitle, BorderLayout.NORTH);
 
-        // Drop zone
         JPanel cvArea = new JPanel(new BorderLayout());
         cvArea.setBackground(CV_UPLOAD_BG);
         cvArea.setBorder(BorderFactory.createCompoundBorder(
@@ -340,7 +323,6 @@ public class ProfilePage extends JFrame {
         cvArea.add(cvInfo, BorderLayout.CENTER);
         card.add(cvArea, BorderLayout.CENTER);
 
-        // CV buttons
         JPanel cvButtons = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         cvButtons.setBackground(CARD_BG);
         cvButtons.setBorder(BorderFactory.createEmptyBorder(14, 0, 0, 0));
@@ -366,7 +348,6 @@ public class ProfilePage extends JFrame {
         cvButtons.add(cvHint);
         card.add(cvButtons, BorderLayout.SOUTH);
 
-        // CV actions
         btnUploadCv.addActionListener(e -> {
             JFileChooser chooser = new JFileChooser();
             chooser.setDialogTitle("Select your CV");
@@ -419,7 +400,6 @@ public class ProfilePage extends JFrame {
         return card;
     }
 
-    // ===== HELPERS =====
     private JLabel styledLabel(String text) {
         JLabel lbl = new JLabel(text);
         lbl.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -468,14 +448,13 @@ public class ProfilePage extends JFrame {
         return btn;
     }
 
-    // ===== LOGIC =====
     public void loadData() {
         txtUserId.setText("1001");
         txtName.setText("John Doe");
         txtEmail.setText("john@gmail.com");
         txtPhone.setText("57894521");
         txtRole.setText("Student");
-        cmbGender.setSelectedIndex(1); // Male
+        cmbGender.setSelectedIndex(1);
         txtBio.setText("Final year Computer Science student with a passion for software development " +
                 "and data systems. Looking for internship opportunities in backend development or data engineering.");
     }
@@ -524,9 +503,26 @@ public class ProfilePage extends JFrame {
     }
 
     public static void main(String[] args) {
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception ignored) {}
-        SwingUtilities.invokeLater(ProfilePage::new);
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Internship Management System");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(1000, 700);
+
+            CardLayout cardLayout = new CardLayout();
+            JPanel mainContent = new JPanel(cardLayout);
+
+            ProfilePage profilePage = new ProfilePage(cardLayout, mainContent);
+            mainContent.add(profilePage, "profilePage");
+
+            JPanel studentDashboard = new JPanel();
+            studentDashboard.add(new JLabel("Student Dashboard"));
+            mainContent.add(studentDashboard, "studentDashboard");
+
+            frame.setContentPane(mainContent);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+
+            cardLayout.show(mainContent, "profilePage");
+        });
     }
 }

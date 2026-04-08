@@ -18,7 +18,6 @@ public class DashboardMain extends JFrame {
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // ===== SIDEBAR =====
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
         sidebar.setPreferredSize(new Dimension(220, getHeight()));
@@ -39,11 +38,9 @@ public class DashboardMain extends JFrame {
 
         add(sidebar, BorderLayout.WEST);
 
-        // ===== MAIN CONTENT =====
         JPanel mainContent = new JPanel(new BorderLayout());
         mainContent.setBackground(Color.WHITE);
 
-        // ===== TOP PANEL (Search Bar) =====
         JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 20));
         topPanel.setBackground(Color.WHITE);
 
@@ -73,11 +70,9 @@ public class DashboardMain extends JFrame {
         topPanel.add(layeredPane);
         mainContent.add(topPanel, BorderLayout.NORTH);
 
-        // ===== CENTER CONTENT =====
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setBackground(Color.WHITE);
 
-        // Welcome Panel
         JPanel welcomePanel = new JPanel();
         welcomePanel.setBackground(Color.WHITE);
         welcomePanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
@@ -88,7 +83,6 @@ public class DashboardMain extends JFrame {
 
         centerPanel.add(welcomePanel, BorderLayout.NORTH);
 
-        // Statistics Cards
         JPanel statsPanel = new JPanel(new GridLayout(1, 3, 20, 20));
         statsPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
         statsPanel.setBackground(Color.WHITE);
@@ -99,7 +93,6 @@ public class DashboardMain extends JFrame {
 
         centerPanel.add(statsPanel, BorderLayout.CENTER);
 
-        // Recent Jobs Table
         String[] columns = {"Company", "Position", "Location", "Status"};
         Object[][] data = {
                 {"TechSoft", "Java Intern", "Port Louis", "Open"},
@@ -117,7 +110,6 @@ public class DashboardMain extends JFrame {
         mainContent.add(centerPanel, BorderLayout.CENTER);
         add(mainContent, BorderLayout.CENTER);
 
-        // ===== ACTIONS =====
         searchField.addActionListener(e -> performSearch(searchField.getText()));
         searchButton.addActionListener(e -> performSearch(searchField.getText()));
     }
@@ -161,7 +153,6 @@ public class DashboardMain extends JFrame {
         return card;
     }
 
-    // Custom rounded border class
     public static class RoundedBorder implements Border {
         private final int radius;
         private final int thickness;
@@ -207,19 +198,16 @@ public class DashboardMain extends JFrame {
         StudentDAO studentDAO = new StudentDAO();
 
         try {
-            // CREATE
             Student student = new Student("Krishnen Chinien", "krishnen.chinien@gmail.com", "krishnen2411", "52567890", "M", "C:/Users/Krishnen/Documents/CV.pdf\"", LocalDateTime.now());
             studentDAO.addStudent(student);
             System.out.println("✅ Student added successfully!");
 
-            // READ
             List<Student> students = studentDAO.getAllStudents();
             System.out.println("📋 Student List:");
             for (Student s : students) {
                 System.out.println(s.getStudentId() + " | " + s.getName() + " | " + s.getGender() + " | " + s.getEmail());
             }
 
-            // UPDATE (example: change name of first student)
             if (!students.isEmpty()) {
                 Student first = students.get(0);
                 first.setName("Roubina Persand");
@@ -227,7 +215,6 @@ public class DashboardMain extends JFrame {
                 System.out.println("✏️ Student updated successfully!");
             }
 
-            // DELETE (example: delete last student)
             if (!students.isEmpty()) {
                 int lastId = students.get(students.size() - 1).getStudentId();
                 studentDAO.deleteStudent(lastId);

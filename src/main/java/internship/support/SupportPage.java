@@ -14,14 +14,12 @@ public class SupportPage extends JPanel {
         this.cardLayout = cardLayout;
         this.mainContent = mainContent;
 
-        // Summary cards
         JPanel summaryPanel = new JPanel(new GridLayout(1, 3, 20, 0));
         summaryPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         summaryPanel.add(createCard("FAQs Available", "5", new Color(52, 152, 219)));
         summaryPanel.add(createCard("Requests Submitted", "12", new Color(46, 204, 113)));
         summaryPanel.add(createCard("Pending Responses", "3", new Color(241, 196, 15)));
 
-        // FAQ table
         JPanel faqPanel = new JPanel(new BorderLayout());
         faqPanel.setBorder(BorderFactory.createTitledBorder("Frequently Asked Questions"));
         String[] columns = {"Question", "Answer"};
@@ -38,7 +36,6 @@ public class SupportPage extends JPanel {
         faqTable.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
         faqPanel.add(new JScrollPane(faqTable), BorderLayout.CENTER);
 
-        // Contact form
         JPanel contactForm = new JPanel(new GridLayout(5, 2, 10, 10));
         contactForm.setBorder(BorderFactory.createTitledBorder("Submit a Support Request"));
         JTextField titleField = new JTextField();
@@ -68,7 +65,6 @@ public class SupportPage extends JPanel {
                     "Confirmation", JOptionPane.INFORMATION_MESSAGE);
         });
 
-        // Layout
         setLayout(new BorderLayout());
         add(summaryPanel, BorderLayout.NORTH);
 
@@ -108,7 +104,6 @@ public class SupportPage extends JPanel {
         return card;
     }
 
-    // ---------------- Main ----------------
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Support Page");
@@ -122,7 +117,6 @@ public class SupportPage extends JPanel {
             mainContent.add(new StudentDashboard(cardLayout, mainContent), "studentDashboard");
             mainContent.add(new SupportPage(cardLayout, mainContent), "supportPage");
 
-            // Show support page first
             cardLayout.show(mainContent, "supportPage");
 
             frame.setContentPane(mainContent);

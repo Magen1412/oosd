@@ -22,7 +22,6 @@ public class Companydashboard extends JPanel {
     private JPanel mainContent;
     private CardLayout cardLayout;
 
-    // Sample internship offers data
     private Object[][] offersData = {
             {"TechSoft", "Java Intern", "Port Louis", "Full-Time", "Open"},
             {"CyberNet", "Web Developer Intern", "Ebene", "Part-Time", "Open"},
@@ -36,7 +35,6 @@ public class Companydashboard extends JPanel {
 
         setLayout(new BorderLayout());
 
-        // ===== HEADER =====
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(new Color(30, 60, 114));
         header.setPreferredSize(new Dimension(getWidth(), 65));
@@ -49,7 +47,6 @@ public class Companydashboard extends JPanel {
 
         add(header, BorderLayout.NORTH);
 
-        // ===== SIDEBAR =====
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
         sidebar.setPreferredSize(new Dimension(220, getHeight()));
@@ -73,7 +70,6 @@ public class Companydashboard extends JPanel {
         sidebar.add(sep);
         sidebar.add(Box.createVerticalStrut(10));
 
-        // Logout button with confirmation
         JButton btnLogout = createSidebarButton("Log Out", null);
         btnLogout.addActionListener(e -> {
             int choice = JOptionPane.showConfirmDialog(
@@ -94,11 +90,9 @@ public class Companydashboard extends JPanel {
 
         add(sidebar, BorderLayout.WEST);
 
-        // ===== MAIN CONTENT =====
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(new Color(245, 247, 252));
 
-        // Stats Panel
         JPanel statsPanel = new JPanel(new GridLayout(1, 4, 15, 0));
         statsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
         statsPanel.setBackground(new Color(245, 247, 252));
@@ -108,7 +102,6 @@ public class Companydashboard extends JPanel {
         statsPanel.add(createStatCard("Hired", "3", new Color(140, 30, 100)));
         contentPanel.add(statsPanel, BorderLayout.NORTH);
 
-        // Internship Offers Table
         JPanel offersPanel = new JPanel(new BorderLayout());
         offersPanel.setBackground(Color.WHITE);
         offersPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
@@ -134,7 +127,6 @@ public class Companydashboard extends JPanel {
         add(contentPanel, BorderLayout.CENTER);
     }
 
-    // ===== HELPERS =====
     private JButton createSidebarButton(String text, String pageName) {
         JButton button = new JButton(text);
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -190,7 +182,6 @@ public class Companydashboard extends JPanel {
         return card;
     }
 
-    // ===== Simple Login Page =====
     static class LoginPage extends JFrame {
         public LoginPage() {
             setTitle("Internship Management System - Login");
@@ -206,7 +197,7 @@ public class Companydashboard extends JPanel {
             add(panel);
         }
     }
-    // ===== MAIN =====
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Internship Management System");
@@ -216,10 +207,8 @@ public class Companydashboard extends JPanel {
             CardLayout cl = new CardLayout();
             JPanel mainContent = new JPanel(cl);
 
-            // Add pages to CardLayout
             mainContent.add(new Companydashboard(mainContent, cl), "companyDashboard");
 
-            // Example placeholder pages
             mainContent.add(new AddInternshipOfferPage(cl, mainContent), "AddOffer");
             mainContent.add(new ApplicationViewPage(mainContent ,cl), "ApplicationViewPage");
             mainContent.add(new ApplicationStatusPage(mainContent, cl), "ApplicationStatusPage");
@@ -232,12 +221,10 @@ public class Companydashboard extends JPanel {
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
 
-            // Show dashboard by default
             cl.show(mainContent, "companyDashboard");
         });
     }
 
-    // Helper to create placeholder pages
     private static JPanel createPage(String title) {
         JPanel panel = new JPanel(new BorderLayout());
         JLabel lbl = new JLabel(title, SwingConstants.CENTER);

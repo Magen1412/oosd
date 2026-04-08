@@ -23,7 +23,6 @@ public class CompanyProfile extends JPanel {
     private static final Color UPLOAD_BG     = new Color(245, 248, 252);
     private static final Color UPLOAD_BORDER = new Color(180, 200, 230);
 
-    // ===== FIELDS =====
     private JTextField txtCompanyId, txtCompanyName, txtEmail, txtPhone,
             txtWebsite, txtAddress, txtRegNumber;
     private JComboBox<String> cmbIndustry, cmbSize, cmbCountry;
@@ -37,7 +36,6 @@ public class CompanyProfile extends JPanel {
     private final CardLayout cardLayout;
     private final JPanel mainContent;
 
-    // ===== CONSTRUCTOR =====
     public CompanyProfile(CardLayout cardLayout, JPanel mainContent) {
         this.cardLayout  = cardLayout;
         this.mainContent = mainContent;
@@ -50,7 +48,6 @@ public class CompanyProfile extends JPanel {
         disableEdit();
     }
 
-    // ===== CONTENT =====
     private JPanel buildContent() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setBackground(CONTENT_BG);
@@ -79,7 +76,6 @@ public class CompanyProfile extends JPanel {
         return wrapper;
     }
 
-    // ===== PROFILE CARD =====
     private JPanel buildProfileCard() {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(CARD_BG);
@@ -207,7 +203,6 @@ public class CompanyProfile extends JPanel {
         centerBlock.add(formPanel, BorderLayout.CENTER);
         card.add(centerBlock, BorderLayout.CENTER);
 
-        // ===== BUTTONS =====
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         buttonPanel.setBackground(CARD_BG);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
@@ -232,7 +227,6 @@ public class CompanyProfile extends JPanel {
         return card;
     }
 
-    // ===== LOGO CARD =====
     private JPanel buildLogoCard() {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(CARD_BG);
@@ -327,7 +321,6 @@ public class CompanyProfile extends JPanel {
         return card;
     }
 
-    // ===== HELPERS =====
     private JLabel styledLabel(String text) {
         JLabel lbl = new JLabel(text);
         lbl.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -385,7 +378,6 @@ public class CompanyProfile extends JPanel {
         return btn;
     }
 
-    // ===== LOGIC =====
     public void loadData() {
         txtCompanyId.setText("C001");
         txtCompanyName.setText("TechCorp Mauritius");
@@ -451,7 +443,6 @@ public class CompanyProfile extends JPanel {
         }
     }
 
-    // ===== MAIN for standalone testing =====
     public static void main(String[] args) {
         try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); }
         catch (Exception ignored) {}
@@ -468,7 +459,7 @@ public class CompanyProfile extends JPanel {
 
 
             Companydashboard dashboard = new Companydashboard(mainContent, cardLayout);
-            mainContent.add(dashboard, "companyDashboard"); // <-- add this line
+            mainContent.add(dashboard, "companyDashboard");
             mainContent.add(new CompanyProfile(cardLayout, mainContent), "companyProfile");
 
             cardLayout.show(mainContent, "companyProfile");

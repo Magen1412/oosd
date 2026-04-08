@@ -9,7 +9,6 @@ import java.io.File;
 
 public class AdminProfilePage extends JPanel {
 
-    // ===== COLORS =====
     private static final Color CONTENT_BG    = new Color(240, 240, 240);
     private static final Color CARD_BG       = Color.WHITE;
     private static final Color HEADER_BG     = new Color(200, 60, 50);
@@ -30,7 +29,6 @@ public class AdminProfilePage extends JPanel {
     private static final Color STATS_GREEN = new Color(60,  160, 80);
     private static final Color STATS_ORG   = new Color(230, 150, 40);
 
-    // ===== FIELDS =====
     private JTextField txtAdminId, txtName, txtEmail, txtPhone, txtDepartment, txtLastLogin;
     private JComboBox<String> cmbGender, cmbAccessLevel;
     private JTextArea txtNotes;
@@ -43,7 +41,6 @@ public class AdminProfilePage extends JPanel {
     private final CardLayout cardLayout;
     private final JPanel mainContent;
 
-    // ===== CONSTRUCTOR =====
     public AdminProfilePage(CardLayout cardLayout, JPanel mainContent) {
         this.cardLayout  = cardLayout;
         this.mainContent = mainContent;
@@ -56,7 +53,6 @@ public class AdminProfilePage extends JPanel {
         disableEdit();
     }
 
-    // ===== CONTENT =====
     private JPanel buildContent() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setBackground(CONTENT_BG);
@@ -87,7 +83,6 @@ public class AdminProfilePage extends JPanel {
         return wrapper;
     }
 
-    // ===== STATS CARD =====
     private JPanel buildStatsCard() {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(CARD_BG);
@@ -132,7 +127,6 @@ public class AdminProfilePage extends JPanel {
         return tile;
     }
 
-    // ===== PROFILE CARD =====
     private JPanel buildProfileCard() {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(CARD_BG);
@@ -141,7 +135,6 @@ public class AdminProfilePage extends JPanel {
                 BorderFactory.createEmptyBorder(30, 40, 30, 40)));
         card.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
-        // Avatar + name + ADMIN badge
         JPanel topRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         topRow.setBackground(CARD_BG);
 
@@ -204,7 +197,6 @@ public class AdminProfilePage extends JPanel {
         topRow.add(nameBlock);
         card.add(topRow, BorderLayout.NORTH);
 
-        // Separator
         JPanel sepWrapper = new JPanel(new BorderLayout());
         sepWrapper.setBackground(CARD_BG);
         sepWrapper.setBorder(BorderFactory.createEmptyBorder(16, 0, 16, 0));
@@ -212,7 +204,6 @@ public class AdminProfilePage extends JPanel {
         sep.setForeground(new Color(230, 230, 230));
         sepWrapper.add(sep);
 
-        // Form
         JPanel formPanel = new JPanel(new GridBagLayout());
         formPanel.setBackground(CARD_BG);
         GridBagConstraints gbc = new GridBagConstraints();
@@ -286,7 +277,6 @@ public class AdminProfilePage extends JPanel {
         centerBlock.add(formPanel, BorderLayout.CENTER);
         card.add(centerBlock, BorderLayout.CENTER);
 
-        // ===== BUTTONS =====
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         buttonPanel.setBackground(CARD_BG);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
@@ -311,7 +301,6 @@ public class AdminProfilePage extends JPanel {
         return card;
     }
 
-    // ===== PROFILE PICTURE CARD =====
     private JPanel buildPictureCard() {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(CARD_BG);
@@ -407,7 +396,6 @@ public class AdminProfilePage extends JPanel {
         return card;
     }
 
-    // ===== HELPERS =====
     private JLabel styledLabel(String text) {
         JLabel lbl = new JLabel(text);
         lbl.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -455,7 +443,6 @@ public class AdminProfilePage extends JPanel {
         return btn;
     }
 
-    // ===== LOGIC =====
     public void loadData() {
         txtAdminId.setText("A001");
         txtName.setText("Alice Dubois");
@@ -515,7 +502,6 @@ public class AdminProfilePage extends JPanel {
         }
     }
 
-    // ===== MAIN for standalone testing =====
     public static void main(String[] args) {
         try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); }
         catch (Exception ignored) {}

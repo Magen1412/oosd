@@ -8,6 +8,7 @@ import java.awt.event.*;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
+import internship.dashboard.StudentDashboard;
 
 /**
  * Internship Search Page
@@ -15,9 +16,6 @@ import java.util.stream.Collectors;
  */
 public class SearchPage extends JPanel {
 
-    // ===================================================
-    // NAVIGATION
-    // ===================================================
     private CardLayout cardLayout;
     private JPanel mainContent;
 
@@ -149,7 +147,7 @@ public class SearchPage extends JPanel {
         JButton btnBack = makeButton("← Back to Dashboard", new Color(255, 255, 255, 30), Color.WHITE);
         btnBack.addActionListener(e -> {
             if (cardLayout != null && mainContent != null) {
-                cardLayout.show(mainContent, "dashboard");
+                cardLayout.show(mainContent, "studentDashboard");
             }
         });
 
@@ -684,21 +682,17 @@ public class SearchPage extends JPanel {
             JPanel mainContent = new JPanel(cardLayout);
 
             JPanel dashboard = new JPanel(new BorderLayout());
-            dashboard.setBackground(Color.WHITE);
-            JLabel dashLabel = new JLabel("Dashboard Page", SwingConstants.CENTER);
-            dashLabel.setFont(new Font("Segoe UI", Font.BOLD, 26));
-            dashboard.add(dashLabel, BorderLayout.CENTER);
 
             SearchPage searchPage = new SearchPage(cardLayout, mainContent);
 
-            mainContent.add(dashboard, "dashboard");
-            mainContent.add(searchPage, "search");
+            mainContent.add(dashboard, "studentDashboard");
+            mainContent.add(searchPage, "browseInternships");
 
             frame.setContentPane(mainContent);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
 
-            cardLayout.show(mainContent, "search");
+            cardLayout.show(mainContent, "browseInternships");
         });
     }
 }

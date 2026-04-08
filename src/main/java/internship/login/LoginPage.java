@@ -36,7 +36,6 @@ public class LoginPage extends JPanel {
     private CardLayout cardLayout;
     private JPanel mainContent;
 
-    // Database credentials (adjust to your setup)
     private static final String DB_URL = "jdbc:mysql://localhost:3306/internship_db?useSSL=false&serverTimezone=UTC";
     private static final String DB_USER = "root";
     private static final String DB_PASS = "blackpowa4****";
@@ -48,12 +47,10 @@ public class LoginPage extends JPanel {
         setLayout(new BorderLayout());
         setBackground(Color.WHITE);
 
-        // ===== MAIN PANEL =====
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setBackground(Color.WHITE);
 
-        // ===== LOGO =====
         ImageIcon logoIcon = new ImageIcon("src/main/resources/logo/img.png");
         Image img = logoIcon.getImage();
         Image scaledImg = img.getScaledInstance(200, 200, Image.SCALE_SMOOTH);
@@ -66,7 +63,6 @@ public class LoginPage extends JPanel {
         mainPanel.add(logoLabel);
         mainPanel.add(Box.createVerticalStrut(30));
 
-        // ===== LOGIN FORM =====
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
         formPanel.setBackground(Color.WHITE);
@@ -142,7 +138,6 @@ public class LoginPage extends JPanel {
 
         add(mainPanel, BorderLayout.CENTER);
 
-        // ===== FORGOT PASSWORD LINK =====
         JLabel forgotPassLink = new JLabel("Forgot Password? Change Password Here!");
         forgotPassLink.setForeground(Color.BLUE);
         forgotPassLink.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -156,7 +151,6 @@ public class LoginPage extends JPanel {
         formPanel.add(Box.createVerticalStrut(10));
         formPanel.add(forgotPanel);
 
-        // ===== ACTIONS =====
         btnLogin.addActionListener(e -> {
             String email = txtUser.getText().trim();
             String pass = new String(txtPass.getPassword());
@@ -202,7 +196,7 @@ public class LoginPage extends JPanel {
         signupLink.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                cardLayout.show(mainContent, "register"); // navigate to registration page
+                cardLayout.show(mainContent, "register");
             }
         });
 
@@ -210,12 +204,10 @@ public class LoginPage extends JPanel {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 cardLayout.show(mainContent, "changePassword");
-                // make sure you register your ChangePasswordPage with this key
             }
         });
     }
 
-    // ===== MAIN =====
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Login");
@@ -225,7 +217,6 @@ public class LoginPage extends JPanel {
             CardLayout cardLayout = new CardLayout();
             JPanel mainContent = new JPanel(cardLayout);
 
-            // Add pages
             mainContent.add(new LoginPage(cardLayout, mainContent), "login");
             mainContent.add(new RegistrationPage(mainContent, cardLayout), "register");
             mainContent.add(new StudentDashboard(cardLayout, mainContent), "studentDashboard");

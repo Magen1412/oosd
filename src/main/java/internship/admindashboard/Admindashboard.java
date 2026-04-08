@@ -15,7 +15,6 @@ public class Admindashboard extends JPanel {
     private JPanel mainContent;
     private CardLayout cardLayout;
 
-    // Sample companies data
     private Object[][] companiesData = {
             {"TechSoft", "Software", "Port Louis", "Active"},
             {"CyberNet", "Web Services", "Ebene", "Active"},
@@ -29,7 +28,6 @@ public class Admindashboard extends JPanel {
 
         setLayout(new BorderLayout());
 
-        // ===== HEADER =====
         JPanel header = new JPanel(new BorderLayout());
         header.setBackground(new Color(30, 60, 114));
         header.setPreferredSize(new Dimension(getWidth(), 65));
@@ -42,7 +40,6 @@ public class Admindashboard extends JPanel {
 
         add(header, BorderLayout.NORTH);
 
-        // ===== SIDEBAR =====
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
         sidebar.setPreferredSize(new Dimension(240, getHeight()));
@@ -58,7 +55,6 @@ public class Admindashboard extends JPanel {
         sidebar.add(new JSeparator());
         sidebar.add(Box.createVerticalStrut(10));
 
-        // Logout button with confirmation
         JButton btnLogout = createSidebarButton("Log Out", null);
         btnLogout.addActionListener(e -> {
             int choice = JOptionPane.showConfirmDialog(
@@ -79,11 +75,9 @@ public class Admindashboard extends JPanel {
 
         add(sidebar, BorderLayout.WEST);
 
-        // ===== MAIN CONTENT =====
         JPanel contentPanel = new JPanel(new BorderLayout());
         contentPanel.setBackground(new Color(245, 247, 252));
 
-        // Stats Panel
         JPanel statsPanel = new JPanel(new GridLayout(1, 4, 15, 0));
         statsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 10, 20));
         statsPanel.setBackground(new Color(245, 247, 252));
@@ -93,7 +87,6 @@ public class Admindashboard extends JPanel {
         statsPanel.add(createStatCard("Applications", "120", new Color(140, 30, 100)));
         contentPanel.add(statsPanel, BorderLayout.NORTH);
 
-        // Companies Table
         JPanel companiesPanel = new JPanel(new BorderLayout());
         companiesPanel.setBackground(Color.WHITE);
         companiesPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 20, 20));
@@ -118,7 +111,6 @@ public class Admindashboard extends JPanel {
         add(contentPanel, BorderLayout.CENTER);
     }
 
-    // ===== HELPERS =====
     private JButton createSidebarButton(String text, String pageName) {
         JButton button = new JButton(text);
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -170,7 +162,6 @@ public class Admindashboard extends JPanel {
         return card;
     }
 
-    // ===== Simple Login Page =====
     static class LoginPage extends JFrame {
         public LoginPage() {
             setTitle("Internship Management System - Login");
@@ -187,7 +178,6 @@ public class Admindashboard extends JPanel {
         }
     }
 
-    // ===== MAIN =====
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Internship Management System");
@@ -196,8 +186,6 @@ public class Admindashboard extends JPanel {
 
             CardLayout cl = new CardLayout();
             JPanel mainContent = new JPanel(cl);
-
-            // Add pages
 
             mainContent.add(new Admindashboard(mainContent, cl), "adminDashboard");
             mainContent.add(createPage("Manage Companies Page"), "Companies");
@@ -211,13 +199,10 @@ public class Admindashboard extends JPanel {
             mainContent.add(createPage("👥 Manage Users Page"), "Users");
             mainContent.add(createPage("🎓 Manage Students Page"), "Students");
             mainContent.add(createPage("📋 Applications Approval Page"), "Applications");
-            // Add AdminProfilePage
+
             mainContent.add(new AdminProfilePage(cl, mainContent), "adminProfile");
 
-            // FIXED: pass all three arguments to SettingsPage
             mainContent.add(new SettingsPage("Admin", cl, mainContent), "Settings");
-
-
 
             frame.add(mainContent);
             frame.setLocationRelativeTo(null);
@@ -226,7 +211,7 @@ public class Admindashboard extends JPanel {
             cl.show(mainContent, "adminDashboard");
         });
     }
-    // Helper to create placeholder pages
+
     private static JPanel createPage(String title) {
         JPanel panel = new JPanel(new BorderLayout());
         JLabel lbl = new JLabel(title, SwingConstants.CENTER);

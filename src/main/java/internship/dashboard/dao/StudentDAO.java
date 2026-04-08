@@ -9,7 +9,6 @@ import java.util.List;
 
 public class StudentDAO {
 
-    // CREATE
     public void addStudent(Student student) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {
             String sql = "INSERT INTO student (name, email, password, phone, gender, cv_path, created_at) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -25,7 +24,6 @@ public class StudentDAO {
         }
     }
 
-    // READ
     public List<Student> getAllStudents() throws Exception {
         List<Student> students = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection()) {
@@ -50,7 +48,6 @@ public class StudentDAO {
         return students;
     }
 
-    // UPDATE
     public void updateStudent(Student student) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {
             String sql = "UPDATE student SET name = ?, email = ?, password = ?, phone = ?, gender = ?, cv_path = ? WHERE studentId = ?";
@@ -66,7 +63,6 @@ public class StudentDAO {
         }
     }
 
-    // DELETE
     public void deleteStudent(int studentId) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {
             String sql = "DELETE FROM student WHERE studentId = ?";
@@ -76,7 +72,6 @@ public class StudentDAO {
         }
     }
 
-    // Check if email already exists
     public boolean existsByEmail(String email) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {
             String sql = "SELECT COUNT(*) FROM student WHERE email = ?";
@@ -90,7 +85,6 @@ public class StudentDAO {
         return false;
     }
 
-    // Validate login
     public boolean validateLogin(String email, String password) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {
             String sql = "SELECT * FROM student WHERE email = ? AND password = ?";

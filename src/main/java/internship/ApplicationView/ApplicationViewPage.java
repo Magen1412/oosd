@@ -15,12 +15,10 @@ public class ApplicationViewPage extends JPanel {
 
         setLayout(new BorderLayout());
 
-        // Main Container with Padding
         JPanel mainPanel = new JPanel(new BorderLayout(20, 20));
         mainPanel.setBorder(new EmptyBorder(30, 40, 30, 40));
         mainPanel.setBackground(new Color(248, 249, 250));
 
-        // --- Top Navigation ---
         JPanel navPanel = new JPanel(new BorderLayout());
         navPanel.setOpaque(false);
 
@@ -30,7 +28,6 @@ public class ApplicationViewPage extends JPanel {
         backButton.setForeground(Color.WHITE);
         backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // Navigation Logic for Back Button
         backButton.addActionListener(e -> cardLayout.show(mainContent, "companyDashboard"));
 
         JButton statusButton = new JButton("Update Status");
@@ -39,7 +36,6 @@ public class ApplicationViewPage extends JPanel {
         statusButton.setFocusPainted(false);
         statusButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // --- POP-UP LOGIC FOR UPDATE STATUS ---
         statusButton.addActionListener(e -> {
             String[] options = {"Pending", "Accepted", "Rejected"};
             String selection = (String) JOptionPane.showInputDialog(
@@ -64,19 +60,16 @@ public class ApplicationViewPage extends JPanel {
         navPanel.add(backButton, BorderLayout.WEST);
         navPanel.add(statusButton, BorderLayout.EAST);
 
-        // --- Content Area ---
         JPanel contentPanel = new JPanel(new GridBagLayout());
         contentPanel.setOpaque(false);
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 0, 0, 20);
 
-        // Left Column
         JPanel leftCol = new JPanel();
         leftCol.setLayout(new BoxLayout(leftCol, BoxLayout.Y_AXIS));
         leftCol.setOpaque(false);
 
-        // Header Card
         JPanel headerCard = createCard();
         headerCard.setLayout(new BorderLayout(20, 0));
 
@@ -99,7 +92,6 @@ public class ApplicationViewPage extends JPanel {
         headerCard.add(avatar, BorderLayout.WEST);
         headerCard.add(nameInfo, BorderLayout.CENTER);
 
-        // Personal Statement Card
         JPanel statementCard = createCard();
         statementCard.setLayout(new BorderLayout(0, 10));
         JLabel statementTitle = new JLabel("Personal Statement");
@@ -117,7 +109,6 @@ public class ApplicationViewPage extends JPanel {
         statementCard.add(statementTitle, BorderLayout.NORTH);
         statementCard.add(statementText, BorderLayout.CENTER);
 
-        // Skills Card
         JPanel skillsCard = createCard();
         skillsCard.setLayout(new BorderLayout(0, 15));
         JLabel skillsTitle = new JLabel("Skills & Expertise");
@@ -128,7 +119,6 @@ public class ApplicationViewPage extends JPanel {
         skillsCard.add(skillsTitle, BorderLayout.NORTH);
         skillsCard.add(skillsPlaceholder, BorderLayout.CENTER);
 
-        // Documents Card
         JPanel docsCard = createCard();
         docsCard.setLayout(new BorderLayout(0, 15));
         JLabel docsTitle = new JLabel("Attached Documents");
@@ -155,7 +145,6 @@ public class ApplicationViewPage extends JPanel {
         leftCol.add(Box.createVerticalStrut(20));
         leftCol.add(docsCard);
 
-        // Right Column
         JPanel rightCol = new JPanel();
         rightCol.setLayout(new BoxLayout(rightCol, BoxLayout.Y_AXIS));
         rightCol.setOpaque(false);
@@ -208,7 +197,6 @@ public class ApplicationViewPage extends JPanel {
         return card;
     }
 
-    // ===== MAIN for testing =====
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Internship Management System");
@@ -218,12 +206,10 @@ public class ApplicationViewPage extends JPanel {
             CardLayout cl = new CardLayout();
             JPanel mainContent = new JPanel(cl);
 
-            // Add Application Status placeholder
             JPanel statusPage = new JPanel(new BorderLayout());
             statusPage.add(new JLabel("📋 Application Status Page", SwingConstants.CENTER), BorderLayout.CENTER);
             mainContent.add(statusPage, "ApplicationStatusPage");
 
-            // Add Application View page
             mainContent.add(new ApplicationViewPage(mainContent, cl), "ApplicationViewPage");
 
             frame.add(mainContent);

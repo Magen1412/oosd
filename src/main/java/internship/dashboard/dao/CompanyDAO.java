@@ -9,7 +9,6 @@ import java.util.List;
 
 public class CompanyDAO {
 
-    // CREATE
     public void addCompany(Company company) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {
             String sql = "INSERT INTO company (name, email, password, description, created_at, role) VALUES (?, ?, ?, ?, ?, ?)";
@@ -24,7 +23,6 @@ public class CompanyDAO {
         }
     }
 
-    // READ
     public List<Company> getAllCompanies() throws Exception {
         List<Company> companies = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection()) {
@@ -48,7 +46,6 @@ public class CompanyDAO {
         return companies;
     }
 
-    // UPDATE
     public void updateCompany(Company company) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {
             String sql = "UPDATE company SET name = ?, email = ?, password = ?, description = ?, role = ? WHERE company_id = ?";
@@ -63,7 +60,6 @@ public class CompanyDAO {
         }
     }
 
-    // DELETE
     public void deleteCompany(int companyId) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {
             String sql = "DELETE FROM company WHERE company_id = ?";
@@ -88,7 +84,6 @@ public class CompanyDAO {
         return false;
     }
 
-    // Validate login
     public boolean validateLogin(String email, String password) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {
             String sql = "SELECT * FROM company WHERE email = ? AND password = ?";

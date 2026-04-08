@@ -3,16 +3,15 @@ package internship.dashboard.model;
 import java.time.LocalDateTime;
 
 public class Student {
-    private int studentId;       // Primary key (auto-increment)
-    private String name;         // Full name
-    private String email;        // Email address
-    private String password;     // Password
-    private String phone;        // Phone number
-    private String gender;       // 'M', 'F', 'O'
-    private String cvPath;       // Path to uploaded CV file
-    private LocalDateTime createdAt; // Timestamp when record was created
+    private int studentId;
+    private String name;
+    private String email;
+    private String password;
+    private String phone;
+    private String gender;
+    private String cvPath;
+    private LocalDateTime createdAt;
 
-    // Constructor without ID (for new registrations)
     public Student(String name, String email, String password,
                    String phone, String gender, String cvPath, LocalDateTime createdAt) {
         this.name = name;
@@ -24,7 +23,6 @@ public class Student {
         this.createdAt = createdAt;
     }
 
-    // Getters and setters
     public int getStudentId() { return studentId; }
     public void setStudentId(int studentId) { this.studentId = studentId; }
 

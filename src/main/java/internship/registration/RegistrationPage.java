@@ -39,7 +39,6 @@ public class RegistrationPage extends JPanel {
         gbc.insets = new Insets(6, 0, 6, 0);
         gbc.gridx = 0;
 
-        // ===== LOGO =====
         ImageIcon logoIcon = new ImageIcon("src/main/resources/logo/img.png");
         Image img = logoIcon.getImage();
         Image scaledImg = img.getScaledInstance(150, 100, Image.SCALE_SMOOTH);
@@ -50,7 +49,6 @@ public class RegistrationPage extends JPanel {
         gbc.insets = new Insets(0, 0, 10, 0);
         formCard.add(logoLabel, gbc);
 
-        // ===== TITLE =====
         JLabel registerTitle = new JLabel("REGISTER", SwingConstants.CENTER);
         registerTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
         registerTitle.setForeground(TEXT_DARK);
@@ -66,7 +64,6 @@ public class RegistrationPage extends JPanel {
         JPasswordField passField = createStyledPasswordField();
         JPasswordField confirmPassField = createStyledPasswordField();
 
-        // Gender radio buttons
         JRadioButton maleBtn = new JRadioButton("Male");
         JRadioButton femaleBtn = new JRadioButton("Female");
         ButtonGroup genderGroup = new ButtonGroup();
@@ -76,7 +73,6 @@ public class RegistrationPage extends JPanel {
         genderPanel.add(maleBtn);
         genderPanel.add(femaleBtn);
 
-        // Role radio buttons
         JRadioButton studentBtn = new JRadioButton("Student");
         JRadioButton companyBtn = new JRadioButton("Company");
         JRadioButton adminBtn   = new JRadioButton("Admin");
@@ -84,7 +80,7 @@ public class RegistrationPage extends JPanel {
         roleGroup.add(studentBtn);
         roleGroup.add(companyBtn);
         roleGroup.add(adminBtn);
-        studentBtn.setSelected(true); // default
+        studentBtn.setSelected(true);
         JPanel rolePanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         rolePanel.add(studentBtn);
         rolePanel.add(companyBtn);
@@ -98,7 +94,6 @@ public class RegistrationPage extends JPanel {
         addFormField(formCard, "Gender:", genderPanel, gbc, 12);
         addFormField(formCard, "Register As:", rolePanel, gbc, 14);
 
-        // ===== REGISTER BUTTON =====
         JButton regButton = new JButton("CREATE ACCOUNT");
         regButton.setBackground(PRIMARY_BLUE);
         regButton.setForeground(Color.WHITE);
@@ -110,7 +105,6 @@ public class RegistrationPage extends JPanel {
         gbc.insets = new Insets(15, 0, 10, 0);
         formCard.add(regButton, gbc);
 
-        // ===== LOGIN LINK + BUTTON =====
         JLabel loginLabel = new JLabel("Already have an account?");
         loginLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         loginLabel.setForeground(TEXT_DARK);
@@ -140,7 +134,6 @@ public class RegistrationPage extends JPanel {
 
         add(formCard, BorderLayout.CENTER);
 
-        // ===== ACTIONS =====
         regButton.addActionListener(e -> {
             String name = nameField.getText().trim();
             String email = emailField.getText().trim();
@@ -150,7 +143,6 @@ public class RegistrationPage extends JPanel {
             String gender = maleBtn.isSelected() ? "M" : (femaleBtn.isSelected() ? "F" : null);
             String role = studentBtn.isSelected() ? "student" : companyBtn.isSelected() ? "company" : "admin";
 
-            // Validations
             if (name.isEmpty() || email.isEmpty() || phone.isEmpty() || pass.isEmpty() || gender == null) {
                 JOptionPane.showMessageDialog(this, "Please fill all fields", "Error", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -241,7 +233,6 @@ public class RegistrationPage extends JPanel {
         return field;
     }
 
-    // For standalone testing
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JPanel mainContent = new JPanel(new CardLayout());

@@ -10,7 +10,7 @@ import internship.companydashboard.Companydashboard;
 import internship.admindashboard.Admindashboard;
 
 public class SettingsPage extends JPanel {
-    // ===== COLORS =====
+
     private static final Color CONTENT_BG  = new Color(240, 240, 240);
     private static final Color CARD_BG     = Color.WHITE;
     private static final Color HEADER_BG   = new Color(200, 60, 50);
@@ -24,7 +24,6 @@ public class SettingsPage extends JPanel {
     private final CardLayout cardLayout;
     private final JPanel mainContent;
 
-    // State
     private String selectedTheme = "Light";
     private JPanel themeLight, themeDark, themeSystem;
 
@@ -35,7 +34,6 @@ public class SettingsPage extends JPanel {
     private JLabel lblRowsVal;
     private JCheckBox chkAutoSave, chkCompact, chkTips;
 
-    // ===== CONSTRUCTOR =====
     public SettingsPage(String callerRole, CardLayout cardLayout, JPanel mainContent) {
         this.callerRole = callerRole;
         this.cardLayout = cardLayout;
@@ -44,11 +42,9 @@ public class SettingsPage extends JPanel {
         setLayout(new BorderLayout());
         setBackground(CONTENT_BG);
 
-        // Content
         add(buildContent(), BorderLayout.CENTER);
     }
 
-    // ===== CONTENT =====
     private JPanel buildContent() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setBackground(CONTENT_BG);
@@ -85,7 +81,6 @@ public class SettingsPage extends JPanel {
         return wrapper;
     }
 
-    // ===== THEME CARD =====
     private JPanel buildThemeCard() {
         JPanel card = card();
         card.add(sectionHeader("Appearance & Theme"), BorderLayout.NORTH);
@@ -193,7 +188,6 @@ public class SettingsPage extends JPanel {
         return card;
     }
 
-    // ===== NOTIFICATIONS CARD =====
     private JPanel buildNotificationsCard() {
         JPanel card = card();
         card.add(sectionHeader("Notification Preferences"), BorderLayout.NORTH);
@@ -216,7 +210,6 @@ public class SettingsPage extends JPanel {
         return card;
     }
 
-    // ===== DISPLAY CARD =====
     private JPanel buildDisplayCard() {
         JPanel card = card();
         card.add(sectionHeader("Display & Accessibility"), BorderLayout.NORTH);
@@ -275,7 +268,6 @@ public class SettingsPage extends JPanel {
         return card;
     }
 
-    // ===== ACTIONS CARD =====
     private JPanel buildActionsCard() {
         JPanel card = card();
 
@@ -313,7 +305,6 @@ public class SettingsPage extends JPanel {
         return card;
     }
 
-    // ===== RESET =====
     private void resetDefaults() {
         selectedTheme = "Light";
         refreshThemeBorders();
@@ -332,7 +323,6 @@ public class SettingsPage extends JPanel {
         chkTips.setSelected(true);
     }
 
-    // ===== SHARED HELPERS =====
     private JPanel card() {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(CARD_BG);
@@ -433,7 +423,6 @@ public class SettingsPage extends JPanel {
         return b;
     }
 
-    // ===== MAIN for standalone testing =====
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -445,7 +434,6 @@ public class SettingsPage extends JPanel {
             frame.setSize(860, 800);
             frame.setLocationRelativeTo(null);
 
-            // Create CardLayout + mainContent
             CardLayout cardLayout = new CardLayout();
             JPanel mainContent = new JPanel(cardLayout);
 
@@ -454,13 +442,11 @@ public class SettingsPage extends JPanel {
             dashboard.add(new JLabel("Dashboard Page"));
             mainContent.add(dashboard, "studentDashboard");
 
-            // Register both dashboard and settings page
             mainContent.add(new StudentDashboard(cardLayout, mainContent), "studentDashboard");
             mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
 
-            // Show settings page first
             cardLayout.show(mainContent, "settings");
-            // Settings page (pass all 3 arguments)
+
             mainContent.add(new SettingsPage("Company", cardLayout, mainContent), "settings");
             mainContent.add(new SettingsPage("Admin", cardLayout, mainContent), "settings");
 

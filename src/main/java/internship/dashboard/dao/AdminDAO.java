@@ -9,7 +9,6 @@ import java.util.List;
 
 public class AdminDAO {
 
-    // CREATE
     public void addAdmin(Admin admin) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {
             String sql = "INSERT INTO admin (name, email, password, role) VALUES (?, ?, ?, ?)";
@@ -22,7 +21,6 @@ public class AdminDAO {
         }
     }
 
-    // READ
     public List<Admin> getAllAdmins() throws Exception {
         List<Admin> admins = new ArrayList<>();
         try (Connection conn = DBConnection.getConnection()) {
@@ -44,7 +42,6 @@ public class AdminDAO {
         return admins;
     }
 
-    // UPDATE
     public void updateAdmin(Admin admin) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {
             String sql = "UPDATE admin SET name = ?, email = ?, password = ?, role = ? WHERE admin_id = ?";
@@ -58,7 +55,6 @@ public class AdminDAO {
         }
     }
 
-    // DELETE
     public void deleteAdmin(int adminId) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {
             String sql = "DELETE FROM admin WHERE admin_id = ?";
@@ -83,7 +79,6 @@ public class AdminDAO {
         return false;
     }
 
-    // Validate login
     public boolean validateLogin(String email, String password) throws Exception {
         try (Connection conn = DBConnection.getConnection()) {
             String sql = "SELECT * FROM admin WHERE email = ? AND password = ?";

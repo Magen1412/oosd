@@ -17,37 +17,17 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * Approve / Reject Application Page
- * Part of: Internship Management System (OOSD Assignment)
- * Admin Interface – Page 19
- *
- * Features:
- *  - Master–detail layout: filterable JTable (top) + detail panel (bottom)
- *  - Filter bar: keyword, status dropdown, date-range, internship filter
- *  - Bulk-select via checkboxes: approve / reject multiple rows at once
- *  - Single-row action buttons: Approve, Reject, Schedule Interview, View CV
- *  - Inline status badge renderer (colour-coded)
- *  - Remarks/feedback text area populated per selection
- *  - Audit trail panel showing the last actions taken this session
- *  - Statistics bar: live counts of Pending / Approved / Rejected / Interviewed
- *  - Confirmation dialogs with remarks before every state change
- *  - Fully responsive — reflows cleanly on resize / minimise
- */
 public class ChoiceApplicationPage extends JFrame {
 
-    // ===================================================
-    // THEME  (identical across all IMS pages)
-    // ===================================================
     private static final Color PRIMARY      = new Color(30, 90, 160);
     private static final Color PRIMARY_HOV  = new Color(20, 65, 120);
-    private static final Color ACCENT       = new Color(0, 168, 120);    // Approved / green
+    private static final Color ACCENT       = new Color(0, 168, 120);
     private static final Color ACCENT_LIGHT = new Color(225, 248, 240);
-    private static final Color WARNING      = new Color(210, 120, 0);    // Interviewed / amber
+    private static final Color WARNING      = new Color(210, 120, 0);
     private static final Color WARNING_LIGHT= new Color(255, 243, 224);
-    private static final Color DANGER       = new Color(200, 45,  45);   // Rejected / red
+    private static final Color DANGER       = new Color(200, 45,  45);
     private static final Color DANGER_LIGHT = new Color(255, 236, 236);
-    private static final Color PENDING_CLR  = new Color(60, 100, 200);   // Pending / blue
+    private static final Color PENDING_CLR  = new Color(60, 100, 200);
     private static final Color PENDING_LITE = new Color(230, 238, 255);
     private static final Color BG           = new Color(245, 247, 252);
     private static final Color CARD_BG      = Color.WHITE;
@@ -75,10 +55,6 @@ public class ChoiceApplicationPage extends JFrame {
     private static final DateTimeFormatter DATE_FMT =
             DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    // ===================================================
-    // APPLICATION MODEL
-    // ===================================================
-    /** Mutable application record — simulates a DB row */
     private static class Application {
         int    id;
         String studentName, studentEmail, studentCourse;
@@ -97,9 +73,6 @@ public class ChoiceApplicationPage extends JFrame {
         }
     }
 
-    // ===================================================
-    // MOCK DATA  — replace with ApplicationDAO.findAll()
-    // ===================================================
     private final List<Application> allApplications = new ArrayList<>(Arrays.asList(
             new Application(1001,"Aisha Ramdhun",   "aisha@uni.mu",   "BSc CS",          "Software Engineering Intern","TechNova Ltd",       "IT & Software","15/03/2026","Pending",  true),
             new Application(1002,"Kevin Bhunjun",   "kevin@uni.mu",   "BSc Finance",     "Finance Intern",             "Horizon Bank",        "Finance",      "16/03/2026","Pending",  true),
@@ -118,27 +91,17 @@ public class ChoiceApplicationPage extends JFrame {
             new Application(1015,"Meera Hurreeram", "meera@uni.mu",   "BSc Supply Chain","Supply Chain Intern",        "LogiFlow Ltd",        "Logistics",    "27/03/2026","Pending",  true)
     ));
 
-    // Session audit trail
     private final List<String> auditLog = new ArrayList<>();
-
-    // ===================================================
-    // UI REFERENCES
-    // ===================================================
-    // Filter bar
     private JTextField       txtSearch;
     private JComboBox<String> cmbStatusFilter;
     private JComboBox<String> cmbIndustryFilter;
     private JButton          btnApplyFilter, btnClearFilter;
 
-    // Stats bar
     private JLabel lblStatPending, lblStatApproved, lblStatRejected, lblStatInterviewed;
     private JLabel lblResultCount;
 
-    // Table
     private JTable            table;
     private DefaultTableModel tableModel;
-
-    // Detail panel
     private JPanel  detailPanel;
     private JLabel  detailName, detailEmail, detailCourse;
     private JLabel  detailInternship, detailCompany, detailIndustry;
@@ -147,15 +110,10 @@ public class ChoiceApplicationPage extends JFrame {
     private JButton btnApprove, btnReject, btnInterview, btnViewCV;
     private JLabel  lblNoSelection;
 
-    // Audit panel
     private DefaultListModel<String> auditListModel;
 
-    // Currently selected application
     private Application selectedApp = null;
 
-    // ===================================================
-    // CONSTRUCTOR
-    // ===================================================
     public ChoiceApplicationPage() {
         setTitle("Internship Management System – Approve / Reject Applications");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -167,10 +125,9 @@ public class ChoiceApplicationPage extends JFrame {
         setContentPane(root);
 
         root.add(buildTopBar(),      BorderLayout.NORTH);
-        root.add(buildStatsBar(),    BorderLayout.CENTER);  // wrapped below
+        root.add(buildStatsBar(),    BorderLayout.CENTER);
 
-        // Replace CENTER with a vertical split: stats + main content
-        root.remove(buildStatsBar()); // rebuild properly
+        root.remove(buildStatsBar());
         JPanel body = new JPanel(new BorderLayout(0, 0));
         body.setBackground(BG);
         body.add(buildStatsBar(),   BorderLayout.NORTH);
@@ -184,9 +141,6 @@ public class ChoiceApplicationPage extends JFrame {
         setVisible(true);
     }
 
-    // ===================================================
-    // TOP BAR
-    // ===================================================
     private JPanel buildTopBar() {
         JPanel bar = new JPanel() {
             @Override protected void paintComponent(Graphics g) {
@@ -206,19 +160,16 @@ public class ChoiceApplicationPage extends JFrame {
         bar.setBorder(new EmptyBorder(14, 28, 14, 28));
         bar.setPreferredSize(new Dimension(0, 88));
 
-        // Left block
         JPanel left = new JPanel(new GridBagLayout());
         left.setOpaque(false);
         GridBagConstraints lc = new GridBagConstraints();
         lc.anchor = GridBagConstraints.WEST;
 
-        // Badge
         JPanel badge = makeBadgePanel("⚙");
         lc.gridx = 0; lc.gridy = 0; lc.gridheight = 2;
         lc.insets = new Insets(0, 0, 0, 14);
         left.add(badge, lc);
 
-        // Title + subtitle
         JPanel tb = new JPanel();
         tb.setLayout(new BoxLayout(tb, BoxLayout.Y_AXIS));
         tb.setOpaque(false);
@@ -235,16 +186,12 @@ public class ChoiceApplicationPage extends JFrame {
         lc.gridx = 1; lc.gridy = 0; lc.gridheight = 2; lc.insets = new Insets(0,0,0,0);
         left.add(tb, lc);
 
-        // Right: admin chip
         JPanel chip = makeCompanyChip("👤  Admin Panel");
         bar.add(left, BorderLayout.WEST);
         bar.add(chip, BorderLayout.EAST);
         return bar;
     }
 
-    // ===================================================
-    // STATS BAR
-    // ===================================================
     private JPanel buildStatsBar() {
         JPanel bar = new JPanel(new GridLayout(1, 4, 12, 0));
         bar.setBackground(BG);
@@ -295,9 +242,6 @@ public class ChoiceApplicationPage extends JFrame {
         return card;
     }
 
-    // ===================================================
-    // MAIN CONTENT  – filter bar + table + detail+audit
-    // ===================================================
     private JPanel buildContentArea() {
         JPanel content = new JPanel(new BorderLayout(0, 12));
         content.setBackground(BG);
@@ -305,7 +249,6 @@ public class ChoiceApplicationPage extends JFrame {
 
         content.add(buildFilterBar(), BorderLayout.NORTH);
 
-        // Vertical split: table (top 55%) | detail+audit (bottom 45%)
         JSplitPane split = new JSplitPane(JSplitPane.VERTICAL_SPLIT,
                 buildTablePanel(), buildBottomRow());
         split.setResizeWeight(0.55);
@@ -318,9 +261,6 @@ public class ChoiceApplicationPage extends JFrame {
         return content;
     }
 
-    // ===================================================
-    // FILTER BAR
-    // ===================================================
     private JPanel buildFilterBar() {
         JPanel bar = new JPanel(new GridBagLayout());
         bar.setBackground(CARD_BG);
@@ -333,7 +273,6 @@ public class ChoiceApplicationPage extends JFrame {
         c.insets = new Insets(0, 0, 0, 10);
         c.anchor = GridBagConstraints.WEST;
 
-        // Search
         c.gridx = 0; c.gridy = 0; c.weightx = 0;
         bar.add(makeFilterLabel("Search:"), c);
 
@@ -342,7 +281,6 @@ public class ChoiceApplicationPage extends JFrame {
         txtSearch.setToolTipText("Student name, email or internship title");
         bar.add(txtSearch, c);
 
-        // Status
         c.gridx = 2; c.weightx = 0;
         bar.add(makeFilterLabel("Status:"), c);
 
@@ -351,7 +289,6 @@ public class ChoiceApplicationPage extends JFrame {
                 "All Statuses","Pending","Approved","Rejected","Interviewed"});
         bar.add(cmbStatusFilter, c);
 
-        // Industry
         c.gridx = 4; c.weightx = 0;
         bar.add(makeFilterLabel("Industry:"), c);
 
@@ -361,7 +298,6 @@ public class ChoiceApplicationPage extends JFrame {
                 "Human Resources","Design","Business","Legal","Logistics"});
         bar.add(cmbIndustryFilter, c);
 
-        // Buttons
         c.gridx = 6; c.weightx = 0; c.insets = new Insets(0, 6, 0, 4);
         btnApplyFilter = makeButton("Filter", PRIMARY, Color.WHITE);
         btnApplyFilter.addActionListener(e -> applyFilter());
@@ -377,14 +313,10 @@ public class ChoiceApplicationPage extends JFrame {
         return bar;
     }
 
-    // ===================================================
-    // TABLE PANEL
-    // ===================================================
     private JPanel buildTablePanel() {
         JPanel panel = new JPanel(new BorderLayout(0, 8));
         panel.setBackground(BG);
 
-        // Count label
         JPanel topRow = new JPanel(new BorderLayout());
         topRow.setOpaque(false);
         lblResultCount = new JLabel("Showing all 15 applications");
@@ -393,7 +325,6 @@ public class ChoiceApplicationPage extends JFrame {
         topRow.add(lblResultCount, BorderLayout.WEST);
         panel.add(topRow, BorderLayout.NORTH);
 
-        // Table
         String[] cols = {"✓", "#", "Student Name", "Course", "Internship Title",
                 "Company", "Industry", "Applied On", "Status"};
         tableModel = new DefaultTableModel(cols, 0) {
@@ -406,7 +337,6 @@ public class ChoiceApplicationPage extends JFrame {
         table = new JTable(tableModel);
         styleTable();
 
-        // Row selection → populate detail panel
         table.getSelectionModel().addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) onRowSelected();
         });
@@ -419,9 +349,6 @@ public class ChoiceApplicationPage extends JFrame {
         return panel;
     }
 
-    // ===================================================
-    // BOTTOM ROW  – detail panel (left) + audit log (right)
-    // ===================================================
     private JPanel buildBottomRow() {
         JPanel row = new JPanel(new GridLayout(1, 2, 12, 0));
         row.setBackground(BG);
@@ -430,7 +357,6 @@ public class ChoiceApplicationPage extends JFrame {
         return row;
     }
 
-    // ── Detail / Action Panel ────────────────────────────
     private JPanel buildDetailPanel() {
         JPanel outer = new JPanel(new BorderLayout());
         outer.setBackground(CARD_BG);
@@ -438,18 +364,15 @@ public class ChoiceApplicationPage extends JFrame {
                 new LineBorder(BORDER_CLR, 1, true),
                 new EmptyBorder(0, 0, 0, 0)));
 
-        // Header
         JPanel hdr = buildSectionHeader("📄  Application Details");
         outer.add(hdr, BorderLayout.NORTH);
 
-        // No-selection placeholder
         lblNoSelection = new JLabel(
                 "<html><center>Select an application from the table<br>to review its details.</center></html>",
                 SwingConstants.CENTER);
         lblNoSelection.setFont(new Font("Segoe UI", Font.ITALIC, 13));
         lblNoSelection.setForeground(TEXT_MUTED);
 
-        // Detail content (hidden until row selected)
         detailPanel = new JPanel(new GridBagLayout());
         detailPanel.setBackground(CARD_BG);
         detailPanel.setBorder(new EmptyBorder(14, 16, 10, 16));
@@ -460,7 +383,6 @@ public class ChoiceApplicationPage extends JFrame {
         c.insets = new Insets(3, 0, 3, 16);
         int row = 0;
 
-        // Student section
         c.gridx = 0; c.gridy = row; c.gridwidth = 2;
         detailPanel.add(makeDetailSection("👤  Student"), c);
         row++;
@@ -473,7 +395,6 @@ public class ChoiceApplicationPage extends JFrame {
         row = addDetailRow(detailPanel, c, row, "Email:",   detailEmail);
         row = addDetailRow(detailPanel, c, row, "Course:",  detailCourse);
 
-        // Internship section
         c.gridy = row; c.gridx = 0; c.gridwidth = 2;
         c.insets = new Insets(10, 0, 3, 16);
         detailPanel.add(makeDetailSection("🏢  Internship"), c);
@@ -492,7 +413,6 @@ public class ChoiceApplicationPage extends JFrame {
         row = addDetailRow(detailPanel, c, row, "Applied:",  detailDate);
         row = addDetailRow(detailPanel, c, row, "Status:",   detailStatus);
 
-        // Remarks
         c.gridy = row; c.gridx = 0; c.gridwidth = 2;
         c.insets = new Insets(10, 0, 4, 0);
         detailPanel.add(makeDetailSection("💬  Remarks / Feedback"), c);
@@ -513,7 +433,6 @@ public class ChoiceApplicationPage extends JFrame {
         c.insets = new Insets(0, 0, 10, 0);
         detailPanel.add(rsPane, c);
 
-        // Action buttons
         JPanel actionRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         actionRow.setOpaque(false);
 
@@ -537,7 +456,6 @@ public class ChoiceApplicationPage extends JFrame {
         c.insets = new Insets(4, 0, 6, 0);
         detailPanel.add(actionRow, c);
 
-        // Bulk action bar (shown at bottom)
         JPanel bulkBar = buildBulkBar();
 
         JPanel wrapper = new JPanel(new CardLayout());
@@ -581,7 +499,6 @@ public class ChoiceApplicationPage extends JFrame {
         return bar;
     }
 
-    // ── Audit Log Panel ──────────────────────────────────
     private JPanel buildAuditPanel() {
         JPanel outer = new JPanel(new BorderLayout());
         outer.setBackground(CARD_BG);
@@ -603,7 +520,6 @@ public class ChoiceApplicationPage extends JFrame {
         auditScroll.setBorder(null);
         outer.add(auditScroll, BorderLayout.CENTER);
 
-        // Footer
         JPanel footer = new JPanel(new BorderLayout());
         footer.setBackground(SECTION_HDR);
         footer.setBorder(BorderFactory.createCompoundBorder(
@@ -618,9 +534,6 @@ public class ChoiceApplicationPage extends JFrame {
         return outer;
     }
 
-    // ===================================================
-    // TABLE STYLING
-    // ===================================================
     private void styleTable() {
         table.setFont(FONT_TABLE);
         table.setForeground(TEXT_DARK);
@@ -642,17 +555,14 @@ public class ChoiceApplicationPage extends JFrame {
         hdr.setPreferredSize(new Dimension(0, 38));
         hdr.setReorderingAllowed(false);
 
-        // Column widths:  ✓  #  Name  Course  Title  Company  Industry  Date  Status
         int[] widths = {34, 44, 150, 120, 190, 130, 110, 90, 90};
         for (int i = 0; i < widths.length; i++)
             table.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);
         table.getColumnModel().getColumn(0).setMaxWidth(34);
         table.getColumnModel().getColumn(1).setMaxWidth(50);
 
-        // Status badge renderer (col 8)
         table.getColumnModel().getColumn(8).setCellRenderer(new StatusBadgeRenderer());
 
-        // Default renderer for all other object columns
         DefaultTableCellRenderer base = new DefaultTableCellRenderer() {
             @Override public Component getTableCellRendererComponent(
                     JTable t, Object v, boolean sel, boolean foc, int r, int c) {
@@ -669,9 +579,6 @@ public class ChoiceApplicationPage extends JFrame {
             table.getColumnModel().getColumn(i).setCellRenderer(base);
     }
 
-    // ===================================================
-    // DATA OPERATIONS
-    // ===================================================
     private void refreshTable(List<Application> apps) {
         tableModel.setRowCount(0);
         for (Application a : apps) {
@@ -732,9 +639,6 @@ public class ChoiceApplicationPage extends JFrame {
         lblStatInterviewed.setText(String.valueOf(interviewed));
     }
 
-    // ===================================================
-    // ROW SELECTION → POPULATE DETAIL PANEL
-    // ===================================================
     private void onRowSelected() {
         int viewRow = table.getSelectedRow();
         if (viewRow < 0) { clearDetailPanel(); return; }
@@ -756,14 +660,12 @@ public class ChoiceApplicationPage extends JFrame {
         detailStatus.setForeground(statusColour(selectedApp.status));
         txtRemarks.setText(selectedApp.remarks);
 
-        // Enable / disable action buttons based on current status
         boolean isPending = "Pending".equals(selectedApp.status);
         btnApprove.setEnabled(!("Approved".equals(selectedApp.status)));
         btnReject.setEnabled(!("Rejected".equals(selectedApp.status)));
         btnInterview.setEnabled(!("Interviewed".equals(selectedApp.status)));
         btnViewCV.setEnabled(selectedApp.hasCV);
 
-        // Show the detail card
         lblNoSelection.setVisible(false);
         detailPanel.setVisible(true);
     }
@@ -775,9 +677,6 @@ public class ChoiceApplicationPage extends JFrame {
         table.clearSelection();
     }
 
-    // ===================================================
-    // DECISION ACTIONS (single row)
-    // ===================================================
     private void handleDecision(String newStatus) {
         if (selectedApp == null) return;
 
@@ -804,19 +703,15 @@ public class ChoiceApplicationPage extends JFrame {
 
         if (confirm != JOptionPane.YES_OPTION) return;
 
-        // Persist change (DAO call slot)
         selectedApp.status  = newStatus;
         selectedApp.remarks = txtRemarks.getText().trim();
 
-        // Refresh table cell
         int viewRow = table.getSelectedRow();
         if (viewRow >= 0) tableModel.setValueAt(newStatus, viewRow, 8);
 
-        // Re-populate detail
         detailStatus.setText(newStatus);
         detailStatus.setForeground(statusColour(newStatus));
 
-        // Update button states
         btnApprove.setEnabled(!("Approved".equals(newStatus)));
         btnReject.setEnabled(!("Rejected".equals(newStatus)));
         btnInterview.setEnabled(!("Interviewed".equals(newStatus)));
@@ -839,11 +734,8 @@ public class ChoiceApplicationPage extends JFrame {
         logAudit("📄 CV viewed  –  " + selectedApp.studentName);
     }
 
-    // ===================================================
-    // BULK ACTION
-    // ===================================================
     private void handleBulk(String newStatus) {
-        // Collect checked rows
+
         List<Integer> checkedIds = new ArrayList<>();
         for (int r = 0; r < tableModel.getRowCount(); r++) {
             if (Boolean.TRUE.equals(tableModel.getValueAt(r, 0))) {
@@ -869,7 +761,6 @@ public class ChoiceApplicationPage extends JFrame {
                     .ifPresent(a -> a.status = newStatus);
         }
 
-        // Sync table
         for (int r = 0; r < tableModel.getRowCount(); r++) {
             int id = (int) tableModel.getValueAt(r, 1);
             if (checkedIds.contains(id)) {
@@ -885,9 +776,6 @@ public class ChoiceApplicationPage extends JFrame {
                 "Bulk Done", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    // ===================================================
-    // AUDIT LOG
-    // ===================================================
     private void logAudit(String entry) {
         String timestamp = LocalDate.now().format(DATE_FMT);
         String line = timestamp + "  ·  " + entry;
@@ -895,13 +783,10 @@ public class ChoiceApplicationPage extends JFrame {
                 auditListModel.get(0).startsWith("  No actions")) {
             auditListModel.clear();
         }
-        auditListModel.add(0, line);  // newest at top
+        auditListModel.add(0, line);
         auditLog.add(line);
     }
 
-    // ===================================================
-    // HELPERS
-    // ===================================================
     private Color statusColour(String status) {
         return switch (status) {
             case "Approved"    -> ACCENT;
@@ -1077,9 +962,6 @@ public class ChoiceApplicationPage extends JFrame {
         return chip;
     }
 
-    // ===================================================
-    // CUSTOM CELL RENDERERS
-    // ===================================================
     /** Colour-coded status badge */
     private class StatusBadgeRenderer extends DefaultTableCellRenderer {
         @Override public Component getTableCellRendererComponent(
@@ -1120,9 +1002,6 @@ public class ChoiceApplicationPage extends JFrame {
         }
     }
 
-    // ===================================================
-    // ENTRY POINT
-    // ===================================================
     public static void main(String[] args) {
         try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); }
         catch (Exception ignored) {}

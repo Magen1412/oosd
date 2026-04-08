@@ -22,35 +22,29 @@ public class MainPage extends JFrame {
         setSize(1000, 700);
         setLocationRelativeTo(null);
 
-        // Core layout
         cardLayout = new CardLayout();
         mainContent = new JPanel(cardLayout);
 
-        // Register all pages
         mainContent.add(new StudentDashboard(cardLayout, mainContent), "dashboard");
-        mainContent.add(new ProfilePage(), "profile");
+        mainContent.add(new ProfilePage(cardLayout, mainContent), "profilePage");
         mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
         mainContent.add(new SupportPage(cardLayout, mainContent), "support");
 
-        // Sidebar navigation
         JPanel sidebar = new JPanel();
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
         sidebar.setPreferredSize(new Dimension(180, getHeight()));
 
         sidebar.add(navButton("Dashboard", "dashboard"));
-        sidebar.add(navButton("Profile", "profile"));
+        sidebar.add(navButton("Profile", "profilePage"));
         sidebar.add(navButton("Settings", "settings"));
         sidebar.add(navButton("Support", "support"));
 
-        // Top bar with greeting + icons
         JPanel topBar = buildTopBar();
 
-        // Layout: sidebar left, topBar north, main content center
         add(sidebar, BorderLayout.WEST);
         add(topBar, BorderLayout.NORTH);
         add(mainContent, BorderLayout.CENTER);
 
-        // Start with dashboard
         cardLayout.show(mainContent, "dashboard");
     }
 
@@ -88,12 +82,11 @@ public class MainPage extends JFrame {
         JLabel avatar = new JLabel(avatarIcon, SwingConstants.CENTER);
         JLabel gear   = new JLabel(gearIcon, SwingConstants.CENTER);
 
-        // Make them clickable
         avatar.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         avatar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                cardLayout.show(mainContent, "profile");
+                cardLayout.show(mainContent, "profilePage");
             }
         });
 
@@ -122,15 +115,12 @@ public class MainPage extends JFrame {
             frame.setSize(860, 800);
             frame.setLocationRelativeTo(null);
 
-            // Create CardLayout and mainContent
             CardLayout cardLayout = new CardLayout();
             JPanel mainContent = new JPanel(cardLayout);
 
-            // Add dashboard and settings page
             mainContent.add(new StudentDashboard(cardLayout, mainContent), "dashboard");
             mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
 
-            // Show dashboard first
             cardLayout.show(mainContent, "dashboard");
 
             frame.setContentPane(mainContent);

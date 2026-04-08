@@ -20,7 +20,6 @@ public class Company {
         this.role = role;
     }
 
-    // Getters and setters
     public int getCompanyId() { return companyId; }
     public void setCompanyId(int companyId) { this.companyId = companyId; }
 

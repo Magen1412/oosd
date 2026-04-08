@@ -10,7 +10,6 @@ import java.io.File;
 
 public class internshipschedule extends JPanel {
 
-    // ===== COLORS (matching Dashboard theme) =====
     private static final Color SIDEBAR_BG    = new Color(60, 63, 65);
     private static final Color SIDEBAR_HOVER = new Color(80, 83, 85);
     private static final Color SIDEBAR_TEXT  = new Color(220, 220, 220);
@@ -29,17 +28,14 @@ public class internshipschedule extends JPanel {
     private static final Color UPLOAD_BG     = new Color(245, 248, 252);
     private static final Color UPLOAD_BORDER = new Color(180, 200, 230);
 
-    // Status colors
     private static final Color STATUS_SCHEDULED = new Color(70, 130, 180);
     private static final Color STATUS_CONFIRMED  = new Color(60, 160, 80);
     private static final Color STATUS_CANCELLED  = new Color(200, 60, 50);
     private static final Color STATUS_PENDING    = new Color(230, 150, 40);
 
-    // ===== CARDLAYOUT NAVIGATION =====
     private final CardLayout cardLayout;
     private final JPanel mainContent;
 
-    // Form fields
     private JComboBox<String> cmbCandidate, cmbPosition, cmbInterviewType,
             cmbInterviewDay, cmbInterviewMonth, cmbInterviewYear,
             cmbStartHour, cmbStartMin, cmbEndHour, cmbEndMin,
@@ -49,11 +45,9 @@ public class internshipschedule extends JPanel {
     private JLabel     lblAttachmentName;
     private File       attachedFile = null;
 
-    // Table
     private DefaultTableModel tableModel;
     private JTable table;
 
-    // Sample data
     private final Object[][] scheduledData = {
             {"001", "John Doe",   "Software Intern",   "20/03/2026", "10:00 - 11:00", "Online", "Alice Manager", "Scheduled"},
             {"002", "Jane Smith", "Web Dev Intern",    "21/03/2026", "14:00 - 15:00", "Onsite", "Bob Director",  "Confirmed"},
@@ -61,7 +55,6 @@ public class internshipschedule extends JPanel {
             {"004", "Sara Lee",   "IT Support Intern", "23/03/2026", "11:00 - 12:00", "Hybrid", "Carol HR",      "Cancelled"},
     };
 
-    // ===== CONSTRUCTOR =====
     public internshipschedule(CardLayout cardLayout, JPanel mainContent) {
         this.cardLayout  = cardLayout;
         this.mainContent = mainContent;
@@ -71,7 +64,6 @@ public class internshipschedule extends JPanel {
         add(buildContent(), BorderLayout.CENTER);
     }
 
-    // ===== MAIN CONTENT =====
     private JPanel buildContent() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setBackground(CONTENT_BG);
@@ -102,7 +94,6 @@ public class internshipschedule extends JPanel {
         return wrapper;
     }
 
-    // ===== CARD 1: SCHEDULE FORM =====
     private JPanel buildScheduleFormCard() {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(CARD_BG);
@@ -155,19 +146,16 @@ public class internshipschedule extends JPanel {
         txtMeetingLink = createStyledField("https://meet.google.com/...");
         txtLocation    = createStyledField("e.g. Room 3B, Head Office");
 
-        // Row 0: Candidate | Position
         gbc.gridx=0; gbc.gridy=0; gbc.weightx=0.2; formLabel(form,"Candidate *",gbc);
         gbc.gridx=1; gbc.weightx=0.8; form.add(cmbCandidate,gbc);
         gbc.gridx=2; gbc.weightx=0.2; formLabel(form,"Position *",gbc);
         gbc.gridx=3; gbc.weightx=0.8; form.add(cmbPosition,gbc);
 
-        // Row 1: Interviewer | Interview Type
         gbc.gridx=0; gbc.gridy=1; gbc.weightx=0.2; formLabel(form,"Interviewer *",gbc);
         gbc.gridx=1; gbc.weightx=0.8; form.add(cmbInterviewer,gbc);
         gbc.gridx=2; gbc.weightx=0.2; formLabel(form,"Interview Type",gbc);
         gbc.gridx=3; gbc.weightx=0.8; form.add(cmbInterviewType,gbc);
 
-        // Row 2: Date | Format
         gbc.gridx=0; gbc.gridy=2; gbc.weightx=0.2; formLabel(form,"Interview Date *",gbc);
         gbc.gridx=1; gbc.weightx=0.8;
         JPanel dateRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0));
@@ -180,19 +168,16 @@ public class internshipschedule extends JPanel {
         gbc.gridx=2; gbc.weightx=0.2; formLabel(form,"Format",gbc);
         gbc.gridx=3; gbc.weightx=0.8; form.add(cmbFormat,gbc);
 
-        // Row 3: Start Time | End Time
         gbc.gridx=0; gbc.gridy=3; gbc.weightx=0.2; formLabel(form,"Start Time *",gbc);
         gbc.gridx=1; gbc.weightx=0.8; form.add(buildTimeRow(cmbStartHour,cmbStartMin),gbc);
         gbc.gridx=2; gbc.weightx=0.2; formLabel(form,"End Time *",gbc);
         gbc.gridx=3; gbc.weightx=0.8; form.add(buildTimeRow(cmbEndHour,cmbEndMin),gbc);
 
-        // Row 4: Meeting Link | Location
         gbc.gridx=0; gbc.gridy=4; gbc.weightx=0.2; formLabel(form,"Meeting Link",gbc);
         gbc.gridx=1; gbc.weightx=0.8; form.add(txtMeetingLink,gbc);
         gbc.gridx=2; gbc.weightx=0.2; formLabel(form,"Location",gbc);
         gbc.gridx=3; gbc.weightx=0.8; form.add(txtLocation,gbc);
 
-        // Row 5: Notes (full width)
         gbc.gridx=0; gbc.gridy=5; gbc.weightx=0.2;
         gbc.insets = new Insets(8,0,0,20);
         formLabel(form,"Notes",gbc);
@@ -212,7 +197,6 @@ public class internshipschedule extends JPanel {
 
         card.add(form, BorderLayout.CENTER);
 
-        // Attachment + action buttons
         JPanel bottomPanel = new JPanel(new BorderLayout());
         bottomPanel.setBackground(CARD_BG);
         bottomPanel.setBorder(BorderFactory.createEmptyBorder(20,0,0,0));
@@ -291,7 +275,6 @@ public class internshipschedule extends JPanel {
         return card;
     }
 
-    // ===== CARD 2: SCHEDULED LIST =====
     private JPanel buildScheduledListCard() {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(CARD_BG);
@@ -349,7 +332,6 @@ public class internshipschedule extends JPanel {
         for (int i=0;i<widths.length;i++)
             table.getColumnModel().getColumn(i).setPreferredWidth(widths[i]);
 
-        // Status badge renderer
         table.getColumnModel().getColumn(7).setCellRenderer(new DefaultTableCellRenderer() {
             public Component getTableCellRendererComponent(JTable t,Object value,
                                                            boolean sel,boolean focus,int row,int col) {
@@ -396,7 +378,6 @@ public class internshipschedule extends JPanel {
         scrollPane.getViewport().setBackground(Color.WHITE);
         card.add(scrollPane,BorderLayout.CENTER);
 
-        // ===== BUTTONS — Back goes to admin dashboard via CardLayout =====
         JPanel btnRow = new JPanel(new FlowLayout(FlowLayout.RIGHT,10,0));
         btnRow.setBackground(CARD_BG);
         btnRow.setBorder(BorderFactory.createEmptyBorder(14,0,0,0));
@@ -409,7 +390,6 @@ public class internshipschedule extends JPanel {
         btnRow.add(btnCancel);
         card.add(btnRow,BorderLayout.SOUTH);
 
-        // Back navigates to the admin dashboard card
         btnBack.addActionListener(e -> cardLayout.show(mainContent,"companyDashboard"));
 
         btnCancel.addActionListener(e -> {
@@ -429,7 +409,6 @@ public class internshipschedule extends JPanel {
         return card;
     }
 
-    // ===== SCHEDULE ACTION =====
     private void scheduleInterview() {
         if (cmbCandidate.getSelectedIndex()==0) {
             JOptionPane.showMessageDialog(this,"Please select a candidate.","Validation Error",JOptionPane.WARNING_MESSAGE); return;
@@ -459,7 +438,6 @@ public class internshipschedule extends JPanel {
         clearForm();
     }
 
-    // ===== CLEAR FORM =====
     private void clearForm() {
         cmbCandidate.setSelectedIndex(0);
         cmbPosition.setSelectedIndex(0);
@@ -482,7 +460,6 @@ public class internshipschedule extends JPanel {
         lblAttachmentName.setFont(new Font("Segoe UI",Font.PLAIN,11));
     }
 
-    // ===== HELPERS =====
     private void formLabel(JPanel panel,String text,GridBagConstraints gbc) {
         JLabel lbl = new JLabel(text);
         lbl.setFont(new Font("Segoe UI",Font.PLAIN,13));
@@ -550,7 +527,6 @@ public class internshipschedule extends JPanel {
         return btn;
     }
 
-    // ===== MAIN — for standalone testing, same pattern as SettingsPage =====
     public static void main(String[] args) {
         try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); }
         catch (Exception ignored) {}
@@ -564,7 +540,7 @@ public class internshipschedule extends JPanel {
             CardLayout cardLayout = new CardLayout();
             JPanel mainContent = new JPanel(cardLayout);
 
-            JPanel companydashboard = new Companydashboard(mainContent,cardLayout); // your real panel
+            JPanel companydashboard = new Companydashboard(mainContent,cardLayout);
             mainContent.add(companydashboard, "companyDashboard");
             mainContent.add(new internshipschedule(cardLayout, mainContent), "interviewScheduling");
 

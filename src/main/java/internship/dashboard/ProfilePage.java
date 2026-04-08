@@ -5,6 +5,7 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import internship.dashboard.StudentDashboard;
 
 public class ProfilePage extends JPanel {
 
@@ -22,7 +23,6 @@ public class ProfilePage extends JPanel {
     private static final Color CV_UPLOAD_BG  = new Color(245, 248, 252);
     private static final Color CV_BORDER     = new Color(180, 200, 230);
 
-    // ===== FIELDS =====
     private JTextField txtUserId, txtName, txtEmail, txtPhone, txtRole;
     private JComboBox<String> cmbGender;
     private JTextArea txtBio;
@@ -36,7 +36,6 @@ public class ProfilePage extends JPanel {
     private final CardLayout cardLayout;
     private final JPanel mainContent;
 
-    // ===== CONSTRUCTOR =====
     public ProfilePage(CardLayout cardLayout, JPanel mainContent) {
         this.cardLayout  = cardLayout;
         this.mainContent = mainContent;
@@ -49,7 +48,6 @@ public class ProfilePage extends JPanel {
         disableEdit();
     }
 
-    // ===== CONTENT AREA =====
     private JPanel buildContent() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setBackground(CONTENT_BG);
@@ -80,7 +78,6 @@ public class ProfilePage extends JPanel {
         return wrapper;
     }
 
-    // ===== PROFILE CARD =====
     private JPanel buildProfileCard() {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(CARD_BG);
@@ -201,7 +198,6 @@ public class ProfilePage extends JPanel {
         centerBlock.add(formPanel, BorderLayout.CENTER);
         card.add(centerBlock, BorderLayout.CENTER);
 
-        // ===== BUTTONS =====
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         buttonPanel.setBackground(CARD_BG);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(20, 0, 0, 0));
@@ -221,12 +217,11 @@ public class ProfilePage extends JPanel {
         btnEdit.addActionListener(e -> enableEdit());
         btnUpdate.addActionListener(e -> updateProfile());
         btnCancel.addActionListener(e -> { loadData(); disableEdit(); });
-        btnBack.addActionListener(e -> cardLayout.show(mainContent, "dashboard"));
+        btnBack.addActionListener(e -> cardLayout.show(mainContent, "studentDashboard"));
 
         return card;
     }
 
-    // ===== CV CARD =====
     private JPanel buildCvCard() {
         JPanel card = new JPanel(new BorderLayout());
         card.setBackground(CARD_BG);
@@ -345,7 +340,6 @@ public class ProfilePage extends JPanel {
         return card;
     }
 
-    // ===== HELPERS =====
     private JLabel styledLabel(String text) {
         JLabel lbl = new JLabel(text);
         lbl.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -394,7 +388,6 @@ public class ProfilePage extends JPanel {
         return btn;
     }
 
-    // ===== LOGIC =====
     public void loadData() {
         txtUserId.setText("1001");
         txtName.setText("John Doe");
@@ -448,7 +441,6 @@ public class ProfilePage extends JPanel {
         }
     }
 
-    // ===== MAIN for standalone testing =====
     public static void main(String[] args) {
         try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); }
         catch (Exception ignored) {}
@@ -464,7 +456,7 @@ public class ProfilePage extends JPanel {
 
 
             StudentDashboard dashboard = new StudentDashboard(cardLayout, mainContent);
-            mainContent.add(dashboard, "dashboard");
+            mainContent.add(dashboard, "studentDashboard");
 
 
             ProfilePage profilePage = new ProfilePage(cardLayout, mainContent);

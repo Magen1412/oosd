@@ -9,7 +9,6 @@ import java.awt.event.*;
 
 public class ApplicationStatusPage extends JPanel {
 
-    // References to parent container and layout
     private JPanel mainContent;
     private CardLayout cardLayout;
 
@@ -18,8 +17,6 @@ public class ApplicationStatusPage extends JPanel {
     private JComboBox<String> cmbFilterStatus;
     private JTextField txtSearch;
     private DefaultTableModel tableModel;
-
-    // ===== COLORS =====
 
     private static final Color CONTENT_BG    = new Color(240, 240, 240);
     private static final Color CARD_BG       = Color.WHITE;
@@ -32,7 +29,6 @@ public class ApplicationStatusPage extends JPanel {
     private static final Color STATUS_REJECTED = new Color(200, 60, 50);
     private static final Color STATUS_DEFAULT  = new Color(120, 120, 120);
 
-    // Sample data
     private final String[][] allData = {
             {"1", "TechSoft",    "Java Intern",             "Port Louis",  "Pending"},
             {"2", "CyberNet",    "Web Developer Intern",    "Ebene",       "Accepted"},
@@ -47,7 +43,6 @@ public class ApplicationStatusPage extends JPanel {
 
         setLayout(new BorderLayout());
 
-        // ===== TITLE BAR =====
         JPanel titleBar = new JPanel(new BorderLayout());
         titleBar.setBackground(HEADER_BG);
         titleBar.setPreferredSize(new Dimension(0, 38));
@@ -61,13 +56,10 @@ public class ApplicationStatusPage extends JPanel {
         add(buildContent(), BorderLayout.CENTER);
     }
 
-
-    // ===== CONTENT =====
     private JPanel buildContent() {
         JPanel wrapper = new JPanel(new BorderLayout());
         wrapper.setBackground(CONTENT_BG);
 
-        // Page header
         JPanel pageHeader = new JPanel(new BorderLayout());
         pageHeader.setBackground(CONTENT_BG);
         pageHeader.setBorder(BorderFactory.createEmptyBorder(22, 28, 10, 28));
@@ -77,7 +69,6 @@ public class ApplicationStatusPage extends JPanel {
         pageHeader.add(pageTitle, BorderLayout.WEST);
         wrapper.add(pageHeader, BorderLayout.NORTH);
 
-        // Card wrapper
         JPanel cardWrapper = new JPanel(new BorderLayout());
         cardWrapper.setBackground(CONTENT_BG);
         cardWrapper.setBorder(BorderFactory.createEmptyBorder(0, 28, 28, 28));
@@ -91,7 +82,6 @@ public class ApplicationStatusPage extends JPanel {
 
         card.add(buildSummaryRow(), BorderLayout.NORTH);
 
-        // Filter + Search
         JPanel filterBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0));
         filterBar.setBackground(CARD_BG);
         filterBar.setBorder(BorderFactory.createEmptyBorder(16, 0, 14, 0));
@@ -120,7 +110,6 @@ public class ApplicationStatusPage extends JPanel {
         filterBar.add(filterLabel);
         filterBar.add(cmbFilterStatus);
 
-        // Table
         String[] columnNames = {"App ID", "Company", "Position", "Location", "Status"};
         tableModel = new DefaultTableModel(allData, columnNames) {
             public boolean isCellEditable(int row, int col) { return false; }
@@ -138,20 +127,18 @@ public class ApplicationStatusPage extends JPanel {
         tableArea.add(scrollPane, BorderLayout.CENTER);
         card.add(tableArea, BorderLayout.CENTER);
 
-        // Back button
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         buttonPanel.setBackground(CARD_BG);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(18, 0, 0, 0));
 
         btnBack = styledButton("← Back", BTN_BACK);
-        btnBack.addActionListener(e -> cardLayout.show(mainContent, "Dashboard"));
+        btnBack.addActionListener(e -> cardLayout.show(mainContent, "studentDashboard"));
         buttonPanel.add(btnBack);
         card.add(buttonPanel, BorderLayout.SOUTH);
 
         cardWrapper.add(card);
         wrapper.add(cardWrapper, BorderLayout.CENTER);
 
-        // Filter logic
         cmbFilterStatus.addActionListener(e -> applyFilter());
         txtSearch.addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent e) { applyFilter(); }
@@ -160,7 +147,6 @@ public class ApplicationStatusPage extends JPanel {
         return wrapper;
     }
 
-    // ===== SUMMARY ROW (counts at top of card) =====
     private JPanel buildSummaryRow() {
         JPanel row = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0));
         row.setBackground(CARD_BG);
@@ -206,7 +192,6 @@ public class ApplicationStatusPage extends JPanel {
         return wrapper;
     }
 
-    // ===== FILTER LOGIC =====
     private void applyFilter() {
         String statusFilter = (String) cmbFilterStatus.getSelectedItem();
         String searchText   = txtSearch.getText().trim().toLowerCase();
@@ -229,7 +214,6 @@ public class ApplicationStatusPage extends JPanel {
         return count;
     }
 
-    // ===== HELPERS =====
     private JButton styledButton(String text, Color bg) {
         JButton btn = new JButton(text);
         btn.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -247,7 +231,6 @@ public class ApplicationStatusPage extends JPanel {
         return btn;
     }
 
-    // ===== MAIN for testing =====
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -261,19 +244,16 @@ public class ApplicationStatusPage extends JPanel {
             CardLayout cl = new CardLayout();
             JPanel mainContent = new JPanel(cl);
 
-            // Add dashboard placeholder
             JPanel dashboard = new JPanel(new BorderLayout());
-            dashboard.add(new JLabel("📊 Dashboard Page", SwingConstants.CENTER), BorderLayout.CENTER);
-            mainContent.add(dashboard, "Dashboard");
 
-            // Add application status page
-            mainContent.add(new ApplicationStatusPage(mainContent, cl), "Application Status");
+            mainContent.add(new ApplicationStatusPage(mainContent, cl), "applicationStatus");
+            mainContent.add(new StudentDashboard(cl, mainContent), "studentDashboard");
 
             frame.add(mainContent);
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
 
-            cl.show(mainContent, "Application Status");
+            cl.show(mainContent, "applicationStatus");
         });
     }
 }
