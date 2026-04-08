@@ -52,11 +52,7 @@ public class Admindashboard extends JPanel {
 
         sidebar.add(createSidebarButton("Dashboard", "adminDashboard"));
         sidebar.add(createSidebarButton("Admin Profile", "adminProfile"));
-        sidebar.add(createSidebarButton("Approve/Reject Application ", "Choiceapplication"));
         sidebar.add(createSidebarButton("System Settings", "Settings"));
-
-
-
 
         sidebar.add(Box.createVerticalGlue());
         sidebar.add(new JSeparator());
