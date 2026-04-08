@@ -6,6 +6,8 @@ import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.*;
 import internship.dashboard.StudentDashboard;
+import internship.companydashboard.Companydashboard;
+import internship.admindashboard.Admindashboard;
 
 public class SettingsPage extends JPanel {
     // ===== COLORS =====
@@ -282,7 +284,15 @@ public class SettingsPage extends JPanel {
 
         JButton btnBack  = btn("< Back to Dashboard", BTN_BACK);
         btnBack.setPreferredSize(new Dimension(170, 34));
-        btnBack.addActionListener(e -> cardLayout.show(mainContent, "studentDashboard"));
+        btnBack.addActionListener(e -> {
+            if ("Student".equalsIgnoreCase(callerRole)) {
+                cardLayout.show(mainContent, "studentDashboard");
+            } else if ("Company".equalsIgnoreCase(callerRole)) {
+                cardLayout.show(mainContent, "companyDashboard");
+            } else if ("Admin".equalsIgnoreCase(callerRole)) {
+                cardLayout.show(mainContent, "adminDashboard");
+            }
+        });
 
         JButton btnReset = btn("Reset Defaults", BTN_ORANGE);
         btnReset.setPreferredSize(new Dimension(140, 34));
@@ -451,6 +461,7 @@ public class SettingsPage extends JPanel {
             // Show settings page first
             cardLayout.show(mainContent, "settings");
             // Settings page (pass all 3 arguments)
+            mainContent.add(new SettingsPage("Company", cardLayout, mainContent), "settings");
             mainContent.add(new SettingsPage("Admin", cardLayout, mainContent), "settings");
 
             frame.setContentPane(mainContent);
