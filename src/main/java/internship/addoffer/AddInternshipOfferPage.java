@@ -22,54 +22,52 @@ public class AddInternshipOfferPage extends JPanel {
         this.mainContent = mainContent;
 
         setLayout(new BorderLayout());
-        setBackground(new Color(240, 245, 249));
+        setBackground(new Color(236, 240, 241)); // light background
 
-        // ---------------- Title Bar ----------------
+        // ---------------- Title ----------------
         JLabel title = new JLabel("Add Internship Offer", SwingConstants.CENTER);
-        title.setFont(new Font("Segoe UI", Font.BOLD, 20));
-        title.setForeground(new Color(30, 58, 95));
+        title.setFont(new Font("Segoe UI", Font.BOLD, 24));
+        title.setForeground(new Color(44, 62, 80));
         title.setBorder(BorderFactory.createEmptyBorder(20, 0, 20, 0));
         add(title, BorderLayout.NORTH);
 
-        // ---------------- Form Panel ----------------
-        JPanel formPanel = new JPanel(new GridLayout(6, 2, 15, 15));
-        formPanel.setBorder(BorderFactory.createEmptyBorder(30, 200, 30, 200));
-        formPanel.setOpaque(false);
+        // ---------------- Form Card ----------------
+        JPanel formCard = new JPanel(new GridBagLayout());
+        formCard.setBackground(Color.WHITE);
+        formCard.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(200, 200, 200), 1),
+                BorderFactory.createEmptyBorder(30, 40, 30, 40)
+        ));
 
-        JTextField companyField = new JTextField();
-        JTextField positionField = new JTextField();
-        JTextField locationField = new JTextField();
-        JTextField durationField = new JTextField();
-        JTextField stipendField = new JTextField();
-        JTextArea descriptionArea = new JTextArea(4, 20);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.gridx = 0;
 
-        formPanel.add(new JLabel("Company Name:"));
-        formPanel.add(companyField);
-        formPanel.add(new JLabel("Position Title:"));
-        formPanel.add(positionField);
-        formPanel.add(new JLabel("Location:"));
-        formPanel.add(locationField);
-        formPanel.add(new JLabel("Duration (e.g., 3 months):"));
-        formPanel.add(durationField);
-        formPanel.add(new JLabel("Stipend (optional):"));
-        formPanel.add(stipendField);
-        formPanel.add(new JLabel("Description:"));
-        formPanel.add(new JScrollPane(descriptionArea));
+        // Fields
+        JTextField companyField = createStyledField();
+        JTextField positionField = createStyledField();
+        JTextField locationField = createStyledField();
+        JTextField durationField = createStyledField();
+        JTextField stipendField = createStyledField();
+        JTextArea descriptionArea = createStyledTextArea();
 
-        add(formPanel, BorderLayout.CENTER);
+        addFormField(formCard, "Company Name:", companyField, gbc, 0);
+        addFormField(formCard, "Position Title:", positionField, gbc, 2);
+        addFormField(formCard, "Location:", locationField, gbc, 4);
+        addFormField(formCard, "Duration (e.g., 3 months):", durationField, gbc, 6);
+        addFormField(formCard, "Stipend (optional):", stipendField, gbc, 8);
+        addFormField(formCard, "Description:", new JScrollPane(descriptionArea), gbc, 10);
 
-        // ---------------- Buttons Row ----------------
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 10));
+        add(formCard, BorderLayout.CENTER);
+
+        // ---------------- Buttons ----------------
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 20, 15));
         buttonPanel.setOpaque(false);
 
-        JButton submitBtn = new JButton("Add Offer");
-        styleButton(submitBtn, new Color(46, 204, 113));
-
-        JButton clearBtn = new JButton("Clear");
-        styleButton(clearBtn, new Color(231, 76, 60));
-
-        JButton backBtn = new JButton("← Back");
-        styleButton(backBtn, new Color(46, 134, 193));
+        JButton submitBtn = createStyledButton("Add Offer", new Color(46, 204, 113));
+        JButton clearBtn = createStyledButton("Clear", new Color(231, 76, 60));
+        JButton backBtn = createStyledButton("← Back", new Color(52, 152, 219));
 
         buttonPanel.add(submitBtn);
         buttonPanel.add(clearBtn);
@@ -77,7 +75,7 @@ public class AddInternshipOfferPage extends JPanel {
 
         add(buttonPanel, BorderLayout.SOUTH);
 
-        // ---------------- Button Actions ----------------
+        // ---------------- Actions ----------------
         submitBtn.addActionListener((ActionEvent e) -> {
             String company = companyField.getText().trim();
             String position = positionField.getText().trim();
@@ -134,16 +132,55 @@ public class AddInternshipOfferPage extends JPanel {
         backBtn.addActionListener(e -> cardLayout.show(mainContent, "Dashboard"));
     }
 
-    private void styleButton(JButton btn, Color bg) {
+    // ---------------- Helpers ----------------
+    private void addFormField(JPanel panel, String labelText, JComponent field, GridBagConstraints gbc, int y) {
+        JLabel label = new JLabel(labelText);
+        label.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        label.setForeground(new Color(44, 62, 80));
+        gbc.gridy = y;
+        gbc.gridx = 0;
+        panel.add(label, gbc);
+        gbc.gridy = y + 1;
+        gbc.gridx = 0;
+        panel.add(field, gbc);
+    }
+
+    private JTextField createStyledField() {
+        JTextField field = new JTextField();
+        field.setPreferredSize(new Dimension(300, 30));
+        field.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        field.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(180, 180, 180)),
+                BorderFactory.createEmptyBorder(5, 10, 5, 10)
+        ));
+        return field;
+    }
+
+    private JTextArea createStyledTextArea() {
+        JTextArea area = new JTextArea(4, 20);
+        area.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        area.setLineWrap(true);
+        area.setWrapStyleWord(true);
+        area.setBorder(BorderFactory.createLineBorder(new Color(180, 180, 180)));
+        return area;
+    }
+
+    private JButton createStyledButton(String text, Color bg) {
+        JButton btn = new JButton(text);
         btn.setBackground(bg);
         btn.setForeground(Color.WHITE);
         btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
         btn.setFocusPainted(false);
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        btn.setPreferredSize(new Dimension(160, 35));
+        btn.setPreferredSize(new Dimension(140, 35));
+        btn.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(bg.darker(), 1),
+                BorderFactory.createEmptyBorder(5, 15, 5, 15)
+        ));
+        return btn;
     }
 
-    // ---------------- Main Function ----------------
+    // ---------------- Main ----------------
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Internship Management System");
@@ -154,17 +191,10 @@ public class AddInternshipOfferPage extends JPanel {
             CardLayout cardLayout = new CardLayout();
             JPanel mainContent = new JPanel(cardLayout);
 
-            // Add dashboard placeholder
-            JPanel dashboardPanel = new JPanel();
-            dashboardPanel.setBackground(new Color(220, 240, 250));
-            dashboardPanel.add(new JLabel("Company Dashboard"));
-            mainContent.add(new Companydashboard(mainContent, cardLayout), "dashboard");
+            mainContent.add(new Companydashboard(mainContent, cardLayout), "Dashboard");
+            mainContent.add(new AddInternshipOfferPage(cardLayout, mainContent), "AddOffer");
 
-            // Add AddInternshipOfferPage
-            mainContent.add(new AddInternshipOfferPage(cardLayout, mainContent), "addOffer");
-
-            // Show AddOffer page first
-            cardLayout.show(mainContent, "addOffer");
+            cardLayout.show(mainContent, "AddOffer");
 
             frame.setContentPane(mainContent);
             frame.setVisible(true);
