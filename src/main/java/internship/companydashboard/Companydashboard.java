@@ -56,8 +56,8 @@ public class Companydashboard extends JPanel {
         sidebar.add(createSidebarButton("Dashboard", "companyDashboard"));
         sidebar.add(createSidebarButton("Internship Offers", "AddOffer"));
         sidebar.add(createSidebarButton("View Applications", "ApplicationViewPage"));
-        sidebar.add(createSidebarButton("Approve/Reject Application", "ChoiceApplicationPage"));
-        sidebar.add(createSidebarButton("Company Profile", "Profile"));
+        sidebar.add(createSidebarButton("Edit Internship Offer ", "EditOfferPage"));
+        //sidebar.add(createSidebarButton("Interview Scheduling Page ", "Profile"));
 
         sidebar.add(Box.createVerticalGlue());
 

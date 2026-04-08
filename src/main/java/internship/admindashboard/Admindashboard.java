@@ -49,20 +49,13 @@ public class Admindashboard extends JPanel {
         sidebar.setBackground(new Color(40, 40, 60));
 
         sidebar.add(Box.createVerticalStrut(20));
-<<<<<<< HEAD
+
         sidebar.add(createSidebarButton("Dashboard", "adminDashboard"));
-        sidebar.add(createSidebarButton("Manage Companies", "Companies"));
-        sidebar.add(createSidebarButton("Manage Users", "Users"));
-        sidebar.add(createSidebarButton("Manage Students", "Students"));
+        sidebar.add(createSidebarButton("Approve/Reject Application ", "Choiceapplication"));
         sidebar.add(createSidebarButton("System Settings", "Settings"));
-=======
-        sidebar.add(createSidebarButton("📊 Dashboard", "Dashboard"));
-        sidebar.add(createSidebarButton("🏢 Manage Companies", "Companies"));
-        sidebar.add(createSidebarButton("👥 Manage Users", "Users"));
-        sidebar.add(createSidebarButton("🎓 Manage Students", "Students"));
-        //sidebar.add(createSidebarButton("📋 Approve/Reject Applications", "Applications"));
-        sidebar.add(createSidebarButton("⚙ System Settings", "Settings"));
->>>>>>> 3595c90eadbd7597dc1680d0f4b6126e099073fb
+
+
+
 
         sidebar.add(Box.createVerticalGlue());
         sidebar.add(new JSeparator());
@@ -208,14 +201,14 @@ public class Admindashboard extends JPanel {
             JPanel mainContent = new JPanel(cl);
 
             // Add pages
-<<<<<<< HEAD
+
             mainContent.add(new Admindashboard(mainContent, cl), "adminDashboard");
             mainContent.add(createPage("Manage Companies Page"), "Companies");
             mainContent.add(createPage("Manage Users Page"), "Users");
             mainContent.add(createPage("Manage Students Page"), "Students");
             mainContent.add(createPage("Applications Approval Page"), "Applications");
             mainContent.add(createPage("System Settings Page"), "Settings");
-=======
+
             mainContent.add(new Admindashboard(mainContent, cl), "Dashboard");
             mainContent.add(createPage("🏢 Manage Companies Page"), "Companies");
             mainContent.add(createPage("👥 Manage Users Page"), "Users");
@@ -224,7 +217,7 @@ public class Admindashboard extends JPanel {
 
             // FIXED: pass all three arguments to SettingsPage
             mainContent.add(new SettingsPage("Admin", cl, mainContent), "Settings");
->>>>>>> 3595c90eadbd7597dc1680d0f4b6126e099073fb
+
 
             frame.add(mainContent);
             frame.setLocationRelativeTo(null);
