@@ -4,7 +4,11 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
+
+import internship.ApplicationSubmissionPage.ApplicationStatusPage;
 import internship.addoffer.AddInternshipOfferPage;
+import internship.ApplicationView.ApplicationViewPage;
+import internship.choiceapplicationpage.ChoiceApplicationPage;
 
 public class Companydashboard extends JPanel {
 
@@ -54,8 +58,8 @@ public class Companydashboard extends JPanel {
         sidebar.add(Box.createVerticalStrut(20));
         sidebar.add(createSidebarButton("📊  Dashboard", "Dashboard"));
         sidebar.add(createSidebarButton("💼  Internship Offers", "AddOffer"));
-        sidebar.add(createSidebarButton("📋  View Applications", "Applications"));
-        sidebar.add(createSidebarButton("📅  Interview Scheduling", "Interviews"));
+        sidebar.add(createSidebarButton("📋  View Applications", "ApplicationViewPage"));
+        sidebar.add(createSidebarButton("📅  Approve/Reject Application", "ChoiceApplicationPage"));
         sidebar.add(createSidebarButton("🏢  Company Profile", "Profile"));
 
         sidebar.add(Box.createVerticalGlue());
@@ -218,9 +222,12 @@ public class Companydashboard extends JPanel {
 
             // Example placeholder pages
             mainContent.add(new AddInternshipOfferPage(cl, mainContent), "AddOffer");
-            mainContent.add(createPage("📋 Applications Page"), "Applications");
-            mainContent.add(createPage("📅 Interview Scheduling Page"), "Interviews");
-            mainContent.add(createPage("🏢 Company Profile Page"), "Profile");
+            mainContent.add(new ApplicationViewPage(mainContent ,cl), "ApplicationViewPage");
+            mainContent.add(new ApplicationStatusPage(mainContent, cl), "ApplicationStatusPage");
+            //mainContent.add(new ChoiceApplicationPage(mainContent, cl), "Approve/Reject Page");
+           // mainContent.add(new CompanyProfilePage(mainContent, cl), "Approve/Reject Page");
+
+
 
             frame.add(mainContent);
             frame.setLocationRelativeTo(null);

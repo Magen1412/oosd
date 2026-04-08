@@ -6,9 +6,19 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 
-public class ApplicationStatusPage extends JFrame {
+public class ApplicationStatusPage extends JPanel {
 
-    // ===== COLORS (matching Dashboard theme) =====
+    // References to parent container and layout
+    private JPanel mainContent;
+    private CardLayout cardLayout;
+
+    private JTable table;
+    private JButton btnBack;
+    private JComboBox<String> cmbFilterStatus;
+    private JTextField txtSearch;
+    private DefaultTableModel tableModel;
+
+    // ===== COLORS =====
     private static final Color SIDEBAR_BG    = new Color(60, 63, 65);
     private static final Color SIDEBAR_HOVER = new Color(80, 83, 85);
     private static final Color SIDEBAR_TEXT  = new Color(220, 220, 220);
@@ -18,17 +28,10 @@ public class ApplicationStatusPage extends JFrame {
     private static final Color LABEL_COLOR   = new Color(80, 80, 80);
     private static final Color BTN_BACK      = new Color(60, 63, 65);
 
-    // Status badge colors
     private static final Color STATUS_PENDING  = new Color(230, 150, 40);
     private static final Color STATUS_ACCEPTED = new Color(60, 160, 80);
     private static final Color STATUS_REJECTED = new Color(200, 60, 50);
     private static final Color STATUS_DEFAULT  = new Color(120, 120, 120);
-
-    private JTable table;
-    private JButton btnBack;
-    private JComboBox<String> cmbFilterStatus;
-    private JTextField txtSearch;
-    private DefaultTableModel tableModel;
 
     // Sample data
     private final String[][] allData = {
@@ -39,11 +42,10 @@ public class ApplicationStatusPage extends JFrame {
             {"5", "DataCore",    "IT Support Intern",       "Port Louis",  "Accepted"},
     };
 
-    public ApplicationStatusPage() {
-        setTitle("Internship Management System");
-        setSize(960, 620);
-        setLocationRelativeTo(null);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    public ApplicationStatusPage(JPanel mainContent, CardLayout cardLayout) {
+        this.mainContent = mainContent;
+        this.cardLayout = cardLayout;
+
         setLayout(new BorderLayout());
 
         // ===== TITLE BAR =====
@@ -58,8 +60,6 @@ public class ApplicationStatusPage extends JFrame {
 
         add(buildSidebar(), BorderLayout.WEST);
         add(buildContent(), BorderLayout.CENTER);
-
-        setVisible(true);
     }
 
     // ===== SIDEBAR =====
@@ -89,10 +89,14 @@ public class ApplicationStatusPage extends JFrame {
         lbl.setForeground(active ? Color.WHITE : SIDEBAR_TEXT);
         lbl.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         item.add(lbl);
+
         if (!active) {
             item.addMouseListener(new MouseAdapter() {
                 public void mouseEntered(MouseEvent e) { item.setBackground(SIDEBAR_HOVER); }
                 public void mouseExited(MouseEvent e)  { item.setBackground(SIDEBAR_BG); }
+                public void mouseClicked(MouseEvent e) {
+                    cardLayout.show(mainContent, label); // navigate to page
+                }
             });
         }
         return item;
@@ -125,10 +129,9 @@ public class ApplicationStatusPage extends JFrame {
                 BorderFactory.createEmptyBorder(24, 28, 24, 28)
         ));
 
-        // ===== SUMMARY BADGES =====
         card.add(buildSummaryRow(), BorderLayout.NORTH);
 
-        // ===== FILTER + SEARCH BAR =====
+        // Filter + Search
         JPanel filterBar = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0));
         filterBar.setBackground(CARD_BG);
         filterBar.setBorder(BorderFactory.createEmptyBorder(16, 0, 14, 0));
@@ -141,7 +144,6 @@ public class ApplicationStatusPage extends JFrame {
                 new LineBorder(new Color(200, 200, 200), 1, true),
                 BorderFactory.createEmptyBorder(3, 8, 3, 8)
         ));
-        txtSearch.putClientProperty("JTextField.placeholderText", "Search company or position...");
 
         JLabel filterLabel = new JLabel("Filter:");
         filterLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
@@ -158,97 +160,13 @@ public class ApplicationStatusPage extends JFrame {
         filterBar.add(filterLabel);
         filterBar.add(cmbFilterStatus);
 
-        // ===== TABLE =====
+        // Table
         String[] columnNames = {"App ID", "Company", "Position", "Location", "Status"};
         tableModel = new DefaultTableModel(allData, columnNames) {
             public boolean isCellEditable(int row, int col) { return false; }
         };
-
-        table = new JTable(tableModel) {
-            public Component prepareRenderer(TableCellRenderer renderer, int row, int col) {
-                Component c = super.prepareRenderer(renderer, row, col);
-                if (!isRowSelected(row)) {
-                    c.setBackground(row % 2 == 0 ? Color.WHITE : new Color(248, 249, 250));
-                }
-                return c;
-            }
-        };
-
-        // Table styling
-        table.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        table = new JTable(tableModel);
         table.setRowHeight(40);
-        table.setShowVerticalLines(false);
-        table.setGridColor(new Color(235, 235, 235));
-        table.setSelectionBackground(new Color(232, 240, 254));
-        table.setSelectionForeground(new Color(30, 30, 30));
-        table.setIntercellSpacing(new Dimension(0, 1));
-        table.setFocusable(false);
-
-        // Header styling
-        JTableHeader header = table.getTableHeader();
-        header.setFont(new Font("Segoe UI", Font.BOLD, 13));
-        header.setBackground(new Color(245, 245, 245));
-        header.setForeground(LABEL_COLOR);
-        header.setPreferredSize(new Dimension(0, 42));
-        header.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, new Color(220, 220, 220)));
-        header.setReorderingAllowed(false);
-
-        // Column widths
-        table.getColumnModel().getColumn(0).setPreferredWidth(60);
-        table.getColumnModel().getColumn(1).setPreferredWidth(160);
-        table.getColumnModel().getColumn(2).setPreferredWidth(200);
-        table.getColumnModel().getColumn(3).setPreferredWidth(130);
-        table.getColumnModel().getColumn(4).setPreferredWidth(110);
-
-        // Custom renderer for Status column (colored badges)
-        table.getColumnModel().getColumn(4).setCellRenderer(new DefaultTableCellRenderer() {
-            public Component getTableCellRendererComponent(JTable t, Object value,
-                                                           boolean isSelected, boolean hasFocus, int row, int col) {
-
-                JLabel badge = new JLabel(value != null ? value.toString() : "", JLabel.CENTER);
-                badge.setFont(new Font("Segoe UI", Font.BOLD, 11));
-                badge.setOpaque(true);
-
-                String status = value != null ? value.toString() : "";
-                Color bg = switch (status) {
-                    case "Accepted" -> STATUS_ACCEPTED;
-                    case "Rejected" -> STATUS_REJECTED;
-                    case "Pending"  -> STATUS_PENDING;
-                    default         -> STATUS_DEFAULT;
-                };
-
-                badge.setBackground(isSelected ? bg.darker() : bg);
-                badge.setForeground(Color.WHITE);
-                badge.setBorder(BorderFactory.createEmptyBorder(4, 10, 4, 10));
-
-                JPanel cell = new JPanel(new FlowLayout(FlowLayout.CENTER, 0, 6));
-                cell.setBackground(isSelected
-                        ? table.getSelectionBackground()
-                        : (row % 2 == 0 ? Color.WHITE : new Color(248, 249, 250)));
-
-                // Rounded badge via panel with custom paint
-                JPanel roundBadge = new JPanel() {
-                    protected void paintComponent(Graphics g) {
-                        Graphics2D g2 = (Graphics2D) g.create();
-                        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                        g2.setColor(bg);
-                        g2.fillRoundRect(0, 0, getWidth(), getHeight(), 12, 12);
-                        g2.dispose();
-                    }
-                };
-                roundBadge.setLayout(new BorderLayout());
-                roundBadge.setOpaque(false);
-                roundBadge.setPreferredSize(new Dimension(80, 24));
-                roundBadge.add(badge);
-                cell.add(roundBadge);
-                return cell;
-            }
-        });
-
-        // Center-align App ID column
-        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
-        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        table.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
 
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setBorder(BorderFactory.createLineBorder(new Color(220, 220, 220), 1));
@@ -260,25 +178,24 @@ public class ApplicationStatusPage extends JFrame {
         tableArea.add(scrollPane, BorderLayout.CENTER);
         card.add(tableArea, BorderLayout.CENTER);
 
-        // ===== BUTTONS =====
+        // Back button
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         buttonPanel.setBackground(CARD_BG);
         buttonPanel.setBorder(BorderFactory.createEmptyBorder(18, 0, 0, 0));
 
         btnBack = styledButton("← Back", BTN_BACK);
+        btnBack.addActionListener(e -> cardLayout.show(mainContent, "Dashboard"));
         buttonPanel.add(btnBack);
         card.add(buttonPanel, BorderLayout.SOUTH);
 
         cardWrapper.add(card);
         wrapper.add(cardWrapper, BorderLayout.CENTER);
 
-        // ===== FILTER / SEARCH LOGIC =====
+        // Filter logic
         cmbFilterStatus.addActionListener(e -> applyFilter());
         txtSearch.addKeyListener(new KeyAdapter() {
             public void keyReleased(KeyEvent e) { applyFilter(); }
         });
-
-        btnBack.addActionListener(e -> dispose());
 
         return wrapper;
     }
@@ -303,23 +220,6 @@ public class ApplicationStatusPage extends JFrame {
     }
 
     private JPanel summaryBadge(String label, String count, Color color) {
-        JPanel badge = new JPanel(new BorderLayout());
-        badge.setBackground(color);
-        badge.setPreferredSize(new Dimension(150, 62));
-        badge.setBorder(BorderFactory.createEmptyBorder(8, 14, 8, 14));
-
-        JLabel numLabel = new JLabel(count);
-        numLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
-        numLabel.setForeground(Color.WHITE);
-
-        JLabel txtLabel = new JLabel(label);
-        txtLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
-        txtLabel.setForeground(new Color(255, 255, 255, 200));
-
-        badge.add(numLabel, BorderLayout.CENTER);
-        badge.add(txtLabel, BorderLayout.SOUTH);
-
-        // Rounded corners
         JPanel wrapper = new JPanel(new BorderLayout()) {
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
@@ -332,6 +232,15 @@ public class ApplicationStatusPage extends JFrame {
         wrapper.setOpaque(false);
         wrapper.setPreferredSize(new Dimension(155, 64));
         wrapper.setBorder(BorderFactory.createEmptyBorder(8, 14, 8, 14));
+
+        JLabel numLabel = new JLabel(count);
+        numLabel.setFont(new Font("Segoe UI", Font.BOLD, 22));
+        numLabel.setForeground(Color.WHITE);
+
+        JLabel txtLabel = new JLabel(label);
+        txtLabel.setFont(new Font("Segoe UI", Font.PLAIN, 11));
+        txtLabel.setForeground(new Color(255, 255, 255, 200));
+
         wrapper.add(numLabel, BorderLayout.CENTER);
         wrapper.add(txtLabel, BorderLayout.SOUTH);
         return wrapper;
@@ -378,10 +287,33 @@ public class ApplicationStatusPage extends JFrame {
         return btn;
     }
 
+    // ===== MAIN for testing =====
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         } catch (Exception ignored) {}
-        SwingUtilities.invokeLater(ApplicationStatusPage::new);
+
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Internship Management System");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(1000, 700);
+
+            CardLayout cl = new CardLayout();
+            JPanel mainContent = new JPanel(cl);
+
+            // Add dashboard placeholder
+            JPanel dashboard = new JPanel(new BorderLayout());
+            dashboard.add(new JLabel("📊 Dashboard Page", SwingConstants.CENTER), BorderLayout.CENTER);
+            mainContent.add(dashboard, "Dashboard");
+
+            // Add application status page
+            mainContent.add(new ApplicationStatusPage(mainContent, cl), "Application Status");
+
+            frame.add(mainContent);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+
+            cl.show(mainContent, "Application Status");
+        });
     }
 }
