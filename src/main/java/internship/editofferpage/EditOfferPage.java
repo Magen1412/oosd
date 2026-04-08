@@ -448,7 +448,7 @@ public class EditOfferPage extends JPanel {
         btnSave = makeButton("💾  Save Changes", PRIMARY, Color.WHITE);
         btnSave.setEnabled(false);
 
-        btnBack.addActionListener(e -> handleBack());
+        btnBack.addActionListener(e -> cardLayout.show(mainContent, "companyDashboard"));
         btnDiscard.addActionListener(e -> handleDiscard());
         btnSave.addActionListener(e -> handleSave());
 
