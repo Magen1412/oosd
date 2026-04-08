@@ -5,6 +5,7 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
+import internship.companydashboard.Companydashboard;
 
 public class CompanyProfile extends JPanel {
 

@@ -11,6 +11,8 @@ import internship.ApplicationView.ApplicationViewPage;
 import internship.choiceapplicationpage.ChoiceApplicationPage;
 import internship.dashboard.dao.CompanyDAO;
 import internship.dashboard.model.Company;
+import internship.editofferpage.EditOfferPage;
+import internship.profile.ProfilePage;
 
 public class Companydashboard extends JPanel {
 
@@ -54,11 +56,11 @@ public class Companydashboard extends JPanel {
 
         sidebar.add(Box.createVerticalStrut(20));
         sidebar.add(createSidebarButton("Dashboard", "companyDashboard"));
+        sidebar.add(createSidebarButton("Company Profile ", "CompanyProfile"));
         sidebar.add(createSidebarButton("Internship Offers", "AddOffer"));
         sidebar.add(createSidebarButton("View Applications", "ApplicationViewPage"));
         sidebar.add(createSidebarButton("Edit Internship Offer ", "EditOfferPage"));
         sidebar.add(createSidebarButton("Schedule interview ", "internshipschedule"));
-        //sidebar.add(createSidebarButton("Interview Scheduling Page ", "Profile"));
 
         sidebar.add(Box.createVerticalGlue());
 
@@ -219,7 +221,8 @@ public class Companydashboard extends JPanel {
             mainContent.add(new ApplicationViewPage(mainContent ,cl), "ApplicationViewPage");
             mainContent.add(new ApplicationStatusPage(mainContent, cl), "ApplicationStatusPage");
             mainContent.add(new internshipschedule(cl, mainContent), "internshipschedule");
-           // mainContent.add(new CompanyProfilePage(mainContent, cl), "Approve/Reject Page");
+            mainContent.add(new EditOfferPage(cl,mainContent), "EditOfferPage");
+            mainContent.add(new CompanyProfile(cl , mainContent), "companyProfile");
 
             frame.add(mainContent);
             frame.setLocationRelativeTo(null);
