@@ -5,6 +5,9 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.*;
 
+import internship.ApplicationView.ApplicationViewPage;
+import internship.settings.SettingsPage;
+
 public class Admindashboard extends JPanel {
 
     private DefaultTableModel companiesTableModel;
@@ -55,7 +58,7 @@ public class Admindashboard extends JPanel {
         sidebar.add(createSidebarButton("🏢 Manage Companies", "Companies"));
         sidebar.add(createSidebarButton("👥 Manage Users", "Users"));
         sidebar.add(createSidebarButton("🎓 Manage Students", "Students"));
-        sidebar.add(createSidebarButton("📋 Approve/Reject Applications", "Applications"));
+        //sidebar.add(createSidebarButton("📋 Approve/Reject Applications", "Applications"));
         sidebar.add(createSidebarButton("⚙ System Settings", "Settings"));
 
         sidebar.add(Box.createVerticalGlue());
@@ -207,7 +210,9 @@ public class Admindashboard extends JPanel {
             mainContent.add(createPage("👥 Manage Users Page"), "Users");
             mainContent.add(createPage("🎓 Manage Students Page"), "Students");
             mainContent.add(createPage("📋 Applications Approval Page"), "Applications");
-            mainContent.add(createPage("⚙ System Settings Page"), "Settings");
+
+            // FIXED: pass all three arguments to SettingsPage
+            mainContent.add(new SettingsPage("Admin", cl, mainContent), "Settings");
 
             frame.add(mainContent);
             frame.setLocationRelativeTo(null);

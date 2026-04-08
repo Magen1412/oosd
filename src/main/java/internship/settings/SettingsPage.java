@@ -5,7 +5,6 @@ import javax.swing.border.*;
 import javax.swing.event.ChangeEvent;
 import java.awt.*;
 import java.awt.event.*;
-import internship.dashboard.StudentDashboard;
 
 public class SettingsPage extends JPanel {
     // ===== COLORS =====
@@ -42,7 +41,6 @@ public class SettingsPage extends JPanel {
         setLayout(new BorderLayout());
         setBackground(CONTENT_BG);
 
-        // Content
         add(buildContent(), BorderLayout.CENTER);
     }
 
@@ -162,6 +160,7 @@ public class SettingsPage extends JPanel {
         themeSystem.setBorder(new LineBorder(selectedTheme.equals("System") ? ACCENT : new Color(210,210,210), selectedTheme.equals("System") ? 2 : 1, true));
     }
 
+    // ===== LANGUAGE CARD =====
     private JPanel buildLanguageCard() {
         JPanel card = card();
         card.add(sectionHeader("Language & Region"), BorderLayout.NORTH);
@@ -190,7 +189,6 @@ public class SettingsPage extends JPanel {
         card.add(form, BorderLayout.CENTER);
         return card;
     }
-
     // ===== NOTIFICATIONS CARD =====
     private JPanel buildNotificationsCard() {
         JPanel card = card();
@@ -282,7 +280,7 @@ public class SettingsPage extends JPanel {
 
         JButton btnBack  = btn("< Back to Dashboard", BTN_BACK);
         btnBack.setPreferredSize(new Dimension(170, 34));
-        btnBack.addActionListener(e -> cardLayout.show(mainContent, "dashboard"));
+        btnBack.addActionListener(e -> cardLayout.show(mainContent, "Dashboard"));
 
         JButton btnReset = btn("Reset Defaults", BTN_ORANGE);
         btnReset.setPreferredSize(new Dimension(140, 34));
@@ -435,26 +433,22 @@ public class SettingsPage extends JPanel {
             frame.setSize(860, 800);
             frame.setLocationRelativeTo(null);
 
-            // Create CardLayout + mainContent
             CardLayout cardLayout = new CardLayout();
             JPanel mainContent = new JPanel(cardLayout);
 
-            // Add a dummy dashboard panel so the back button has somewhere to go
+            // Dummy dashboard
             JPanel dashboard = new JPanel();
             dashboard.setBackground(new Color(230, 240, 250));
-            dashboard.add(new JLabel("Student Dashboard"));
+            dashboard.add(new JLabel("📊 Dashboard Page"));
+            mainContent.add(dashboard, "Dashboard");
 
-            // Register both dashboard and settings page
-            mainContent.add(new StudentDashboard(cardLayout, mainContent), "dashboard");
-            mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
-
-            // Show settings page first
-            cardLayout.show(mainContent, "settings");
+            // Settings page (pass all 3 arguments)
+            mainContent.add(new SettingsPage("Admin", cardLayout, mainContent), "settings");
 
             frame.setContentPane(mainContent);
             frame.setVisible(true);
+
+            cardLayout.show(mainContent, "settings");
         });
     }
-
 }
-
