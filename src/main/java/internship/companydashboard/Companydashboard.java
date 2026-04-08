@@ -13,6 +13,7 @@ import internship.dashboard.dao.CompanyDAO;
 import internship.dashboard.model.Company;
 import internship.editofferpage.EditOfferPage;
 import internship.profile.ProfilePage;
+import internship.settings.SettingsPage;
 
 public class Companydashboard extends JPanel {
 
@@ -61,6 +62,7 @@ public class Companydashboard extends JPanel {
         sidebar.add(createSidebarButton("View Applications", "ApplicationViewPage"));
         sidebar.add(createSidebarButton("Edit Internship Offer ", "EditOfferPage"));
         sidebar.add(createSidebarButton("Schedule interview ", "internshipschedule"));
+        sidebar.add(createSidebarButton("System Settings ", "settings"));
 
         sidebar.add(Box.createVerticalGlue());
 
@@ -223,6 +225,7 @@ public class Companydashboard extends JPanel {
             mainContent.add(new internshipschedule(cl, mainContent), "internshipschedule");
             mainContent.add(new EditOfferPage(cl,mainContent), "EditOfferPage");
             mainContent.add(new CompanyProfile(cl , mainContent), "companyProfile");
+            mainContent.add(new SettingsPage("Company", cl , mainContent), "settings");
 
             frame.add(mainContent);
             frame.setLocationRelativeTo(null);

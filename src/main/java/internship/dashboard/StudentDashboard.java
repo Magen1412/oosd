@@ -7,6 +7,7 @@ import java.awt.event.*;
 
 import internship.searchpage.SearchPage;
 import internship.settings.SettingsPage;
+import internship.support.SupportPage;
 import java.util.Arrays;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
