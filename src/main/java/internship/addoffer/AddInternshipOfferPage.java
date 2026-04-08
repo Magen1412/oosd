@@ -22,7 +22,7 @@ public class AddInternshipOfferPage extends JPanel {
         this.mainContent = mainContent;
 
         setLayout(new BorderLayout());
-        setBackground(new Color(236, 240, 241)); // light background
+        setBackground(new Color(236, 240, 241));
 
         // ---------------- Title ----------------
         JLabel title = new JLabel("Add Internship Offer", SwingConstants.CENTER);
@@ -45,19 +45,19 @@ public class AddInternshipOfferPage extends JPanel {
         gbc.gridx = 0;
 
         // Fields
-        JTextField companyField = createStyledField();
-        JTextField positionField = createStyledField();
-        JTextField locationField = createStyledField();
-        JTextField durationField = createStyledField();
-        JTextField stipendField = createStyledField();
+        JTextField companyIdField = createStyledField();
+        JTextField companyNameField = createStyledField();
+        JTextField titleField = createStyledField();
         JTextArea descriptionArea = createStyledTextArea();
+        JTextField startDateField = createStyledField(); // yyyy-MM-dd
+        JTextField endDateField = createStyledField();   // yyyy-MM-dd
 
-        addFormField(formCard, "Company Name:", companyField, gbc, 0);
-        addFormField(formCard, "Position Title:", positionField, gbc, 2);
-        addFormField(formCard, "Location:", locationField, gbc, 4);
-        addFormField(formCard, "Duration (e.g., 3 months):", durationField, gbc, 6);
-        addFormField(formCard, "Stipend (optional):", stipendField, gbc, 8);
-        addFormField(formCard, "Description:", new JScrollPane(descriptionArea), gbc, 10);
+        addFormField(formCard, "Company ID:", companyIdField, gbc, 0);
+        addFormField(formCard, "Company Name:", companyNameField, gbc, 2);
+        addFormField(formCard, "Title:", titleField, gbc, 4);
+        addFormField(formCard, "Description:", new JScrollPane(descriptionArea), gbc, 6);
+        addFormField(formCard, "Start Date (yyyy-MM-dd):", startDateField, gbc, 8);
+        addFormField(formCard, "End Date (yyyy-MM-dd):", endDateField, gbc, 10);
 
         add(formCard, BorderLayout.CENTER);
 
@@ -77,41 +77,42 @@ public class AddInternshipOfferPage extends JPanel {
 
         // ---------------- Actions ----------------
         submitBtn.addActionListener((ActionEvent e) -> {
-            String company = companyField.getText().trim();
-            String position = positionField.getText().trim();
-            String location = locationField.getText().trim();
-            String duration = durationField.getText().trim();
-            String stipend = stipendField.getText().trim();
+            String companyIdStr = companyIdField.getText().trim();
+            String companyName = companyNameField.getText().trim();
+            String titleTxt = titleField.getText().trim();
             String description = descriptionArea.getText().trim();
+            String startDateStr = startDateField.getText().trim();
+            String endDateStr = endDateField.getText().trim();
 
-            if (company.isEmpty() || position.isEmpty() || location.isEmpty() || duration.isEmpty()) {
+            if (companyIdStr.isEmpty() || companyName.isEmpty() || titleTxt.isEmpty()
+                    || startDateStr.isEmpty() || endDateStr.isEmpty()) {
                 JOptionPane.showMessageDialog(this,
-                        "Please fill in all required fields (Company, Position, Location, Duration).",
+                        "Please fill in all required fields (Company ID, Company Name, Title, Start/End Date).",
                         "Validation Error", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
             try (Connection conn = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS)) {
-                String sql = "INSERT INTO internship (company_name, position_title, location, duration, stipend, description) VALUES (?, ?, ?, ?, ?, ?)";
+                String sql = "INSERT INTO internship (company_id, company_name, title, description, start_date, end_date) VALUES (?, ?, ?, ?, ?, ?)";
                 PreparedStatement stmt = conn.prepareStatement(sql);
-                stmt.setString(1, company);
-                stmt.setString(2, position);
-                stmt.setString(3, location);
-                stmt.setString(4, duration);
-                stmt.setString(5, stipend);
-                stmt.setString(6, description);
+                stmt.setInt(1, Integer.parseInt(companyIdStr));
+                stmt.setString(2, companyName);
+                stmt.setString(3, titleTxt);
+                stmt.setString(4, description);
+                stmt.setDate(5, java.sql.Date.valueOf(startDateStr));
+                stmt.setDate(6, java.sql.Date.valueOf(endDateStr));
                 stmt.executeUpdate();
 
                 JOptionPane.showMessageDialog(this,
                         "Internship offer added successfully!",
                         "Success", JOptionPane.INFORMATION_MESSAGE);
 
-                companyField.setText("");
-                positionField.setText("");
-                locationField.setText("");
-                durationField.setText("");
-                stipendField.setText("");
+                companyIdField.setText("");
+                companyNameField.setText("");
+                titleField.setText("");
                 descriptionArea.setText("");
+                startDateField.setText("");
+                endDateField.setText("");
 
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(this,
@@ -121,12 +122,12 @@ public class AddInternshipOfferPage extends JPanel {
         });
 
         clearBtn.addActionListener((ActionEvent e) -> {
-            companyField.setText("");
-            positionField.setText("");
-            locationField.setText("");
-            durationField.setText("");
-            stipendField.setText("");
+            companyIdField.setText("");
+            companyNameField.setText("");
+            titleField.setText("");
             descriptionArea.setText("");
+            startDateField.setText("");
+            endDateField.setText("");
         });
 
         backBtn.addActionListener(e -> cardLayout.show(mainContent, "companyDashboard"));
