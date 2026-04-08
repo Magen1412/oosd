@@ -1,5 +1,7 @@
 package internship.ApplicationSubmissionPage;
 
+import internship.dashboard.StudentDashboard;
+
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 import java.awt.*;
@@ -148,6 +150,18 @@ public class ApplicationSubmissionPage extends JPanel {
         filePanel.add(fileName);
         card.add(filePanel);
         card.add(Box.createVerticalStrut(20));
+        // Back Button
+        JButton backBtn = new JButton("← Back");
+        backBtn.setAlignmentX(Component.LEFT_ALIGNMENT);
+        backBtn.setFocusPainted(false);
+        backBtn.setBackground(new Color(220, 220, 220));
+
+        backBtn.addActionListener(e -> {
+            cardLayout.show(mainContent, "dashboard");
+        });
+
+        card.add(backBtn);
+        card.add(Box.createVerticalStrut(10));
 
         // Submit Button
         JButton submitBtn = new JButton("Submit Application");
@@ -188,7 +202,7 @@ public class ApplicationSubmissionPage extends JPanel {
                     "✅ Application submitted successfully!",
                     "Success",
                     JOptionPane.INFORMATION_MESSAGE);
-            cardLayout.show(mainContent, "Dashboard"); // redirect back to dashboard
+            cardLayout.show(mainContent, "dashboard"); // redirect back to dashboard
         }
     }
 
@@ -217,11 +231,9 @@ public class ApplicationSubmissionPage extends JPanel {
 
             CardLayout cl = new CardLayout();
             JPanel mainContent = new JPanel(cl);
+            mainContent.add(new StudentDashboard(cl, mainContent), "dashboard");
 
             mainContent.add(new ApplicationSubmissionPage(mainContent, cl), "Application");
-            mainContent.add(new JPanel(new BorderLayout()) {{
-                add(new JLabel("📊 Dashboard Page", SwingConstants.CENTER), BorderLayout.CENTER);
-            }}, "Dashboard");
 
             frame.add(mainContent);
             frame.setLocationRelativeTo(null);
