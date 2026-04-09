@@ -20,7 +20,6 @@ public class ChangePasswordPage extends JPanel {
     private CardLayout cardLayout;
     private JPanel mainContent;
 
-    // ===== UI COMPONENTS =====
     private JPasswordField txtOldPass;
     private JPasswordField txtNewPass;
     private JPasswordField txtConfirmPass;
@@ -28,10 +27,9 @@ public class ChangePasswordPage extends JPanel {
     private JButton btnChange;
     private JButton btnBack;
 
-    // ===== THEME COLOURS (matches project palette) =====
-    private static final Color PRIMARY     = new Color(30, 90, 160);   // deep blue
+    private static final Color PRIMARY     = new Color(30, 90, 160);
     private static final Color PRIMARY_HOV = new Color(20, 65, 120);
-    private static final Color ACCENT      = new Color(0, 168, 120);   // teal accent
+    private static final Color ACCENT      = new Color(0, 168, 120);
     private static final Color BG          = new Color(245, 247, 252);
     private static final Color CARD_BG     = Color.WHITE;
     private static final Color TEXT_DARK   = new Color(30, 35, 50);
@@ -45,7 +43,6 @@ public class ChangePasswordPage extends JPanel {
 
     private String currentPassword = "1234";
 
-    // ===================================================
     public ChangePasswordPage(CardLayout cardLayout, JPanel mainContent) {
         this.cardLayout = cardLayout;
         this.mainContent = mainContent;
@@ -53,13 +50,9 @@ public class ChangePasswordPage extends JPanel {
         setLayout(new BorderLayout());
         setBackground(BG);
 
-        // Instead of an empty body, add your right panel directly
         add(buildRightPanel(), BorderLayout.CENTER);
     }
 
-    // ===================================================
-    // LEFT PANEL – branding / logo
-    // ===================================================
     private JPanel buildLeftPanel() {
 
         JPanel panel = new JPanel(new BorderLayout()) {
@@ -67,31 +60,27 @@ public class ChangePasswordPage extends JPanel {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                         RenderingHints.VALUE_ANTIALIAS_ON);
-                // Gradient background
+
                 GradientPaint gp = new GradientPaint(
                         0, 0, PRIMARY,
                         0, getHeight(), new Color(10, 50, 110));
                 g2.setPaint(gp);
                 g2.fillRect(0, 0, getWidth(), getHeight());
 
-                // Decorative circle (top-right)
                 g2.setColor(new Color(255, 255, 255, 18));
                 g2.fillOval(getWidth() - 100, -80, 220, 220);
 
-                // Decorative circle (bottom-left)
                 g2.fillOval(-60, getHeight() - 140, 200, 200);
                 g2.dispose();
             }
         };
         panel.setOpaque(false);
 
-        // ── Logo area ──
         JPanel logoWrap = new JPanel();
         logoWrap.setLayout(new BoxLayout(logoWrap, BoxLayout.Y_AXIS));
         logoWrap.setOpaque(false);
         logoWrap.setBorder(new EmptyBorder(0, 20, 0, 20));
 
-        // Try to load the logo; fall back to text initials
         JLabel logoLabel;
         ImageIcon raw = new ImageIcon("src/smart.png");
         if (raw.getIconWidth() > 0) {
@@ -115,7 +104,6 @@ public class ChangePasswordPage extends JPanel {
         appSub.setForeground(new Color(180, 210, 255));
         appSub.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Thin divider
         JSeparator sep = new JSeparator();
         sep.setForeground(new Color(255, 255, 255, 60));
         sep.setMaximumSize(new Dimension(140, 1));
@@ -142,17 +130,12 @@ public class ChangePasswordPage extends JPanel {
         return panel;
     }
 
-    // ===================================================
-    // RIGHT PANEL – change-password form
-    // ===================================================
     private JPanel buildRightPanel() {
 
-        // Outer panel centres the card vertically & horizontally
         JPanel outer = new JPanel(new GridBagLayout());
         outer.setBackground(BG);
         outer.setBorder(new EmptyBorder(24, 24, 24, 24));
 
-        // Card (white rounded rectangle effect via border)
         JPanel card = new JPanel(new GridBagLayout());
         card.setBackground(CARD_BG);
         card.setBorder(BorderFactory.createCompoundBorder(
@@ -166,7 +149,6 @@ public class ChangePasswordPage extends JPanel {
         c.gridx     = 0;
         int row     = 0;
 
-        // ── Title ──
         JLabel title = new JLabel("Change Password");
         title.setFont(FONT_TITLE);
         title.setForeground(TEXT_DARK);
@@ -176,24 +158,20 @@ public class ChangePasswordPage extends JPanel {
         card.add(title, c);
         c.insets = new Insets(6, 0, 4, 0);
 
-        // ── Old Password ──
         card.add(makeLabel("Old Password"), setRow(c, row++));
         txtOldPass = makePassField();
         card.add(txtOldPass, setRow(c, row++));
 
-        // ── New Password ──
         card.add(makeLabel("New Password"), setRow(c, row++));
         txtNewPass = makePassField();
         card.add(txtNewPass, setRow(c, row++));
 
-        // ── Confirm Password ──
         card.add(makeLabel("Confirm New Password"), setRow(c, row++));
         txtConfirmPass = makePassField();
         card.add(txtConfirmPass, setRow(c, row++));
 
-        // ── Buttons (fully centred) ──
         c.gridy  = row;
-        c.fill   = GridBagConstraints.NONE;   // don't stretch buttons
+        c.fill   = GridBagConstraints.NONE;
         c.anchor = GridBagConstraints.CENTER;
         c.insets = new Insets(22, 0, 0, 0);
 
@@ -210,31 +188,24 @@ public class ChangePasswordPage extends JPanel {
         btnRow.add(btnBack);
         card.add(btnRow, c);
 
-        // Put card inside outer with both weights so it stays centred
         GridBagConstraints oc = new GridBagConstraints();
         oc.weightx = 1; oc.weighty = 1;
         oc.fill    = GridBagConstraints.NONE;
         oc.anchor  = GridBagConstraints.CENTER;
         outer.add(card, oc);
 
-        // ── Wire events ──
         btnChange.addActionListener(e -> changePassword());
 
-        // Back button redirects to Login Page
         btnBack.addActionListener(e -> {
             mainContent.add(new LoginPage(cardLayout, mainContent), "LoginPage");
             cardLayout.show(mainContent, "LoginPage");
         });
 
-        // Allow Enter key on the last field to trigger change
         txtConfirmPass.addActionListener(e -> changePassword());
 
         return outer;
     }
 
-    // ===================================================
-    // HELPERS – factory methods
-    // ===================================================
     private JLabel makeLabel(String text) {
         JLabel lbl = new JLabel(text);
         lbl.setFont(FONT_LABEL);
@@ -255,7 +226,6 @@ public class ChangePasswordPage extends JPanel {
                 new EmptyBorder(6, 10, 6, 10)));
         f.setBackground(new Color(250, 251, 255));
 
-        // Highlight border on focus
         f.addFocusListener(new FocusAdapter() {
             @Override public void focusGained(FocusEvent e) {
                 f.setBorder(BorderFactory.createCompoundBorder(
@@ -309,9 +279,6 @@ public class ChangePasswordPage extends JPanel {
         return c;
     }
 
-    // ===================================================
-    // CHANGE PASSWORD LOGIC
-    // ===================================================
     private void changePassword() {
 
         String oldPass     = new String(txtOldPass.getPassword()).trim();
@@ -344,7 +311,6 @@ public class ChangePasswordPage extends JPanel {
                 "Password changed successfully!",
                 "Success", JOptionPane.INFORMATION_MESSAGE);
 
-        // Clear all fields
         txtOldPass.setText("");
         txtNewPass.setText("");
         txtConfirmPass.setText("");
@@ -356,7 +322,6 @@ public class ChangePasswordPage extends JPanel {
                 JOptionPane.WARNING_MESSAGE);
     }
 
-    // ===================================================
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Change Password");

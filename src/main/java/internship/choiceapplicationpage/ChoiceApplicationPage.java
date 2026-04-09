@@ -125,10 +125,8 @@ public class ChoiceApplicationPage extends JPanel {
         setLayout(new BorderLayout());
         setBackground(BG);
 
-        // Top bar at the top
         add(buildTopBar(), BorderLayout.NORTH);
 
-        // Body contains stats + content
         JPanel body = new JPanel(new BorderLayout());
         body.setBackground(BG);
         body.add(buildStatsBar(), BorderLayout.NORTH);
@@ -159,7 +157,6 @@ public class ChoiceApplicationPage extends JPanel {
         bar.setBorder(new EmptyBorder(14, 28, 14, 28));
         bar.setPreferredSize(new Dimension(0, 88));
 
-        // Left side: badge + title
         JPanel left = new JPanel(new GridBagLayout());
         left.setOpaque(false);
         GridBagConstraints lc = new GridBagConstraints();
@@ -186,7 +183,6 @@ public class ChoiceApplicationPage extends JPanel {
         lc.gridx = 1; lc.gridy = 0; lc.gridheight = 2;
         left.add(tb, lc);
 
-        // Right side: Admin chip + Back button
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
         rightPanel.setOpaque(false);
 
@@ -1028,7 +1024,6 @@ public class ChoiceApplicationPage extends JPanel {
             CardLayout cardLayout = new CardLayout();
             JPanel mainContent = new JPanel(cardLayout);
 
-            // Add ChoiceApplicationPage as the starting view
             ChoiceApplicationPage choicePage = new ChoiceApplicationPage(cardLayout, mainContent);
             mainContent.add(choicePage, "ChoiceApplicationPage");
             mainContent.add(new Companydashboard(mainContent, cardLayout), "companyDashboard");
@@ -1036,7 +1031,6 @@ public class ChoiceApplicationPage extends JPanel {
             frame.setContentPane(mainContent);
             frame.setVisible(true);
 
-            // Show the ChoiceApplicationPage initially
             cardLayout.show(mainContent, "ChoiceApplicationPage");
         });
     }

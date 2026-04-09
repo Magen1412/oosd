@@ -10,24 +10,14 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import internship.companydashboard.Companydashboard;
 
-/**
- * Edit Internship Offer Page
- * Converted from JFrame to JPanel
- */
 public class EditOfferPage extends JPanel {
 
-    // ===================================================
-    // CARD NAVIGATION
-    // ===================================================
     private CardLayout cardLayout;
     private JPanel mainContent;
 
     private static final String EDIT_PAGE = "EDIT_PAGE";
     private static final String DASHBOARD_PAGE = "DASHBOARD_PAGE";
 
-    // ===================================================
-    // THEME
-    // ===================================================
     private static final Color PRIMARY      = new Color(30, 90, 160);
     private static final Color PRIMARY_HOV  = new Color(20, 65, 120);
     private static final Color ACCENT       = new Color(0, 168, 120);
@@ -53,9 +43,6 @@ public class EditOfferPage extends JPanel {
     private static final DateTimeFormatter DATE_FMT =
             DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-    // ===================================================
-    // FORM FIELDS
-    // ===================================================
     private JTextField txtTitle;
     private JTextArea txtDescription;
     private JComboBox<String> cmbIndustry;
@@ -68,21 +55,15 @@ public class EditOfferPage extends JPanel {
     private JTextArea txtRequirements;
     private JComboBox<String> cmbStatus;
 
-    // Inline error labels
     private JLabel errTitle, errStipend, errVacancies, errDeadline;
 
-    // Action buttons
     private JButton btnSave;
     private JButton btnDiscard;
     private JButton btnBack;
 
-    // Change-tracking
     private String[] originalValues;
     private boolean isDirty = false;
 
-    // ===================================================
-    // MOCK DATA
-    // ===================================================
     private static final String MOCK_TITLE        = "Software Engineering Intern";
     private static final String MOCK_DESC         =
             "You will work closely with our engineering team to design, develop, and " +
@@ -103,9 +84,6 @@ public class EditOfferPage extends JPanel {
                     "- Strong problem-solving skills";
     private static final String MOCK_STATUS       = "Open";
 
-    // ===================================================
-    // CONSTRUCTOR
-    // ===================================================
     public EditOfferPage(CardLayout cardLayout, JPanel mainContent) {
         this.cardLayout = cardLayout;
         this.mainContent = mainContent;
@@ -122,9 +100,6 @@ public class EditOfferPage extends JPanel {
         wireChangeListeners();
     }
 
-    // ===================================================
-    // TOP BAR
-    // ===================================================
     private JPanel buildTopBar() {
         JPanel bar = new JPanel() {
             @Override
@@ -226,9 +201,6 @@ public class EditOfferPage extends JPanel {
         return bar;
     }
 
-    // ===================================================
-    // MAIN AREA
-    // ===================================================
     private JScrollPane buildMainArea() {
         JPanel form = new JPanel(new GridBagLayout());
         form.setBackground(BG);
@@ -417,9 +389,6 @@ public class EditOfferPage extends JPanel {
         return scroll;
     }
 
-    // ===================================================
-    // BOTTOM BAR
-    // ===================================================
     private JPanel buildBottomBar() {
         JPanel bar = new JPanel(new BorderLayout());
         bar.setBackground(CARD_BG);
@@ -462,9 +431,6 @@ public class EditOfferPage extends JPanel {
         return bar;
     }
 
-    // ===================================================
-    // POPULATE
-    // ===================================================
     private void populateFields() {
         txtTitle.setText(MOCK_TITLE);
         txtDescription.setText(MOCK_DESC);
@@ -488,9 +454,6 @@ public class EditOfferPage extends JPanel {
         }
     }
 
-    // ===================================================
-    // CHANGE TRACKING
-    // ===================================================
     private void snapshotOriginal() {
         originalValues = currentValues();
     }
@@ -549,9 +512,6 @@ public class EditOfferPage extends JPanel {
         });
     }
 
-    // ===================================================
-    // VALIDATION
-    // ===================================================
     private boolean validateForm() {
         boolean valid = true;
         clearErrors();
@@ -647,9 +607,6 @@ public class EditOfferPage extends JPanel {
         resetAreaBorder(txtDescription);
     }
 
-    // ===================================================
-    // BUTTON ACTIONS
-    // ===================================================
     private void handleSave() {
         clearErrors();
         if (!validateForm()) return;
@@ -684,7 +641,6 @@ public class EditOfferPage extends JPanel {
             btnSave.setEnabled(false);
             btnDiscard.setEnabled(false);
 
-            // Optional navigation after save
             cardLayout.show(mainContent, DASHBOARD_PAGE);
         }
     }
@@ -726,9 +682,6 @@ public class EditOfferPage extends JPanel {
         cardLayout.show(mainContent, DASHBOARD_PAGE);
     }
 
-    // ===================================================
-    // UI HELPERS
-    // ===================================================
     private JPanel buildSectionHeader(String text) {
         JPanel p = new JPanel(new BorderLayout()) {
             @Override
@@ -878,9 +831,6 @@ public class EditOfferPage extends JPanel {
         });
     }
 
-    // ===================================================
-    // SAMPLE DASHBOARD PANEL
-    // ===================================================
     static class DashboardPage extends JPanel {
         public DashboardPage(CardLayout cardLayout, JPanel mainContent) {
             setLayout(new BorderLayout());
@@ -906,9 +856,6 @@ public class EditOfferPage extends JPanel {
         }
     }
 
-    // ===================================================
-    // MAIN METHOD WITH NAVIGATION
-    // ===================================================
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -935,7 +882,6 @@ public class EditOfferPage extends JPanel {
             frame.setLocationRelativeTo(null);
             frame.setVisible(true);
 
-            // Start on dashboard
             cardLayout.show(mainContent, DASHBOARD_PAGE);
         });
     }

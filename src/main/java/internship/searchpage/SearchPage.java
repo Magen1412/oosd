@@ -10,18 +10,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import internship.dashboard.StudentDashboard;
 
-/**
- * Internship Search Page
- * Converted from JFrame -> JPanel
- */
 public class SearchPage extends JPanel {
 
     private CardLayout cardLayout;
     private JPanel mainContent;
 
-    // ===================================================
-    // THEME
-    // ===================================================
     private static final Color PRIMARY      = new Color(30, 90, 160);
     private static final Color PRIMARY_HOV  = new Color(20, 65, 120);
     private static final Color ACCENT       = new Color(0, 168, 120);
@@ -43,9 +36,6 @@ public class SearchPage extends JPanel {
     private static final Font FONT_TABLE_H  = new Font("Segoe UI", Font.BOLD, 12);
     private static final Font FONT_TABLE    = new Font("Segoe UI", Font.PLAIN, 12);
 
-    // ===================================================
-    // FILTER CONTROLS
-    // ===================================================
     private JTextField txtSearch;
     private JComboBox<String> cmbIndustry;
     private JComboBox<String> cmbLocation;
@@ -56,16 +46,10 @@ public class SearchPage extends JPanel {
     private JButton btnSearch;
     private JButton btnClear;
 
-    // ===================================================
-    // TABLE
-    // ===================================================
     private JTable resultsTable;
     private DefaultTableModel tableModel;
     private JLabel lblResultCount;
 
-    // ===================================================
-    // MOCK DATA
-    // ===================================================
     private static final String[][] ALL_INTERNSHIPS = {
             {"Software Engineering Intern",  "TechNova Ltd",        "IT & Software",    "Port Louis",   "On-site",  "3",  "15000", "Open"},
             {"Data Analyst Intern",          "DataBridge Co.",      "Analytics",        "Ebene",        "Hybrid",   "6",  "18000", "Open"},
@@ -84,9 +68,6 @@ public class SearchPage extends JPanel {
             {"Social Media Intern",          "ViralBoost Agency",   "Marketing",        "Curepipe",     "Remote",   "3",  "7500",  "Open"},
     };
 
-    // ===================================================
-    // CONSTRUCTOR
-    // ===================================================
     public SearchPage(CardLayout cardLayout, JPanel mainContent) {
         this.cardLayout = cardLayout;
         this.mainContent = mainContent;
@@ -98,9 +79,6 @@ public class SearchPage extends JPanel {
         add(buildMainArea(), BorderLayout.CENTER);
     }
 
-    // ===================================================
-    // TOP BAR
-    // ===================================================
     private JPanel buildTopBar() {
         JPanel bar = new JPanel() {
             @Override
@@ -156,9 +134,6 @@ public class SearchPage extends JPanel {
         return bar;
     }
 
-    // ===================================================
-    // MAIN AREA
-    // ===================================================
     private JSplitPane buildMainArea() {
         JSplitPane split = new JSplitPane(
                 JSplitPane.HORIZONTAL_SPLIT,
@@ -173,9 +148,6 @@ public class SearchPage extends JPanel {
         return split;
     }
 
-    // ===================================================
-    // FILTER SIDEBAR
-    // ===================================================
     private JPanel buildFilterPanel() {
         JPanel outer = new JPanel(new BorderLayout());
         outer.setBackground(BG);
@@ -276,9 +248,6 @@ public class SearchPage extends JPanel {
         return outer;
     }
 
-    // ===================================================
-    // RESULTS PANEL
-    // ===================================================
     private JPanel buildResultsPanel() {
         JPanel outer = new JPanel(new BorderLayout(0, 0));
         outer.setBackground(BG);
@@ -335,9 +304,6 @@ public class SearchPage extends JPanel {
         return outer;
     }
 
-    // ===================================================
-    // SEARCH LOGIC
-    // ===================================================
     private void runSearch() {
         String keyword  = txtSearch.getText().trim().toLowerCase();
         String industry = (String) cmbIndustry.getSelectedItem();
@@ -400,9 +366,6 @@ public class SearchPage extends JPanel {
         }
     }
 
-    // ===================================================
-    // ROW ACTIONS
-    // ===================================================
     private void onApply() {
         int row = resultsTable.getSelectedRow();
         if (row < 0) {
@@ -477,9 +440,6 @@ public class SearchPage extends JPanel {
         JOptionPane.showMessageDialog(this, msg, "Info", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    // ===================================================
-    // TABLE STYLING
-    // ===================================================
     private void styleTable() {
         resultsTable.setFont(FONT_TABLE);
         resultsTable.setForeground(TEXT_DARK);
@@ -557,9 +517,6 @@ public class SearchPage extends JPanel {
         });
     }
 
-    // ===================================================
-    // UI HELPERS
-    // ===================================================
     private JLabel sectionHeader(String text) {
         JLabel lbl = new JLabel(text);
         lbl.setFont(new Font("Segoe UI", Font.BOLD, 13));
@@ -664,9 +621,6 @@ public class SearchPage extends JPanel {
         });
     }
 
-    // ===================================================
-    // ENTRY POINT
-    // ===================================================
     public static void main(String[] args) {
         try {
             UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
