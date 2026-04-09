@@ -160,7 +160,7 @@ public class ProfilePage extends JPanel {
         nameBlock.setLayout(new BoxLayout(nameBlock, BoxLayout.Y_AXIS));
         nameBlock.setBackground(CARD_BG);
         nameBlock.setBorder(BorderFactory.createEmptyBorder(6, 16, 0, 0));
-        JLabel nameLabel = new JLabel("John Doe");
+        JLabel nameLabel = new JLabel("Roubina Chinapyel");
         nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 17));
         nameLabel.setForeground(new Color(30, 30, 30));
         JLabel roleLabel = new JLabel("Student");
@@ -450,8 +450,8 @@ public class ProfilePage extends JPanel {
 
     public void loadData() {
         txtUserId.setText("1001");
-        txtName.setText("John Doe");
-        txtEmail.setText("john@gmail.com");
+        txtName.setText("Roubina Chinapyel");
+        txtEmail.setText("roubina111@gmail.com");
         txtPhone.setText("57894521");
         txtRole.setText("Student");
         cmbGender.setSelectedIndex(1);

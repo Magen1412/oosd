@@ -6,6 +6,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 import internship.ApplicationView.ApplicationViewPage;
+import internship.login.LoginPage;
 import internship.settings.SettingsPage;
 
 public class Admindashboard extends JPanel {
@@ -65,11 +66,10 @@ public class Admindashboard extends JPanel {
                     JOptionPane.QUESTION_MESSAGE
             );
             if (choice == JOptionPane.YES_OPTION) {
-                JFrame topFrame = (JFrame) SwingUtilities.getWindowAncestor(this);
-                topFrame.dispose();
-                SwingUtilities.invokeLater(() -> new LoginPage().setVisible(true));
+                cardLayout.show(mainContent, "login");
             }
         });
+
         sidebar.add(btnLogout);
         sidebar.add(Box.createVerticalStrut(20));
 
@@ -168,13 +168,6 @@ public class Admindashboard extends JPanel {
             setSize(500, 300);
             setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
             setLocationRelativeTo(null);
-
-            JPanel panel = new JPanel(new BorderLayout());
-            JLabel lbl = new JLabel("Please log in", SwingConstants.CENTER);
-            lbl.setFont(new Font("SansSerif", Font.BOLD, 20));
-            panel.add(lbl, BorderLayout.CENTER);
-
-            add(panel);
         }
     }
 
@@ -203,6 +196,7 @@ public class Admindashboard extends JPanel {
             mainContent.add(new AdminProfilePage(cl, mainContent), "adminProfile");
 
             mainContent.add(new SettingsPage("Admin", cl, mainContent), "adminSettings");
+            mainContent.add(new internship.login.LoginPage(cl, mainContent), "login");
 
             frame.add(mainContent);
             frame.setLocationRelativeTo(null);

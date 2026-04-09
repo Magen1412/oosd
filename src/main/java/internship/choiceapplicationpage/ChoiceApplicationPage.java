@@ -16,8 +16,12 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+import internship.companydashboard.Companydashboard;
 
-public class ChoiceApplicationPage extends JFrame {
+public class ChoiceApplicationPage extends JPanel {
+
+    private CardLayout cardLayout;
+    private JPanel mainContent;
 
     private static final Color PRIMARY      = new Color(30, 90, 160);
     private static final Color PRIMARY_HOV  = new Color(20, 65, 120);
@@ -114,31 +118,26 @@ public class ChoiceApplicationPage extends JFrame {
 
     private Application selectedApp = null;
 
-    public ChoiceApplicationPage() {
-        setTitle("Internship Management System – Approve / Reject Applications");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(1000, 680));
-        setSize(1300, 820);
+    public ChoiceApplicationPage(CardLayout cardLayout, JPanel mainContent) {
+        this.cardLayout = cardLayout;
+        this.mainContent = mainContent;
 
-        JPanel root = new JPanel(new BorderLayout(0, 0));
-        root.setBackground(BG);
-        setContentPane(root);
+        setLayout(new BorderLayout());
+        setBackground(BG);
 
-        root.add(buildTopBar(),      BorderLayout.NORTH);
-        root.add(buildStatsBar(),    BorderLayout.CENTER);
+        // Top bar at the top
+        add(buildTopBar(), BorderLayout.NORTH);
 
-        root.remove(buildStatsBar());
-        JPanel body = new JPanel(new BorderLayout(0, 0));
+        // Body contains stats + content
+        JPanel body = new JPanel(new BorderLayout());
         body.setBackground(BG);
-        body.add(buildStatsBar(),   BorderLayout.NORTH);
-        body.add(buildContentArea(),BorderLayout.CENTER);
-        root.add(body, BorderLayout.CENTER);
+        body.add(buildStatsBar(), BorderLayout.NORTH);
+        body.add(buildContentArea(), BorderLayout.CENTER);
+
+        add(body, BorderLayout.CENTER);
 
         refreshTable(allApplications);
         updateStats();
-
-        setLocationRelativeTo(null);
-        setVisible(true);
     }
 
     private JPanel buildTopBar() {
@@ -160,6 +159,7 @@ public class ChoiceApplicationPage extends JFrame {
         bar.setBorder(new EmptyBorder(14, 28, 14, 28));
         bar.setPreferredSize(new Dimension(0, 88));
 
+        // Left side: badge + title
         JPanel left = new JPanel(new GridBagLayout());
         left.setOpaque(false);
         GridBagConstraints lc = new GridBagConstraints();
@@ -183,12 +183,26 @@ public class ChoiceApplicationPage extends JFrame {
         tb.add(title);
         tb.add(Box.createVerticalStrut(3));
         tb.add(sub);
-        lc.gridx = 1; lc.gridy = 0; lc.gridheight = 2; lc.insets = new Insets(0,0,0,0);
+        lc.gridx = 1; lc.gridy = 0; lc.gridheight = 2;
         left.add(tb, lc);
 
+        // Right side: Admin chip + Back button
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
+        rightPanel.setOpaque(false);
+
         JPanel chip = makeCompanyChip("👤  Admin Panel");
+        JButton btnBack = makeButton("← Back to Dashboard", PRIMARY, Color.WHITE);
+        btnBack.addActionListener(e -> {
+            mainContent.add(new Companydashboard(mainContent, cardLayout), "companyDashboard");
+            cardLayout.show(mainContent, "companyDashboard");
+        });
+
+        rightPanel.add(chip);
+        rightPanel.add(btnBack);
+
         bar.add(left, BorderLayout.WEST);
-        bar.add(chip, BorderLayout.EAST);
+        bar.add(rightPanel, BorderLayout.EAST);
+
         return bar;
     }
 
@@ -1005,6 +1019,25 @@ public class ChoiceApplicationPage extends JFrame {
     public static void main(String[] args) {
         try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); }
         catch (Exception ignored) {}
-        SwingUtilities.invokeLater(ChoiceApplicationPage::new);
+            SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Approve/reject Applications");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(1300, 820);
+            frame.setLocationRelativeTo(null);
+
+            CardLayout cardLayout = new CardLayout();
+            JPanel mainContent = new JPanel(cardLayout);
+
+            // Add ChoiceApplicationPage as the starting view
+            ChoiceApplicationPage choicePage = new ChoiceApplicationPage(cardLayout, mainContent);
+            mainContent.add(choicePage, "ChoiceApplicationPage");
+            mainContent.add(new Companydashboard(mainContent, cardLayout), "companyDashboard");
+
+            frame.setContentPane(mainContent);
+            frame.setVisible(true);
+
+            // Show the ChoiceApplicationPage initially
+            cardLayout.show(mainContent, "ChoiceApplicationPage");
+        });
     }
 }

@@ -6,7 +6,19 @@ import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
 
-public class ChangePasswordPage extends JFrame {
+import internship.ApplicationSubmissionPage.ApplicationStatusPage;
+import internship.ApplicationSubmissionPage.ApplicationSubmissionPage;
+import internship.dashboard.ProfilePage;
+import internship.dashboard.StudentDashboard;
+import internship.login.LoginPage;
+import internship.searchpage.SearchPage;
+import internship.settings.SettingsPage;
+import internship.support.SupportPage;
+
+public class ChangePasswordPage extends JPanel {
+
+    private CardLayout cardLayout;
+    private JPanel mainContent;
 
     // ===== UI COMPONENTS =====
     private JPasswordField txtOldPass;
@@ -34,29 +46,15 @@ public class ChangePasswordPage extends JFrame {
     private String currentPassword = "1234";
 
     // ===================================================
-    public ChangePasswordPage() {
+    public ChangePasswordPage(CardLayout cardLayout, JPanel mainContent) {
+        this.cardLayout = cardLayout;
+        this.mainContent = mainContent;
 
-        setTitle("Internship Management System – Change Password");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setMinimumSize(new Dimension(680, 440));
-        setSize(920, 560);
+        setLayout(new BorderLayout());
+        setBackground(BG);
 
-        // Root content pane with custom background
-        JPanel root = new JPanel(new GridLayout(1, 2, 0, 0)) {
-            @Override protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                g.setColor(BG);
-                g.fillRect(0, 0, getWidth(), getHeight());
-            }
-        };
-        root.setBackground(BG);
-        setContentPane(root);
-
-        root.add(buildLeftPanel());
-        root.add(buildRightPanel());
-
-        setLocationRelativeTo(null);
-        setVisible(true);
+        // Instead of an empty body, add your right panel directly
+        add(buildRightPanel(), BorderLayout.CENTER);
     }
 
     // ===================================================
@@ -195,7 +193,7 @@ public class ChangePasswordPage extends JFrame {
 
         // ── Buttons (fully centred) ──
         c.gridy  = row;
-        c.fill   = GridBagConstraints.NONE;   // <-- don't stretch buttons
+        c.fill   = GridBagConstraints.NONE;   // don't stretch buttons
         c.anchor = GridBagConstraints.CENTER;
         c.insets = new Insets(22, 0, 0, 0);
 
@@ -203,7 +201,7 @@ public class ChangePasswordPage extends JFrame {
         btnRow.setBackground(CARD_BG);
 
         btnChange = makeButton("Change Password", PRIMARY, Color.WHITE);
-        btnBack   = makeButton("Back",            CARD_BG, PRIMARY);
+        btnBack   = makeButton("Back to Login", CARD_BG, PRIMARY);
         btnBack.setBorder(BorderFactory.createCompoundBorder(
                 new LineBorder(PRIMARY, 1, true),
                 new EmptyBorder(8, 22, 8, 22)));
@@ -221,7 +219,12 @@ public class ChangePasswordPage extends JFrame {
 
         // ── Wire events ──
         btnChange.addActionListener(e -> changePassword());
-        btnBack.addActionListener(e -> dispose());
+
+        // Back button redirects to Login Page
+        btnBack.addActionListener(e -> {
+            mainContent.add(new LoginPage(cardLayout, mainContent), "LoginPage");
+            cardLayout.show(mainContent, "LoginPage");
+        });
 
         // Allow Enter key on the last field to trigger change
         txtConfirmPass.addActionListener(e -> changePassword());
@@ -355,10 +358,22 @@ public class ChangePasswordPage extends JFrame {
 
     // ===================================================
     public static void main(String[] args) {
-        // Respect the OS look-and-feel for native controls
-        try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); }
-        catch (Exception ignored) {}
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Change Password");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(860, 800);
+            frame.setLocationRelativeTo(null);
 
-        SwingUtilities.invokeLater(ChangePasswordPage::new);
+            CardLayout cardLayout = new CardLayout();
+            JPanel mainContent = new JPanel(cardLayout);
+
+            mainContent.add(new ChangePasswordPage(cardLayout, mainContent), "changePassword");
+            mainContent.add(new LoginPage(cardLayout, mainContent), "loginPage");
+
+            cardLayout.show(mainContent, "changePassword");
+
+            frame.setContentPane(mainContent);
+            frame.setVisible(true);
+        });
     }
 }
