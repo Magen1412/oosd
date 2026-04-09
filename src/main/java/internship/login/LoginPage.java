@@ -8,6 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 import internship.ApplicationView.ApplicationViewPage;
+import internship.admindashboard.AdminProfilePage;
 import internship.registration.RegistrationPage;
 import internship.settings.SettingsPage;
 import internship.ApplicationSubmissionPage.ApplicationStatusPage;
@@ -234,7 +235,7 @@ public class LoginPage extends JPanel {
             mainContent.add(new ApplicationViewPage(mainContent, cardLayout), "ApplicationViewPage");
             mainContent.add(new ApplicationSubmissionPage(mainContent, cardLayout), "ApplicationSubmission");
             mainContent.add(new AddInternshipOfferPage(cardLayout, mainContent), "AddOffer");
-            //mainContent.add(new ChangePasswordPage(cardLayout, mainContent), "changePassword");
+            //mainContent.add(new ChangePasswordPage(), "changePassword");
             mainContent.add(new SupportPage(cardLayout, mainContent), "supportPage");
             mainContent.add(new ProfilePage(cardLayout, mainContent), "profilePage");
             mainContent.add(new SearchPage(cardLayout, mainContent), "browseInternships");
@@ -242,6 +243,7 @@ public class LoginPage extends JPanel {
             mainContent.add(new EditOfferPage(cardLayout, mainContent), "EditOffer");
             mainContent.add(new internshipschedule(cardLayout, mainContent), "interviewScheduling");
             //mainContent.add(new ChoiceApplicationPage(cardLayout, mainContent), "choiceApplication");
+            mainContent.add(new AdminProfilePage(cardLayout, mainContent), "adminProfile");
 
             frame.setContentPane(mainContent);
             frame.setLocationRelativeTo(null);

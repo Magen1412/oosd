@@ -163,7 +163,7 @@ public class AdminProfilePage extends JPanel {
         JPanel nameBadgeRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 8, 0));
         nameBadgeRow.setBackground(CARD_BG);
 
-        JLabel nameLabel = new JLabel("Alice Dubois");
+        JLabel nameLabel = new JLabel("Roubina Chinapyel");
         nameLabel.setFont(new Font("Segoe UI", Font.BOLD, 17));
         nameLabel.setForeground(new Color(30, 30, 30));
 
@@ -187,7 +187,7 @@ public class AdminProfilePage extends JPanel {
         nameBadgeRow.add(nameLabel);
         nameBadgeRow.add(badge);
 
-        JLabel roleLabel = new JLabel("System Administrator - IT Department");
+        JLabel roleLabel = new JLabel("System Administrator");
         roleLabel.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         roleLabel.setForeground(new Color(130, 130, 130));
         nameBlock.add(nameBadgeRow);
@@ -218,7 +218,7 @@ public class AdminProfilePage extends JPanel {
         txtDepartment = createStyledField();
         txtLastLogin  = createStyledField(); txtLastLogin.setEditable(false); txtLastLogin.setBackground(new Color(248, 248, 248));
 
-        cmbGender = new JComboBox<>(new String[]{"Select Gender", "Male", "Female", "Prefer not to say"});
+        cmbGender = new JComboBox<>(new String[]{"Select Gender", "Female", "Male", "Prefer not to say"});
         cmbGender.setFont(new Font("Segoe UI", Font.PLAIN, 13));
         cmbGender.setPreferredSize(new Dimension(180, 34));
         cmbGender.setBackground(Color.WHITE);
@@ -444,13 +444,13 @@ public class AdminProfilePage extends JPanel {
     }
 
     public void loadData() {
-        txtAdminId.setText("A001");
-        txtName.setText("Alice Dubois");
-        txtEmail.setText("alice.dubois@ims-admin.mu");
+        txtAdminId.setText("1");
+        txtName.setText("Roubina Chinapyel");
+        txtEmail.setText("roubina.admin@gmail.com");
         txtPhone.setText("52001122");
         txtDepartment.setText("Information Technology");
         txtLastLogin.setText("20/03/2026  09:14 AM");
-        cmbGender.setSelectedIndex(2);
+        cmbGender.setSelectedIndex(1);
         cmbAccessLevel.setSelectedIndex(0);
         txtNotes.setText("Primary system administrator. Responsible for user management, " +
                 "system configuration, and overall platform integrity. Contact for escalations.");
