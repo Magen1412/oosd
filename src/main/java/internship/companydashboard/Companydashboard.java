@@ -54,13 +54,13 @@ public class Companydashboard extends JPanel {
 
         sidebar.add(Box.createVerticalStrut(20));
         sidebar.add(createSidebarButton("Dashboard", "companyDashboard"));
-        sidebar.add(createSidebarButton("Company Profile ", "CompanyProfile"));
+        sidebar.add(createSidebarButton("Company Profile ", "companyProfile"));
         sidebar.add(createSidebarButton("Internship Offers", "AddOffer"));
         sidebar.add(createSidebarButton("View Applications", "ApplicationViewPage"));
-        sidebar.add(createSidebarButton("Edit Internship Offer ", "EditOfferPage"));
-        sidebar.add(createSidebarButton("Schedule interview ", "internshipschedule"));
+        sidebar.add(createSidebarButton("Edit Internship Offer ", "EditOffer"));
+        sidebar.add(createSidebarButton("Schedule interview ", "interviewScheduling"));
         sidebar.add(createSidebarButton("Accept/Reject Applications ", "ChoiceApplicationPage"));
-        sidebar.add(createSidebarButton("System Settings ", "settings"));
+        sidebar.add(createSidebarButton("System Settings ", "companySettings"));
 
         sidebar.add(Box.createVerticalGlue());
 
@@ -211,11 +211,11 @@ public class Companydashboard extends JPanel {
 
             mainContent.add(new AddInternshipOfferPage(cl, mainContent), "AddOffer");
             mainContent.add(new ApplicationViewPage(mainContent ,cl), "ApplicationViewPage");
-            mainContent.add(new ApplicationStatusPage(mainContent, cl), "ApplicationStatusPage");
-            mainContent.add(new internshipschedule(cl, mainContent), "internshipschedule");
-            mainContent.add(new EditOfferPage(cl,mainContent), "EditOfferPage");
+            mainContent.add(new ApplicationStatusPage(mainContent, cl), "applicationStatus");
+            mainContent.add(new internshipschedule(cl, mainContent), "interviewScheduling");
+            mainContent.add(new EditOfferPage(cl,mainContent), "EditOffer");
             mainContent.add(new CompanyProfile(cl , mainContent), "companyProfile");
-            mainContent.add(new SettingsPage("Company", cl , mainContent), "settings");
+            mainContent.add(new SettingsPage("Company", cl , mainContent), "companySettings");
 
             frame.add(mainContent);
             frame.setLocationRelativeTo(null);

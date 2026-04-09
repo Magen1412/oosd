@@ -49,7 +49,7 @@ public class Admindashboard extends JPanel {
 
         sidebar.add(createSidebarButton("Dashboard", "adminDashboard"));
         sidebar.add(createSidebarButton("Admin Profile", "adminProfile"));
-        sidebar.add(createSidebarButton("System Settings", "Settings"));
+        sidebar.add(createSidebarButton("System Settings", "adminSettings"));
 
         sidebar.add(Box.createVerticalGlue());
         sidebar.add(new JSeparator());
@@ -192,7 +192,7 @@ public class Admindashboard extends JPanel {
             mainContent.add(createPage("Manage Users Page"), "Users");
             mainContent.add(createPage("Manage Students Page"), "Students");
             mainContent.add(createPage("Applications Approval Page"), "Applications");
-            mainContent.add(createPage("System Settings Page"), "Settings");
+            mainContent.add(createPage("System Settings Page"), "adminSettings");
 
             mainContent.add(new Admindashboard(mainContent, cl), "Dashboard");
             mainContent.add(createPage("🏢 Manage Companies Page"), "Companies");
@@ -202,7 +202,7 @@ public class Admindashboard extends JPanel {
 
             mainContent.add(new AdminProfilePage(cl, mainContent), "adminProfile");
 
-            mainContent.add(new SettingsPage("Admin", cl, mainContent), "Settings");
+            mainContent.add(new SettingsPage("Admin", cl, mainContent), "adminSettings");
 
             frame.add(mainContent);
             frame.setLocationRelativeTo(null);

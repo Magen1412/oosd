@@ -441,14 +441,19 @@ public class SettingsPage extends JPanel {
             dashboard.setBackground(new Color(230, 240, 250));
             dashboard.add(new JLabel("Dashboard Page"));
             mainContent.add(dashboard, "studentDashboard");
+            mainContent.add(dashboard, "companyDashboard");
+            mainContent.add(dashboard, "adminDashboard");
 
             mainContent.add(new StudentDashboard(cardLayout, mainContent), "studentDashboard");
-            mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
 
-            cardLayout.show(mainContent, "settings");
+            cardLayout.show(mainContent, "studentSettings");
 
-            mainContent.add(new SettingsPage("Company", cardLayout, mainContent), "settings");
-            mainContent.add(new SettingsPage("Admin", cardLayout, mainContent), "settings");
+            mainContent.add(new StudentDashboard(cardLayout, mainContent), "companyDashboard");
+            mainContent.add(new StudentDashboard(cardLayout, mainContent), "adminDashboard");
+
+            mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "studentSettings");
+            mainContent.add(new SettingsPage("Company", cardLayout, mainContent), "companySettings");
+            mainContent.add(new SettingsPage("Admin", cardLayout, mainContent), "adminSettings");
 
             frame.setContentPane(mainContent);
             frame.setVisible(true);

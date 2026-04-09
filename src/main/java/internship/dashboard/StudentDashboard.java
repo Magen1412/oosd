@@ -175,7 +175,7 @@ public class StudentDashboard extends JPanel {
         gear.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                cardLayout.show(mainContent, "settings");
+                cardLayout.show(mainContent, "studentSettings");
             }
         });
 
@@ -253,7 +253,7 @@ public class StudentDashboard extends JPanel {
         apply.setFocusPainted(false);
 
         apply.addActionListener(e -> {
-            cardLayout.show(mainContent, "applicationSubmission");
+            cardLayout.show(mainContent, "ApplicationSubmission");
         });
 
         p.add(l,BorderLayout.WEST);
@@ -293,9 +293,9 @@ public class StudentDashboard extends JPanel {
             JPanel mainContent = new JPanel(cardLayout);
 
             mainContent.add(new StudentDashboard(cardLayout, mainContent), "studentDashboard");
-            mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
+            mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "studentSettings");
             mainContent.add(new ApplicationStatusPage(mainContent, cardLayout), "applicationStatus");
-            mainContent.add(new ApplicationSubmissionPage(mainContent, cardLayout), "applicationSubmission");
+            mainContent.add(new ApplicationSubmissionPage(mainContent, cardLayout), "ApplicationSubmission");
             mainContent.add(new SearchPage(cardLayout, mainContent), "browseInternships");
             mainContent.add(new SupportPage(cardLayout, mainContent), "supportPage");
             mainContent.add(new LoginPage(cardLayout, mainContent), "loginPage");

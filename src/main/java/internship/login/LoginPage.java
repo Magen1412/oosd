@@ -16,12 +16,17 @@ import internship.choiceapplicationpage.ChoiceApplicationPage;
 import internship.addoffer.AddInternshipOfferPage;
 import internship.password.ChangePasswordPage;
 import internship.support.SupportPage;
+import internship.dashboard.ProfilePage;
+import internship.companydashboard.Companydashboard;
+import internship.companydashboard.CompanyProfile;
+import internship.companydashboard.internshipschedule;
+import internship.editofferpage.EditOfferPage;
+import internship.searchpage.SearchPage;
 
 import internship.dashboard.StudentDashboard;
 import internship.dashboard.dao.StudentDAO;
 import internship.dashboard.model.Student;
 
-import internship.companydashboard.Companydashboard;
 import internship.dashboard.dao.CompanyDAO;
 import internship.dashboard.model.Company;
 
@@ -222,13 +227,21 @@ public class LoginPage extends JPanel {
             mainContent.add(new StudentDashboard(cardLayout, mainContent), "studentDashboard");
             mainContent.add(new Companydashboard(mainContent, cardLayout), "companyDashboard");
             mainContent.add(new Admindashboard(mainContent, cardLayout), "adminDashboard");
-            mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
-            mainContent.add(new ApplicationStatusPage(mainContent, cardLayout), "ApplicationStatusPage");
+            mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "studentSettings");
+            mainContent.add(new SettingsPage("Company", cardLayout, mainContent), "companySettings");
+            mainContent.add(new SettingsPage("Admin", cardLayout, mainContent), "adminSettings");
+            mainContent.add(new ApplicationStatusPage(mainContent, cardLayout), "applicationStatus");
             mainContent.add(new ApplicationViewPage(mainContent, cardLayout), "ApplicationViewPage");
-            mainContent.add(new ApplicationSubmissionPage(mainContent, cardLayout), "ApplicationSubmissionPage");
+            mainContent.add(new ApplicationSubmissionPage(mainContent, cardLayout), "ApplicationSubmission");
             mainContent.add(new AddInternshipOfferPage(cardLayout, mainContent), "AddOffer");
             //mainContent.add(new ChangePasswordPage(cardLayout, mainContent), "changePassword");
             mainContent.add(new SupportPage(cardLayout, mainContent), "supportPage");
+            mainContent.add(new ProfilePage(cardLayout, mainContent), "profilePage");
+            mainContent.add(new SearchPage(cardLayout, mainContent), "browseInternships");
+            mainContent.add(new CompanyProfile(cardLayout, mainContent), "companyProfile");
+            mainContent.add(new EditOfferPage(cardLayout, mainContent), "EditOffer");
+            mainContent.add(new internshipschedule(cardLayout, mainContent), "interviewScheduling");
+            //mainContent.add(new ChoiceApplicationPage(cardLayout, mainContent), "choiceApplication");
 
             frame.setContentPane(mainContent);
             frame.setLocationRelativeTo(null);
