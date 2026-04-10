@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
-
 import internship.searchpage.SearchPage;
 import internship.settings.SettingsPage;
 import internship.support.SupportPage;
@@ -289,7 +288,6 @@ public class StudentDashboard extends JPanel {
             mainContent.add(new StudentDashboard(cardLayout, mainContent), "dashboard");
             mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
             //mainContent.add(new SearchPage(cardLayout, mainContent), "browseInternships");
-            // mainContent.add(new ApplicationsPage(cardLayout, mainContent), "applicationsPage");
             mainContent.add(new SupportPage(cardLayout, mainContent), "supportPage");
             // mainContent.add(new LoginPage(cardLayout, mainContent), "loginPage");
 
