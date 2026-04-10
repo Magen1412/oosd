@@ -4,6 +4,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
+import internship.ApplicationSubmissionPage.*;
 import internship.searchpage.SearchPage;
 import internship.settings.SettingsPage;
 import internship.support.SupportPage;
@@ -244,7 +245,9 @@ public class StudentDashboard extends JPanel {
         apply.setForeground(Color.WHITE);
         apply.setFocusPainted(false);
 
-        apply.addActionListener(e -> JOptionPane.showMessageDialog(this,"Applied to "+role));
+        apply.addActionListener(e -> {
+            cardLayout.show(mainContent, "applicationSubmission");
+        });
 
         p.add(l,BorderLayout.WEST);
         p.add(apply,BorderLayout.EAST);
@@ -287,6 +290,8 @@ public class StudentDashboard extends JPanel {
             // Add dashboard and settings page
             mainContent.add(new StudentDashboard(cardLayout, mainContent), "dashboard");
             mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
+            mainContent.add(new ApplicationStatusPage(mainContent, cardLayout), "applicationsPage");
+            mainContent.add(new ApplicationSubmissionPage(mainContent, cardLayout), "applicationSubmission");
             //mainContent.add(new SearchPage(cardLayout, mainContent), "browseInternships");
             mainContent.add(new SupportPage(cardLayout, mainContent), "supportPage");
             // mainContent.add(new LoginPage(cardLayout, mainContent), "loginPage");

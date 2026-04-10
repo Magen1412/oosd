@@ -1,5 +1,6 @@
 package internship.ApplicationSubmissionPage;
 
+import
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
@@ -19,9 +20,7 @@ public class ApplicationStatusPage extends JPanel {
     private DefaultTableModel tableModel;
 
     // ===== COLORS =====
-    private static final Color SIDEBAR_BG    = new Color(60, 63, 65);
-    private static final Color SIDEBAR_HOVER = new Color(80, 83, 85);
-    private static final Color SIDEBAR_TEXT  = new Color(220, 220, 220);
+
     private static final Color CONTENT_BG    = new Color(240, 240, 240);
     private static final Color CARD_BG       = Color.WHITE;
     private static final Color HEADER_BG     = new Color(200, 60, 50);
@@ -58,49 +57,10 @@ public class ApplicationStatusPage extends JPanel {
         titleBar.add(appTitle, BorderLayout.WEST);
         add(titleBar, BorderLayout.NORTH);
 
-        add(buildSidebar(), BorderLayout.WEST);
+
         add(buildContent(), BorderLayout.CENTER);
     }
 
-    // ===== SIDEBAR =====
-    private JPanel buildSidebar() {
-        JPanel sidebar = new JPanel();
-        sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
-        sidebar.setBackground(SIDEBAR_BG);
-        sidebar.setPreferredSize(new Dimension(200, 0));
-
-        String[] items = {"Dashboard", "Jobs", "Companies", "Application Status", "Profile", "Log Out"};
-        String[] icons = {"⊞", "✎", "⊟", "☰", "👤", "⏻"};
-
-        sidebar.add(Box.createVerticalStrut(10));
-        for (int i = 0; i < items.length; i++) {
-            sidebar.add(createNavItem(icons[i], items[i], items[i].equals("Application Status")));
-        }
-        sidebar.add(Box.createVerticalGlue());
-        return sidebar;
-    }
-
-    private JPanel createNavItem(String icon, String label, boolean active) {
-        JPanel item = new JPanel(new FlowLayout(FlowLayout.LEFT, 18, 10));
-        item.setBackground(active ? SIDEBAR_HOVER : SIDEBAR_BG);
-        item.setMaximumSize(new Dimension(200, 45));
-        item.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        JLabel lbl = new JLabel(icon + "  " + label);
-        lbl.setForeground(active ? Color.WHITE : SIDEBAR_TEXT);
-        lbl.setFont(new Font("Segoe UI", Font.PLAIN, 13));
-        item.add(lbl);
-
-        if (!active) {
-            item.addMouseListener(new MouseAdapter() {
-                public void mouseEntered(MouseEvent e) { item.setBackground(SIDEBAR_HOVER); }
-                public void mouseExited(MouseEvent e)  { item.setBackground(SIDEBAR_BG); }
-                public void mouseClicked(MouseEvent e) {
-                    cardLayout.show(mainContent, label); // navigate to page
-                }
-            });
-        }
-        return item;
-    }
 
     // ===== CONTENT =====
     private JPanel buildContent() {
