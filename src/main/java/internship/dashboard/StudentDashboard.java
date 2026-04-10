@@ -5,6 +5,7 @@ import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
 import internship.settings.SettingsPage;
+import internship.ApplicationSubmissionPage.ApplicationStatusPage;
 import java.util.Arrays;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
@@ -180,7 +181,8 @@ public class StudentDashboard extends JPanel {
         avatar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                JOptionPane.showMessageDialog(null, "Opening Profile Page...");
+                // Show ProfilePage card
+                cardLayout.show(mainContent, "profile");
             }
         });
 
@@ -313,6 +315,8 @@ public class StudentDashboard extends JPanel {
 
             // Add dashboard and settings page
             mainContent.add(new StudentDashboard(cardLayout, mainContent), "dashboard");
+            ProfilePage profilePage = new ProfilePage(cardLayout, mainContent);
+            mainContent.add(profilePage, "profile");
             mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
 
             System.out.println("Cards in mainContent: " + Arrays.toString(mainContent.getComponents()));
