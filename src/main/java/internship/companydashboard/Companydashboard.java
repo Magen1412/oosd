@@ -57,6 +57,7 @@ public class Companydashboard extends JPanel {
         sidebar.add(createSidebarButton("Internship Offers", "AddOffer"));
         sidebar.add(createSidebarButton("View Applications", "ApplicationViewPage"));
         sidebar.add(createSidebarButton("Edit Internship Offer ", "EditOfferPage"));
+        sidebar.add(createSidebarButton("Schedule interview ", "internshipschedule"));
         //sidebar.add(createSidebarButton("Interview Scheduling Page ", "Profile"));
 
         sidebar.add(Box.createVerticalGlue());
@@ -217,7 +218,7 @@ public class Companydashboard extends JPanel {
             mainContent.add(new AddInternshipOfferPage(cl, mainContent), "AddOffer");
             mainContent.add(new ApplicationViewPage(mainContent ,cl), "ApplicationViewPage");
             mainContent.add(new ApplicationStatusPage(mainContent, cl), "ApplicationStatusPage");
-            //mainContent.add(new ChoiceApplicationPage(mainContent, cl), "Approve/Reject Page");
+            mainContent.add(new internshipschedule(cl, mainContent), "internshipschedule");
            // mainContent.add(new CompanyProfilePage(mainContent, cl), "Approve/Reject Page");
 
             frame.add(mainContent);
