@@ -51,6 +51,7 @@ public class Admindashboard extends JPanel {
         sidebar.add(Box.createVerticalStrut(20));
 
         sidebar.add(createSidebarButton("Dashboard", "adminDashboard"));
+        sidebar.add(createSidebarButton("Admin Profile", "adminProfile"));
         sidebar.add(createSidebarButton("Approve/Reject Application ", "Choiceapplication"));
         sidebar.add(createSidebarButton("System Settings", "Settings"));
 
@@ -214,9 +215,12 @@ public class Admindashboard extends JPanel {
             mainContent.add(createPage("👥 Manage Users Page"), "Users");
             mainContent.add(createPage("🎓 Manage Students Page"), "Students");
             mainContent.add(createPage("📋 Applications Approval Page"), "Applications");
+            // Add AdminProfilePage
+            mainContent.add(new AdminProfilePage(cl, mainContent), "adminProfile");
 
             // FIXED: pass all three arguments to SettingsPage
             mainContent.add(new SettingsPage("Admin", cl, mainContent), "Settings");
+
 
 
             frame.add(mainContent);
