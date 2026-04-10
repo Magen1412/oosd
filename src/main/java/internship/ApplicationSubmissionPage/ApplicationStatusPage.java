@@ -1,6 +1,6 @@
 package internship.ApplicationSubmissionPage;
 
-import
+import internship.dashboard.StudentDashboard;
 import javax.swing.*;
 import javax.swing.border.*;
 import javax.swing.table.*;
@@ -261,13 +261,10 @@ public class ApplicationStatusPage extends JPanel {
             CardLayout cl = new CardLayout();
             JPanel mainContent = new JPanel(cl);
 
-            // Add dashboard placeholder
-            JPanel dashboard = new JPanel(new BorderLayout());
-            dashboard.add(new JLabel("📊 Dashboard Page", SwingConstants.CENTER), BorderLayout.CENTER);
-            mainContent.add(dashboard, "Dashboard");
 
             // Add application status page
             mainContent.add(new ApplicationStatusPage(mainContent, cl), "Application Status");
+            mainContent.add(new StudentDashboard(new CardLayout(),mainContent ), "Dashboard");
 
             frame.add(mainContent);
             frame.setLocationRelativeTo(null);
