@@ -8,50 +8,47 @@ import java.awt.event.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import internship.companydashboard.Companydashboard;
 
 /**
  * Edit Internship Offer Page
- * Part of: Internship Management System (OOSD Assignment)
- * Company Interface – Page 15
- *
- * Features:
- *  - Pre-populated form fields (simulates loading from DAO / DB)
- *  - Full field coverage: title, description, industry, location, work mode,
- *    duration, stipend, vacancies, deadline, requirements, status
- *  - Section-grouped layout with scrollable right panel
- *  - Change-tracking: Save button only enables when at least one field changes
- *  - Full validation with inline error hints
- *  - Discard Changes dialog guard on Back
- *  - Fully responsive — all panels reflow cleanly on resize / minimise
+ * Converted from JFrame to JPanel
  */
-public class EditOfferPage extends JFrame {
+public class EditOfferPage extends JPanel {
 
     // ===================================================
-    // THEME  (identical to ChangePasswordPage / InternshipSearchPage)
+    // CARD NAVIGATION
+    // ===================================================
+    private CardLayout cardLayout;
+    private JPanel mainContent;
+
+    private static final String EDIT_PAGE = "EDIT_PAGE";
+    private static final String DASHBOARD_PAGE = "DASHBOARD_PAGE";
+
+    // ===================================================
+    // THEME
     // ===================================================
     private static final Color PRIMARY      = new Color(30, 90, 160);
     private static final Color PRIMARY_HOV  = new Color(20, 65, 120);
     private static final Color ACCENT       = new Color(0, 168, 120);
-    private static final Color ACCENT_LIGHT = new Color(230, 248, 243);
     private static final Color WARNING      = new Color(210, 120, 0);
-    private static final Color DANGER       = new Color(200, 45,  45);
-    private static final Color DANGER_LIGHT = new Color(255, 240, 240);
+    private static final Color DANGER       = new Color(200, 45, 45);
     private static final Color BG           = new Color(245, 247, 252);
     private static final Color CARD_BG      = Color.WHITE;
     private static final Color SECTION_HDR  = new Color(248, 249, 253);
-    private static final Color TEXT_DARK    = new Color(30,  35,  50);
+    private static final Color TEXT_DARK    = new Color(30, 35, 50);
     private static final Color TEXT_MUTED   = new Color(110, 120, 140);
     private static final Color BORDER_CLR   = new Color(210, 215, 230);
     private static final Color BORDER_FOCUS = PRIMARY;
     private static final Color BORDER_ERR   = DANGER;
 
-    private static final Font FONT_TITLE    = new Font("Segoe UI", Font.BOLD,  22);
+    private static final Font FONT_TITLE    = new Font("Segoe UI", Font.BOLD, 22);
     private static final Font FONT_SUBTITLE = new Font("Segoe UI", Font.PLAIN, 13);
-    private static final Font FONT_SECTION  = new Font("Segoe UI", Font.BOLD,  13);
-    private static final Font FONT_LABEL    = new Font("Segoe UI", Font.BOLD,  12);
+    private static final Font FONT_SECTION  = new Font("Segoe UI", Font.BOLD, 13);
+    private static final Font FONT_LABEL    = new Font("Segoe UI", Font.BOLD, 12);
     private static final Font FONT_HINT     = new Font("Segoe UI", Font.PLAIN, 11);
     private static final Font FONT_FIELD    = new Font("Segoe UI", Font.PLAIN, 13);
-    private static final Font FONT_BTN      = new Font("Segoe UI", Font.BOLD,  13);
+    private static final Font FONT_BTN      = new Font("Segoe UI", Font.BOLD, 13);
 
     private static final DateTimeFormatter DATE_FMT =
             DateTimeFormatter.ofPattern("dd/MM/yyyy");
@@ -59,19 +56,19 @@ public class EditOfferPage extends JFrame {
     // ===================================================
     // FORM FIELDS
     // ===================================================
-    private JTextField   txtTitle;
-    private JTextArea    txtDescription;
+    private JTextField txtTitle;
+    private JTextArea txtDescription;
     private JComboBox<String> cmbIndustry;
     private JComboBox<String> cmbLocation;
     private JComboBox<String> cmbWorkMode;
     private JComboBox<String> cmbDuration;
-    private JTextField   txtStipend;
-    private JTextField   txtVacancies;
-    private JTextField   txtDeadline;
-    private JTextArea    txtRequirements;
+    private JTextField txtStipend;
+    private JTextField txtVacancies;
+    private JTextField txtDeadline;
+    private JTextArea txtRequirements;
     private JComboBox<String> cmbStatus;
 
-    // Inline error labels keyed per field
+    // Inline error labels
     private JLabel errTitle, errStipend, errVacancies, errDeadline;
 
     // Action buttons
@@ -79,12 +76,12 @@ public class EditOfferPage extends JFrame {
     private JButton btnDiscard;
     private JButton btnBack;
 
-    // Change-tracking: snapshot of original values
+    // Change-tracking
     private String[] originalValues;
-    private boolean  isDirty = false;
+    private boolean isDirty = false;
 
     // ===================================================
-    // MOCK DATA — replace with InternshipDAO.findById(id)
+    // MOCK DATA
     // ===================================================
     private static final String MOCK_TITLE        = "Software Engineering Intern";
     private static final String MOCK_DESC         =
@@ -109,31 +106,20 @@ public class EditOfferPage extends JFrame {
     // ===================================================
     // CONSTRUCTOR
     // ===================================================
-    public EditOfferPage() {
-        setTitle("Internship Management System – Edit Internship Offer");
-        setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-        setMinimumSize(new Dimension(860, 580));
-        setSize(1120, 740);
+    public EditOfferPage(CardLayout cardLayout, JPanel mainContent) {
+        this.cardLayout = cardLayout;
+        this.mainContent = mainContent;
 
-        // Guard unsaved changes when the window X is clicked
-        addWindowListener(new WindowAdapter() {
-            @Override public void windowClosing(WindowEvent e) { handleBack(); }
-        });
+        setLayout(new BorderLayout());
+        setBackground(BG);
 
-        JPanel root = new JPanel(new BorderLayout(0, 0));
-        root.setBackground(BG);
-        setContentPane(root);
-
-        root.add(buildTopBar(),    BorderLayout.NORTH);
-        root.add(buildMainArea(),  BorderLayout.CENTER);
-        root.add(buildBottomBar(), BorderLayout.SOUTH);
+        add(buildTopBar(), BorderLayout.NORTH);
+        add(buildMainArea(), BorderLayout.CENTER);
+        add(buildBottomBar(), BorderLayout.SOUTH);
 
         populateFields();
         snapshotOriginal();
         wireChangeListeners();
-
-        setLocationRelativeTo(null);
-        setVisible(true);
     }
 
     // ===================================================
@@ -141,7 +127,8 @@ public class EditOfferPage extends JFrame {
     // ===================================================
     private JPanel buildTopBar() {
         JPanel bar = new JPanel() {
-            @Override protected void paintComponent(Graphics g) {
+            @Override
+            protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                         RenderingHints.VALUE_ANTIALIAS_ON);
@@ -150,7 +137,6 @@ public class EditOfferPage extends JFrame {
                 g2.setPaint(gp);
                 g2.fillRect(0, 0, getWidth(), getHeight());
 
-                // Subtle decorative arc top-right
                 g2.setColor(new Color(255, 255, 255, 14));
                 g2.fillOval(getWidth() - 140, -70, 260, 260);
                 g2.dispose();
@@ -160,15 +146,14 @@ public class EditOfferPage extends JFrame {
         bar.setBorder(new EmptyBorder(14, 28, 14, 28));
         bar.setPreferredSize(new Dimension(0, 88));
 
-        // Left: icon badge + title block
         JPanel leftSide = new JPanel(new GridBagLayout());
         leftSide.setOpaque(false);
         GridBagConstraints lc = new GridBagConstraints();
         lc.anchor = GridBagConstraints.WEST;
 
-        // Small coloured badge
         JPanel badge = new JPanel() {
-            @Override protected void paintComponent(Graphics g) {
+            @Override
+            protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                         RenderingHints.VALUE_ANTIALIAS_ON);
@@ -180,6 +165,7 @@ public class EditOfferPage extends JFrame {
         badge.setOpaque(false);
         badge.setPreferredSize(new Dimension(46, 46));
         badge.setLayout(new GridBagLayout());
+
         JLabel badgeIcon = new JLabel("✏");
         badgeIcon.setFont(new Font("Segoe UI Emoji", Font.PLAIN, 22));
         badgeIcon.setForeground(Color.WHITE);
@@ -196,23 +182,23 @@ public class EditOfferPage extends JFrame {
         JLabel sub = new JLabel("Update the details of an existing internship listing");
         sub.setFont(FONT_SUBTITLE);
         sub.setForeground(new Color(180, 210, 255));
-        sub.setPreferredSize(new Dimension(440, 20));
 
         titleBlock.add(title);
         titleBlock.add(Box.createVerticalStrut(3));
         titleBlock.add(sub);
 
-        lc.gridx = 0; lc.gridy = 0; lc.gridheight = 2;
+        lc.gridx = 0;
+        lc.gridy = 0;
         lc.insets = new Insets(0, 0, 0, 14);
         leftSide.add(badge, lc);
 
-        lc.gridx = 1; lc.gridy = 0; lc.gridheight = 2;
+        lc.gridx = 1;
         lc.insets = new Insets(0, 0, 0, 0);
         leftSide.add(titleBlock, lc);
 
-        // Right: company chip
         JPanel companyChip = new JPanel() {
-            @Override protected void paintComponent(Graphics g) {
+            @Override
+            protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                         RenderingHints.VALUE_ANTIALIAS_ON);
@@ -234,13 +220,14 @@ public class EditOfferPage extends JFrame {
         companyChip.add(compIcon);
         companyChip.add(compName);
 
-        bar.add(leftSide,    BorderLayout.WEST);
+        bar.add(leftSide, BorderLayout.WEST);
         bar.add(companyChip, BorderLayout.EAST);
+
         return bar;
     }
 
     // ===================================================
-    // MAIN AREA  – two-column form layout
+    // MAIN AREA
     // ===================================================
     private JScrollPane buildMainArea() {
         JPanel form = new JPanel(new GridBagLayout());
@@ -248,162 +235,190 @@ public class EditOfferPage extends JFrame {
         form.setBorder(new EmptyBorder(20, 24, 10, 24));
 
         GridBagConstraints gc = new GridBagConstraints();
-        gc.fill    = GridBagConstraints.BOTH;
+        gc.fill = GridBagConstraints.BOTH;
         gc.weightx = 1.0;
-        gc.insets  = new Insets(0, 0, 16, 0);
+        gc.insets = new Insets(0, 0, 16, 0);
         int row = 0;
 
-        // ── Section 1: Basic Information ──────────────────
-        gc.gridy = row++; gc.gridx = 0; gc.gridwidth = 2;
+        gc.gridy = row++;
+        gc.gridx = 0;
+        gc.gridwidth = 2;
         form.add(buildSectionHeader("📋  Basic Information"), gc);
 
-        // Row: Title (full width)
-        gc.gridy = row++; gc.gridx = 0; gc.gridwidth = 2; gc.weighty = 0;
+        gc.gridy = row++;
         gc.insets = new Insets(0, 0, 4, 0);
         form.add(makeLabel("Job Title *"), gc);
 
-        gc.gridy = row++; gc.insets = new Insets(0, 0, 2, 0);
+        gc.gridy = row++;
+        gc.insets = new Insets(0, 0, 2, 0);
         txtTitle = makeTextField();
         form.add(txtTitle, gc);
 
-        gc.gridy = row++; gc.insets = new Insets(0, 0, 14, 0);
+        gc.gridy = row++;
+        gc.insets = new Insets(0, 0, 14, 0);
         errTitle = makeErrLabel();
         form.add(errTitle, gc);
 
-        // Row: Description (full width, multiline)
-        gc.gridy = row++; gc.gridx = 0; gc.gridwidth = 2;
+        gc.gridy = row++;
         gc.insets = new Insets(0, 0, 4, 0);
         form.add(makeLabel("Job Description *"), gc);
 
-        gc.gridy = row++; gc.weighty = 0.15; gc.insets = new Insets(0, 0, 14, 0);
+        gc.gridy = row++;
+        gc.weighty = 0.15;
+        gc.insets = new Insets(0, 0, 14, 0);
         txtDescription = makeTextArea(4);
-        form.add(new JScrollPane(txtDescription) {{
-            setBorder(new LineBorder(BORDER_CLR, 1, true));
-            setBackground(CARD_BG);
-        }}, gc);
+        JScrollPane descScroll = new JScrollPane(txtDescription);
+        descScroll.setBorder(new LineBorder(BORDER_CLR, 1, true));
+        form.add(descScroll, gc);
         gc.weighty = 0;
 
-        // ── Section 2: Offer Details ──────────────────────
-        gc.gridy = row++; gc.gridx = 0; gc.gridwidth = 2;
+        gc.gridy = row++;
         gc.insets = new Insets(8, 0, 16, 0);
         form.add(buildSectionHeader("📌  Offer Details"), gc);
 
-        // Row: Industry | Location (2 columns)
-        gc.insets = new Insets(0, 0, 4, 0); gc.gridwidth = 1;
+        gc.gridwidth = 1;
+        gc.insets = new Insets(0, 0, 4, 0);
 
-        gc.gridy = row; gc.gridx = 0;
+        gc.gridy = row;
+        gc.gridx = 0;
         form.add(makeLabel("Industry *"), gc);
         gc.gridx = 1;
         form.add(makeLabel("Location *"), gc);
 
         row++;
-        gc.gridy = row++; gc.gridx = 0; gc.insets = new Insets(0, 0, 14, 8);
+        gc.gridy = row++;
+        gc.gridx = 0;
+        gc.insets = new Insets(0, 0, 14, 8);
         cmbIndustry = makeCombo(new String[]{
                 "IT & Software","Analytics","Marketing","Finance",
                 "Human Resources","Design","Business","Legal","Logistics"});
         form.add(cmbIndustry, gc);
 
-        gc.gridx = 1; gc.insets = new Insets(0, 8, 14, 0);
+        gc.gridx = 1;
+        gc.insets = new Insets(0, 8, 14, 0);
         cmbLocation = makeCombo(new String[]{
                 "Port Louis","Ebene","Quatre Bornes","Rose Hill",
                 "Curepipe","Baie du Tombeau","Remote"});
         form.add(cmbLocation, gc);
 
-        // Row: Work Mode | Duration
-        gc.gridy = row; gc.gridx = 0; gc.insets = new Insets(0, 0, 4, 8);
+        gc.gridy = row;
+        gc.gridx = 0;
+        gc.insets = new Insets(0, 0, 4, 8);
         form.add(makeLabel("Work Mode *"), gc);
-        gc.gridx = 1; gc.insets = new Insets(0, 8, 4, 0);
+        gc.gridx = 1;
+        gc.insets = new Insets(0, 8, 4, 0);
         form.add(makeLabel("Duration *"), gc);
 
         row++;
-        gc.gridy = row++; gc.gridx = 0; gc.insets = new Insets(0, 0, 14, 8);
+        gc.gridy = row++;
+        gc.gridx = 0;
+        gc.insets = new Insets(0, 0, 14, 8);
         cmbWorkMode = makeCombo(new String[]{"On-site","Remote","Hybrid"});
         form.add(cmbWorkMode, gc);
 
-        gc.gridx = 1; gc.insets = new Insets(0, 8, 14, 0);
+        gc.gridx = 1;
+        gc.insets = new Insets(0, 8, 14, 0);
         cmbDuration = makeCombo(new String[]{"3 Months","6 Months","12 Months"});
         form.add(cmbDuration, gc);
 
-        // ── Section 3: Compensation & Recruitment ─────────
-        gc.gridy = row++; gc.gridx = 0; gc.gridwidth = 2;
+        gc.gridy = row++;
+        gc.gridx = 0;
+        gc.gridwidth = 2;
         gc.insets = new Insets(8, 0, 16, 0);
         form.add(buildSectionHeader("💰  Compensation & Recruitment"), gc);
 
-        // Row: Stipend | Vacancies
         gc.gridwidth = 1;
-        gc.gridy = row; gc.gridx = 0; gc.insets = new Insets(0, 0, 4, 8);
+        gc.gridy = row;
+        gc.gridx = 0;
+        gc.insets = new Insets(0, 0, 4, 8);
         form.add(makeLabel("Monthly Stipend (Rs) *"), gc);
-        gc.gridx = 1; gc.insets = new Insets(0, 8, 4, 0);
+        gc.gridx = 1;
+        gc.insets = new Insets(0, 8, 4, 0);
         form.add(makeLabel("Number of Vacancies *"), gc);
 
         row++;
-        gc.gridy = row++; gc.gridx = 0; gc.insets = new Insets(0, 0, 2, 8);
+        gc.gridy = row++;
+        gc.gridx = 0;
+        gc.insets = new Insets(0, 0, 2, 8);
         txtStipend = makeTextField();
         form.add(txtStipend, gc);
 
-        gc.gridx = 1; gc.insets = new Insets(0, 8, 2, 0);
+        gc.gridx = 1;
+        gc.insets = new Insets(0, 8, 2, 0);
         txtVacancies = makeTextField();
         form.add(txtVacancies, gc);
 
-        gc.gridy = row++; gc.gridx = 0; gc.insets = new Insets(0, 0, 14, 8);
+        gc.gridy = row++;
+        gc.gridx = 0;
+        gc.insets = new Insets(0, 0, 14, 8);
         errStipend = makeErrLabel();
         form.add(errStipend, gc);
 
-        gc.gridx = 1; gc.insets = new Insets(0, 8, 14, 0);
+        gc.gridx = 1;
+        gc.insets = new Insets(0, 8, 14, 0);
         errVacancies = makeErrLabel();
         form.add(errVacancies, gc);
 
-        // Row: Deadline | Status
-        gc.gridy = row; gc.gridx = 0; gc.insets = new Insets(0, 0, 4, 8);
+        gc.gridy = row;
+        gc.gridx = 0;
+        gc.insets = new Insets(0, 0, 4, 8);
         form.add(makeLabel("Application Deadline (dd/MM/yyyy) *"), gc);
-        gc.gridx = 1; gc.insets = new Insets(0, 8, 4, 0);
+        gc.gridx = 1;
+        gc.insets = new Insets(0, 8, 4, 0);
         form.add(makeLabel("Listing Status *"), gc);
 
         row++;
-        gc.gridy = row++; gc.gridx = 0; gc.insets = new Insets(0, 0, 2, 8);
+        gc.gridy = row++;
+        gc.gridx = 0;
+        gc.insets = new Insets(0, 0, 2, 8);
         txtDeadline = makeTextField();
         form.add(txtDeadline, gc);
 
-        gc.gridx = 1; gc.insets = new Insets(0, 8, 14, 0);
+        gc.gridx = 1;
+        gc.insets = new Insets(0, 8, 14, 0);
         cmbStatus = makeCombo(new String[]{"Open","Closed","Draft"});
         styleStatusCombo();
         form.add(cmbStatus, gc);
 
-        gc.gridy = row++; gc.gridx = 0; gc.gridwidth = 2;
+        gc.gridy = row++;
+        gc.gridx = 0;
+        gc.gridwidth = 2;
         gc.insets = new Insets(0, 0, 14, 0);
         errDeadline = makeErrLabel();
         form.add(errDeadline, gc);
 
-        // ── Section 4: Requirements ───────────────────────
-        gc.gridy = row++; gc.gridx = 0; gc.gridwidth = 2;
+        gc.gridy = row++;
         gc.insets = new Insets(8, 0, 16, 0);
         form.add(buildSectionHeader("📝  Requirements"), gc);
 
-        gc.gridy = row++; gc.insets = new Insets(0, 0, 4, 0);
+        gc.gridy = row++;
+        gc.insets = new Insets(0, 0, 4, 0);
         form.add(makeLabel("Candidate Requirements"), gc);
-        form.add(makeHint("List each requirement on a new line"), gc);
 
-        gc.gridy = row++; gc.weighty = 0.2; gc.insets = new Insets(0, 0, 24, 0);
+        gc.gridy = row++;
+        gc.weighty = 0.2;
+        gc.insets = new Insets(0, 0, 24, 0);
         txtRequirements = makeTextArea(5);
-        form.add(new JScrollPane(txtRequirements) {{
-            setBorder(new LineBorder(BORDER_CLR, 1, true));
-        }}, gc);
-        gc.weighty = 0;
+        JScrollPane reqScroll = new JScrollPane(txtRequirements);
+        reqScroll.setBorder(new LineBorder(BORDER_CLR, 1, true));
+        form.add(reqScroll, gc);
+        gc.weighty = 1.0;
 
-        // Bottom padding row
-        gc.gridy = row; gc.gridx = 0; gc.gridwidth = 2;
-        gc.weighty = 1.0; gc.fill = GridBagConstraints.VERTICAL;
+        gc.gridy = row;
+        gc.gridx = 0;
+        gc.gridwidth = 2;
         form.add(Box.createVerticalGlue(), gc);
 
         JScrollPane scroll = new JScrollPane(form);
         scroll.setBorder(null);
         scroll.getVerticalScrollBar().setUnitIncrement(16);
         scroll.getViewport().setBackground(BG);
+
         return scroll;
     }
 
     // ===================================================
-    // BOTTOM BAR  – action buttons
+    // BOTTOM BAR
     // ===================================================
     private JPanel buildBottomBar() {
         JPanel bar = new JPanel(new BorderLayout());
@@ -412,52 +427,51 @@ public class EditOfferPage extends JFrame {
                 new MatteBorder(1, 0, 0, 0, BORDER_CLR),
                 new EmptyBorder(14, 24, 14, 24)));
 
-        // Left: last-edited hint
         JLabel hint = new JLabel("Last edited: 01/04/2026  ·  by Admin");
         hint.setFont(FONT_HINT);
         hint.setForeground(TEXT_MUTED);
 
-        // Right: action buttons
         JPanel btnPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
         btnPanel.setOpaque(false);
 
-        btnBack    = makeButton("← Back",           CARD_BG, PRIMARY);
+        btnBack = makeButton("← Back", CARD_BG, PRIMARY);
         btnBack.setBorder(BorderFactory.createCompoundBorder(
                 new LineBorder(PRIMARY, 1, true),
                 new EmptyBorder(9, 20, 9, 20)));
 
-        btnDiscard = makeButton("Discard Changes",  CARD_BG, DANGER);
+        btnDiscard = makeButton("Discard Changes", CARD_BG, DANGER);
         btnDiscard.setBorder(BorderFactory.createCompoundBorder(
                 new LineBorder(DANGER, 1, true),
                 new EmptyBorder(9, 20, 9, 20)));
         btnDiscard.setEnabled(false);
 
-        btnSave    = makeButton("💾  Save Changes",  PRIMARY, Color.WHITE);
+        btnSave = makeButton("💾  Save Changes", PRIMARY, Color.WHITE);
         btnSave.setEnabled(false);
 
-        btnBack.addActionListener(e    -> handleBack());
+        btnBack.addActionListener(e -> cardLayout.show(mainContent, "companyDashboard"));
         btnDiscard.addActionListener(e -> handleDiscard());
-        btnSave.addActionListener(e    -> handleSave());
+        btnSave.addActionListener(e -> handleSave());
 
         btnPanel.add(btnBack);
         btnPanel.add(btnDiscard);
         btnPanel.add(btnSave);
 
-        bar.add(hint,     BorderLayout.WEST);
+        bar.add(hint, BorderLayout.WEST);
         bar.add(btnPanel, BorderLayout.EAST);
+
         return bar;
     }
 
     // ===================================================
-    // POPULATE FIELDS FROM MOCK / DAO
+    // POPULATE
     // ===================================================
     private void populateFields() {
         txtTitle.setText(MOCK_TITLE);
         txtDescription.setText(MOCK_DESC);
-        selectCombo(cmbIndustry,  MOCK_INDUSTRY);
-        selectCombo(cmbLocation,  MOCK_LOCATION);
-        selectCombo(cmbWorkMode,  MOCK_MODE);
-        selectCombo(cmbDuration,  MOCK_DURATION);
+        selectCombo(cmbIndustry, MOCK_INDUSTRY);
+        selectCombo(cmbLocation, MOCK_LOCATION);
+        selectCombo(cmbWorkMode, MOCK_MODE);
+        selectCombo(cmbDuration, MOCK_DURATION);
         txtStipend.setText(MOCK_STIPEND);
         txtVacancies.setText(MOCK_VACANCIES);
         txtDeadline.setText(MOCK_DEADLINE);
@@ -467,7 +481,10 @@ public class EditOfferPage extends JFrame {
 
     private void selectCombo(JComboBox<String> cmb, String value) {
         for (int i = 0; i < cmb.getItemCount(); i++) {
-            if (cmb.getItemAt(i).equals(value)) { cmb.setSelectedIndex(i); return; }
+            if (cmb.getItemAt(i).equals(value)) {
+                cmb.setSelectedIndex(i);
+                return;
+            }
         }
     }
 
@@ -498,7 +515,10 @@ public class EditOfferPage extends JFrame {
         String[] current = currentValues();
         isDirty = false;
         for (int i = 0; i < originalValues.length; i++) {
-            if (!originalValues[i].equals(current[i])) { isDirty = true; break; }
+            if (!originalValues[i].equals(current[i])) {
+                isDirty = true;
+                break;
+            }
         }
         btnSave.setEnabled(isDirty);
         btnDiscard.setEnabled(isDirty);
@@ -506,10 +526,11 @@ public class EditOfferPage extends JFrame {
 
     private void wireChangeListeners() {
         DocumentListener dl = new DocumentListener() {
-            public void insertUpdate(DocumentEvent e)  { checkDirty(); }
-            public void removeUpdate(DocumentEvent e)  { checkDirty(); }
+            public void insertUpdate(DocumentEvent e) { checkDirty(); }
+            public void removeUpdate(DocumentEvent e) { checkDirty(); }
             public void changedUpdate(DocumentEvent e) { checkDirty(); }
         };
+
         txtTitle.getDocument().addDocumentListener(dl);
         txtDescription.getDocument().addDocumentListener(dl);
         txtStipend.getDocument().addDocumentListener(dl);
@@ -522,7 +543,10 @@ public class EditOfferPage extends JFrame {
         cmbLocation.addActionListener(al);
         cmbWorkMode.addActionListener(al);
         cmbDuration.addActionListener(al);
-        cmbStatus.addActionListener(e -> { styleStatusCombo(); checkDirty(); });
+        cmbStatus.addActionListener(e -> {
+            styleStatusCombo();
+            checkDirty();
+        });
     }
 
     // ===================================================
@@ -547,9 +571,12 @@ public class EditOfferPage extends JFrame {
         } else {
             try {
                 int s = Integer.parseInt(stipStr);
-                if (s < 0) { showErr(errStipend, txtStipend, "Stipend cannot be negative."); valid = false; }
+                if (s < 0) {
+                    showErr(errStipend, txtStipend, "Stipend cannot be negative.");
+                    valid = false;
+                }
             } catch (NumberFormatException ex) {
-                showErr(errStipend, txtStipend, "Stipend must be a whole number (e.g. 15000).");
+                showErr(errStipend, txtStipend, "Stipend must be a whole number.");
                 valid = false;
             }
         }
@@ -561,7 +588,10 @@ public class EditOfferPage extends JFrame {
         } else {
             try {
                 int v = Integer.parseInt(vacStr);
-                if (v < 1) { showErr(errVacancies, txtVacancies, "Must have at least 1 vacancy."); valid = false; }
+                if (v < 1) {
+                    showErr(errVacancies, txtVacancies, "Must have at least 1 vacancy.");
+                    valid = false;
+                }
             } catch (NumberFormatException ex) {
                 showErr(errVacancies, txtVacancies, "Vacancies must be a whole number.");
                 valid = false;
@@ -580,7 +610,7 @@ public class EditOfferPage extends JFrame {
                     valid = false;
                 }
             } catch (DateTimeParseException ex) {
-                showErr(errDeadline, txtDeadline, "Use format dd/MM/yyyy (e.g. 30/06/2026).");
+                showErr(errDeadline, txtDeadline, "Use format dd/MM/yyyy.");
                 valid = false;
             }
         }
@@ -606,10 +636,14 @@ public class EditOfferPage extends JFrame {
     }
 
     private void clearErrors() {
-        for (JLabel e : new JLabel[]{errTitle, errStipend, errVacancies, errDeadline})
+        for (JLabel e : new JLabel[]{errTitle, errStipend, errVacancies, errDeadline}) {
             e.setVisible(false);
-        for (JTextField f : new JTextField[]{txtTitle, txtStipend, txtVacancies, txtDeadline})
+        }
+
+        for (JTextField f : new JTextField[]{txtTitle, txtStipend, txtVacancies, txtDeadline}) {
             resetFieldBorder(f);
+        }
+
         resetAreaBorder(txtDescription);
     }
 
@@ -620,7 +654,6 @@ public class EditOfferPage extends JFrame {
         clearErrors();
         if (!validateForm()) return;
 
-        // Build confirmation summary
         String summary = String.format(
                 "<html><b>Review changes before saving:</b><br><br>" +
                         "<table>" +
@@ -634,34 +667,43 @@ public class EditOfferPage extends JFrame {
                 txtStipend.getText().trim(),
                 txtVacancies.getText().trim(),
                 txtDeadline.getText().trim(),
-                cmbStatus.getSelectedItem());
+                cmbStatus.getSelectedItem()
+        );
 
         int confirm = JOptionPane.showConfirmDialog(
-                this, summary, "Confirm Save", JOptionPane.YES_NO_OPTION,
-                JOptionPane.QUESTION_MESSAGE);
+                this, summary, "Confirm Save",
+                JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
         if (confirm == JOptionPane.YES_OPTION) {
-            // DAO call would go here: InternshipDAO.update(buildInternshipObject());
             JOptionPane.showMessageDialog(this,
                     "Internship offer updated successfully!",
                     "Saved", JOptionPane.INFORMATION_MESSAGE);
-            snapshotOriginal();   // new baseline = just-saved values
+
+            snapshotOriginal();
             isDirty = false;
             btnSave.setEnabled(false);
             btnDiscard.setEnabled(false);
+
+            // Optional navigation after save
+            cardLayout.show(mainContent, DASHBOARD_PAGE);
         }
     }
 
     private void handleDiscard() {
         if (!isDirty) return;
+
         int confirm = JOptionPane.showConfirmDialog(
                 this,
                 "Discard all unsaved changes and restore the original values?",
-                "Discard Changes", JOptionPane.YES_NO_OPTION,
-                JOptionPane.WARNING_MESSAGE);
+                "Discard Changes",
+                JOptionPane.YES_NO_OPTION,
+                JOptionPane.WARNING_MESSAGE
+        );
+
         if (confirm == JOptionPane.YES_OPTION) {
             populateFields();
             clearErrors();
+            snapshotOriginal();
             isDirty = false;
             btnSave.setEnabled(false);
             btnDiscard.setEnabled(false);
@@ -673,19 +715,24 @@ public class EditOfferPage extends JFrame {
             int choice = JOptionPane.showConfirmDialog(
                     this,
                     "You have unsaved changes.\nLeave without saving?",
-                    "Unsaved Changes", JOptionPane.YES_NO_OPTION,
-                    JOptionPane.WARNING_MESSAGE);
+                    "Unsaved Changes",
+                    JOptionPane.YES_NO_OPTION,
+                    JOptionPane.WARNING_MESSAGE
+            );
+
             if (choice != JOptionPane.YES_OPTION) return;
         }
-        dispose();
+
+        cardLayout.show(mainContent, DASHBOARD_PAGE);
     }
 
     // ===================================================
-    // UI FACTORY HELPERS
+    // UI HELPERS
     // ===================================================
     private JPanel buildSectionHeader(String text) {
         JPanel p = new JPanel(new BorderLayout()) {
-            @Override protected void paintComponent(Graphics g) {
+            @Override
+            protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setColor(SECTION_HDR);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
@@ -711,13 +758,6 @@ public class EditOfferPage extends JFrame {
         return l;
     }
 
-    private JLabel makeHint(String text) {
-        JLabel l = new JLabel(text);
-        l.setFont(FONT_HINT);
-        l.setForeground(TEXT_MUTED);
-        return l;
-    }
-
     private JLabel makeErrLabel() {
         JLabel l = new JLabel();
         l.setFont(new Font("Segoe UI", Font.PLAIN, 11));
@@ -728,7 +768,8 @@ public class EditOfferPage extends JFrame {
 
     private JTextField makeTextField() {
         JTextField f = new JTextField() {
-            @Override public Dimension getPreferredSize() {
+            @Override
+            public Dimension getPreferredSize() {
                 return new Dimension(super.getPreferredSize().width, 36);
             }
         };
@@ -760,10 +801,10 @@ public class EditOfferPage extends JFrame {
         return cb;
     }
 
-    /** Colour-code the Status combo based on selection */
     private void styleStatusCombo() {
         if (cmbStatus == null) return;
         String sel = (String) cmbStatus.getSelectedItem();
+
         if ("Open".equals(sel)) {
             cmbStatus.setForeground(ACCENT);
         } else if ("Closed".equals(sel)) {
@@ -775,10 +816,12 @@ public class EditOfferPage extends JFrame {
 
     private JButton makeButton(String text, Color bg, Color fg) {
         JButton btn = new JButton(text) {
-            @Override protected void paintComponent(Graphics g) {
+            @Override
+            protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                         RenderingHints.VALUE_ANTIALIAS_ON);
+
                 Color draw = bg;
                 if (!isEnabled()) {
                     draw = new Color(200, 202, 210);
@@ -788,12 +831,15 @@ public class EditOfferPage extends JFrame {
                         && (bg.equals(PRIMARY) || bg.equals(ACCENT))) {
                     draw = PRIMARY_HOV;
                 }
+
                 g2.setColor(draw);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 8, 8);
                 g2.dispose();
+
                 super.paintComponent(g);
             }
         };
+
         btn.setFont(FONT_BTN);
         btn.setForeground(fg);
         btn.setBackground(bg);
@@ -818,23 +864,79 @@ public class EditOfferPage extends JFrame {
 
     private void addFocusBorder(JTextField f) {
         f.addFocusListener(new FocusAdapter() {
-            @Override public void focusGained(FocusEvent e) {
+            @Override
+            public void focusGained(FocusEvent e) {
                 f.setBorder(BorderFactory.createCompoundBorder(
                         new LineBorder(BORDER_FOCUS, 2, true),
                         new EmptyBorder(5, 9, 5, 9)));
             }
-            @Override public void focusLost(FocusEvent e) {
+
+            @Override
+            public void focusLost(FocusEvent e) {
                 resetFieldBorder(f);
             }
         });
     }
 
     // ===================================================
-    // ENTRY POINT
+    // SAMPLE DASHBOARD PANEL
+    // ===================================================
+    static class DashboardPage extends JPanel {
+        public DashboardPage(CardLayout cardLayout, JPanel mainContent) {
+            setLayout(new BorderLayout());
+            setBackground(Color.WHITE);
+
+            JLabel lbl = new JLabel("Company Dashboard", SwingConstants.CENTER);
+            lbl.setFont(new Font("Segoe UI", Font.BOLD, 28));
+
+            JButton btnGoToEdit = new JButton("Go to Edit Offer Page");
+            btnGoToEdit.setFont(new Font("Segoe UI", Font.BOLD, 16));
+            btnGoToEdit.addActionListener(e -> cardLayout.show(mainContent, EDIT_PAGE));
+
+            JPanel center = new JPanel(new BorderLayout());
+            center.setOpaque(false);
+            center.add(lbl, BorderLayout.CENTER);
+
+            JPanel south = new JPanel();
+            south.setOpaque(false);
+            south.add(btnGoToEdit);
+
+            add(center, BorderLayout.CENTER);
+            add(south, BorderLayout.SOUTH);
+        }
+    }
+
+    // ===================================================
+    // MAIN METHOD WITH NAVIGATION
     // ===================================================
     public static void main(String[] args) {
-        try { UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName()); }
-        catch (Exception ignored) {}
-        SwingUtilities.invokeLater(EditOfferPage::new);
+        try {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (Exception ignored) {}
+
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("Internship Management System");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            frame.setSize(1120, 740);
+            frame.setMinimumSize(new Dimension(860, 580));
+
+            CardLayout cardLayout = new CardLayout();
+            JPanel mainContent = new JPanel(cardLayout);
+
+            DashboardPage dashboardPage = new DashboardPage(cardLayout, mainContent);
+            EditOfferPage editOfferPage = new EditOfferPage(cardLayout, mainContent);
+
+            mainContent.add(dashboardPage, DASHBOARD_PAGE);
+            mainContent.add(editOfferPage, EDIT_PAGE);
+            mainContent.add(new Companydashboard(mainContent, cardLayout), "companyDashboard");
+            mainContent.add(new EditOfferPage(cardLayout, mainContent), "EditOffer");
+
+            frame.setContentPane(mainContent);
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+
+            // Start on dashboard
+            cardLayout.show(mainContent, DASHBOARD_PAGE);
+        });
     }
 }

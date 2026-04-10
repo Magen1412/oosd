@@ -14,6 +14,8 @@ import internship.ApplicationSubmissionPage.ApplicationStatusPage;
 import internship.ApplicationSubmissionPage.ApplicationSubmissionPage;
 import internship.choiceapplicationpage.ChoiceApplicationPage;
 import internship.addoffer.AddInternshipOfferPage;
+import internship.password.ChangePasswordPage;
+import internship.support.SupportPage;
 
 import internship.dashboard.StudentDashboard;
 import internship.dashboard.dao.StudentDAO;
@@ -97,11 +99,6 @@ public class LoginPage extends JPanel {
         formPanel.add(txtPass);
         formPanel.add(Box.createVerticalStrut(20));
 
-        // ===== ROLE SELECTION =====
-        JLabel lblRole = new JLabel("Login as:");
-        lblRole.setAlignmentX(Component.CENTER_ALIGNMENT);
-        formPanel.add(lblRole);
-
         JRadioButton studentBtn = new JRadioButton("Student");
         JRadioButton companyBtn = new JRadioButton("Company");
         JRadioButton adminBtn   = new JRadioButton("Admin");
@@ -111,7 +108,7 @@ public class LoginPage extends JPanel {
         roleGroup.add(companyBtn);
         roleGroup.add(adminBtn);
 
-        studentBtn.setSelected(true); // default
+        studentBtn.setSelected(true);
 
         JPanel rolePanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 10, 0));
         rolePanel.setBackground(Color.WHITE);
@@ -144,6 +141,20 @@ public class LoginPage extends JPanel {
         mainPanel.add(Box.createVerticalGlue());
 
         add(mainPanel, BorderLayout.CENTER);
+
+        // ===== FORGOT PASSWORD LINK =====
+        JLabel forgotPassLink = new JLabel("Forgot Password? Change Password Here!");
+        forgotPassLink.setForeground(Color.BLUE);
+        forgotPassLink.setAlignmentX(Component.CENTER_ALIGNMENT);
+        forgotPassLink.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        forgotPassLink.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        JPanel forgotPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        forgotPanel.setBackground(Color.WHITE);
+        forgotPanel.add(forgotPassLink);
+
+        formPanel.add(Box.createVerticalStrut(10));
+        formPanel.add(forgotPanel);
 
         // ===== ACTIONS =====
         btnLogin.addActionListener(e -> {
@@ -194,6 +205,14 @@ public class LoginPage extends JPanel {
                 cardLayout.show(mainContent, "register"); // navigate to registration page
             }
         });
+
+        forgotPassLink.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                cardLayout.show(mainContent, "changePassword");
+                // make sure you register your ChangePasswordPage with this key
+            }
+        });
     }
 
     // ===== MAIN =====
@@ -217,6 +236,8 @@ public class LoginPage extends JPanel {
             mainContent.add(new ApplicationViewPage(mainContent, cardLayout), "ApplicationViewPage");
             mainContent.add(new ApplicationSubmissionPage(mainContent, cardLayout), "ApplicationSubmissionPage");
             mainContent.add(new AddInternshipOfferPage(cardLayout, mainContent), "AddOffer");
+            //mainContent.add(new ChangePasswordPage(cardLayout, mainContent), "changePassword");
+            mainContent.add(new SupportPage(cardLayout, mainContent), "supportPage");
 
             frame.setContentPane(mainContent);
             frame.setLocationRelativeTo(null);

@@ -4,8 +4,9 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
+
+import internship.searchpage.SearchPage;
 import internship.settings.SettingsPage;
-import internship.ApplicationSubmissionPage.ApplicationStatusPage;
 import java.util.Arrays;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
@@ -17,7 +18,6 @@ public class StudentDashboard extends JPanel {
     static final Color BG = new Color(240,245,249);
     static final Color WHITE = Color.WHITE;
     static final Color TEXT_DARK = new Color(30,58,95);
-    static final Color TEXT_MUTED = new Color(138,165,191);
 
     static final Color CARD1_A = new Color(74,127,160);
     static final Color CARD1_B = new Color(90,154,184);
@@ -38,7 +38,7 @@ public class StudentDashboard extends JPanel {
         add(buildMain(), BorderLayout.CENTER);
     }
 
-    // Sidebar
+    // Sidebar separator line
     private JPanel sidebarSeparator() {
         JPanel line = new JPanel();
         line.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
@@ -46,6 +46,7 @@ public class StudentDashboard extends JPanel {
         return line;
     }
 
+    // Sidebar with buttons
     JPanel buildSidebar() {
         JPanel sidebar = new JPanel() {
             @Override
@@ -62,11 +63,10 @@ public class StudentDashboard extends JPanel {
         sidebar.setLayout(new BoxLayout(sidebar, BoxLayout.Y_AXIS));
         sidebar.add(Box.createVerticalStrut(30));
 
-        String[] items = {"Dashboard","Browse Internships","Companies","My Applications","Support","Log Out"};
+        String[] items = {"Dashboard","Browse Internships","My Applications","Support","Log Out"};
         for (int i = 0; i < items.length; i++) {
-            sidebar.add(sidebarButton(items[i]));
+            sidebar.add(createSidebarButton(items[i]));
             sidebar.add(Box.createVerticalStrut(5));
-
             if (i < items.length - 1) {
                 sidebar.add(sidebarSeparator());
                 sidebar.add(Box.createVerticalStrut(5));
@@ -76,72 +76,51 @@ public class StudentDashboard extends JPanel {
         return sidebar;
     }
 
-    JButton sidebarButton(String text) {
+    // Unified sidebar button method
+    JButton createSidebarButton(String text) {
         JButton btn = new JButton(text) {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+                // Draw hover background
                 if (getModel().isRollover()) {
-                    g2.setColor(new Color(255,255,255,40));
+                    g2.setColor(new Color(255,255,255,40)); // translucent white
                     g2.fillRoundRect(0,0,getWidth(),getHeight(),12,12);
                 }
+
+                // Let Swing paint the text once
                 super.paintComponent(g);
             }
         };
 
         btn.setFocusPainted(false);
         btn.setBorderPainted(false);
-        btn.setContentAreaFilled(false);
+        btn.setContentAreaFilled(false); // no default background
         btn.setForeground(Color.WHITE);
         btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
-
         btn.setHorizontalAlignment(SwingConstants.LEFT);
-
         btn.setAlignmentX(Component.LEFT_ALIGNMENT);
-
         btn.setBorder(new EmptyBorder(10,20,10,10));
-
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         btn.setMaximumSize(new Dimension(200,40));
 
-        btn.addActionListener(e ->
-                JOptionPane.showMessageDialog(this, text + " page opened")
-        );
-
-        return btn;
-    }
-
-    JButton navButton(String text) {
-        JButton btn = new JButton(text);
-        btn.setFocusPainted(false);
-        btn.setBorderPainted(false);
-        btn.setContentAreaFilled(false);
-        btn.setForeground(Color.WHITE);
-        btn.setFont(new Font("Segoe UI", Font.BOLD, 14));
-        btn.setAlignmentX(Component.LEFT_ALIGNMENT);
-        btn.setBorder(new EmptyBorder(12,20,12,10));
-        btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-        btn.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                btn.setOpaque(true);
-                btn.setBackground(new Color(255,255,255,40));
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                btn.setOpaque(false);
-                btn.setBackground(null);
+        // Navigation
+        btn.addActionListener(e -> {
+            switch (text) {
+                case "Dashboard": cardLayout.show(mainContent, "studentDashboard"); break;
+                case "Browse Internships": cardLayout.show(mainContent, "browseInternships"); break;
+                case "My Applications": cardLayout.show(mainContent, "applicationsPage"); break;
+                case "Support": cardLayout.show(mainContent, "supportPage"); break;
+                case "Log Out": cardLayout.show(mainContent, "loginPage"); break;
             }
         });
 
-        btn.addActionListener(e ->
-                JOptionPane.showMessageDialog(this, text + " page opened")
-        );
-
         return btn;
     }
 
-    // Main
+    // Main content
     JPanel buildMain() {
         JPanel main = new JPanel();
         main.setBackground(BG);
@@ -153,7 +132,6 @@ public class StudentDashboard extends JPanel {
         main.add(statsRow());
         main.add(Box.createVerticalStrut(25));
         main.add(recommendedSection());
-        main.add(Box.createVerticalStrut(25));
         main.add(Box.createVerticalStrut(25));
         main.add(loadMore());
 
@@ -181,8 +159,7 @@ public class StudentDashboard extends JPanel {
         avatar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                // Show ProfilePage card
-                cardLayout.show(mainContent, "profile");
+                JOptionPane.showMessageDialog(null, "Opening Profile Page...");
             }
         });
 
@@ -190,7 +167,6 @@ public class StudentDashboard extends JPanel {
         gear.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                System.out.println("Gear clicked");
                 cardLayout.show(mainContent, "settings");
             }
         });
@@ -205,19 +181,15 @@ public class StudentDashboard extends JPanel {
         return p;
     }
 
-    // Statistics
     JPanel statsRow() {
         JPanel p = new JPanel(new GridLayout(1,3,20,0));
         p.setOpaque(false);
-
         p.add(new StatCard("Applied","12","Applications sent",CARD1_A,CARD1_B));
         p.add(new StatCard("Shortlisted","5","Companies interested",CARD2_A,CARD2_B));
         p.add(new StatCard("Offers","2","Offers received",CARD3_A,CARD3_B));
-
         return p;
     }
 
-    // Recommended Internships
     JPanel recommendedSection() {
         JPanel panel = new RoundedCard(20, WHITE);
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -272,9 +244,7 @@ public class StudentDashboard extends JPanel {
         apply.setForeground(Color.WHITE);
         apply.setFocusPainted(false);
 
-        apply.addActionListener(e ->
-                JOptionPane.showMessageDialog(this,"Applied to "+role)
-        );
+        apply.addActionListener(e -> JOptionPane.showMessageDialog(this,"Applied to "+role));
 
         p.add(l,BorderLayout.WEST);
         p.add(apply,BorderLayout.EAST);
@@ -296,13 +266,14 @@ public class StudentDashboard extends JPanel {
         p.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         p.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e) {
-                JOptionPane.showMessageDialog(null,"Loading more...");
+                cardLayout.show(mainContent, "browseInternships");
             }
         });
 
         return p;
     }
 
+    // ---------------- Main ----------------
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             JFrame frame = new JFrame("Student Dashboard");
@@ -315,14 +286,14 @@ public class StudentDashboard extends JPanel {
 
             // Add dashboard and settings page
             mainContent.add(new StudentDashboard(cardLayout, mainContent), "dashboard");
-            ProfilePage profilePage = new ProfilePage(cardLayout, mainContent);
-            mainContent.add(profilePage, "profile");
             mainContent.add(new SettingsPage("Student", cardLayout, mainContent), "settings");
-
-            System.out.println("Cards in mainContent: " + Arrays.toString(mainContent.getComponents()));
+            //mainContent.add(new SearchPage(cardLayout, mainContent), "browseInternships");
+            // mainContent.add(new ApplicationsPage(cardLayout, mainContent), "applicationsPage");
+            mainContent.add(new SupportPage(cardLayout, mainContent), "supportPage");
+            // mainContent.add(new LoginPage(cardLayout, mainContent), "loginPage");
 
             // Show dashboard first
-            cardLayout.show(mainContent, "dashboard");
+            cardLayout.show(mainContent, "studentDashboard");
 
             frame.setContentPane(mainContent);
             frame.setVisible(true);
@@ -330,13 +301,13 @@ public class StudentDashboard extends JPanel {
     }
 }
 
-// Additional Classes
 class RoundedCard extends JPanel {
     int r; Color bg;
     RoundedCard(int r, Color bg) {
         this.r = r; this.bg = bg;
         setOpaque(false);
     }
+    @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -345,6 +316,7 @@ class RoundedCard extends JPanel {
     }
 }
 
+// Statistic card with gradient background
 class StatCard extends JPanel {
     Color a,b;
     String label,value,sub;
@@ -367,9 +339,12 @@ class StatCard extends JPanel {
         v.setFont(new Font("Segoe UI",Font.BOLD,28));
         s.setFont(new Font("Segoe UI",Font.PLAIN,12));
 
-        add(l); add(Box.createVerticalStrut(5)); add(v); add(Box.createVerticalStrut(5)); add(s);
+        add(l); add(Box.createVerticalStrut(5));
+        add(v); add(Box.createVerticalStrut(5));
+        add(s);
     }
 
+    @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2=(Graphics2D)g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -378,29 +353,5 @@ class StatCard extends JPanel {
         g2.fillRoundRect(0,0,getWidth(),getHeight(),25,25);
         g2.setColor(new Color(0,0,0,40));
         g2.drawRoundRect(0,0,getWidth()-1,getHeight()-1,25,25);
-    }
-}
-
-class AvatarIcon extends JComponent {
-    AvatarIcon() { setPreferredSize(new Dimension(40,40)); }
-    protected void paintComponent(Graphics g) {
-        Graphics2D g2=(Graphics2D)g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(new Color(180,180,180));
-        g2.fillOval(0,0,40,40);
-        g2.setColor(Color.WHITE);
-        g2.drawOval(0,0,40,40);
-    }
-}
-
-class GearIcon extends JComponent {
-    GearIcon() { setPreferredSize(new Dimension(40,40)); }
-    protected void paintComponent(Graphics g) {
-        Graphics2D g2=(Graphics2D)g;
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(new Color(100,100,100));
-        g2.fillOval(5,5,30,30);
-        g2.setColor(Color.WHITE);
-        g2.drawOval(5,5,30,30);
     }
 }
