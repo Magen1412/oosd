@@ -529,14 +529,10 @@ public class AdminProfilePage extends JPanel {
             CardLayout cardLayout = new CardLayout();
             JPanel mainContent = new JPanel(cardLayout);
 
-            JPanel dashboard = new JPanel(new BorderLayout());
-            dashboard.setBackground(new Color(230, 240, 250));
-            dashboard.add(new JLabel("Dashboard", JLabel.CENTER), BorderLayout.CENTER);
-
-            mainContent.add(dashboard, "adminDashboard");
+            mainContent.add(new AdminProfilePage(cardLayout, mainContent), "adminProfile");
             mainContent.add(new Admindashboard(mainContent, cardLayout), "adminDashboard");
 
-            cardLayout.show(mainContent, "adminDashboard");
+            cardLayout.show(mainContent, "adminProfile");
 
             frame.setContentPane(mainContent);
             frame.setVisible(true);
