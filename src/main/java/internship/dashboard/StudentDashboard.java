@@ -8,6 +8,7 @@ import internship.ApplicationSubmissionPage.*;
 import internship.searchpage.SearchPage;
 import internship.settings.SettingsPage;
 import internship.support.SupportPage;
+
 import java.util.Arrays;
 
 import com.formdev.flatlaf.extras.FlatSVGIcon;
@@ -160,7 +161,7 @@ public class StudentDashboard extends JPanel {
         avatar.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
-                JOptionPane.showMessageDialog(null, "Opening Profile Page...");
+                cardLayout.show(mainContent, "profilePage");
             }
         });
 
@@ -295,8 +296,8 @@ public class StudentDashboard extends JPanel {
             //mainContent.add(new SearchPage(cardLayout, mainContent), "browseInternships");
             mainContent.add(new SupportPage(cardLayout, mainContent), "supportPage");
             // mainContent.add(new LoginPage(cardLayout, mainContent), "loginPage");
+            mainContent.add(new ProfilePage(cardLayout, mainContent), "profilePage");
 
-            // Show dashboard first
             cardLayout.show(mainContent, "studentDashboard");
 
             frame.setContentPane(mainContent);
